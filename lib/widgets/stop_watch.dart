@@ -25,6 +25,7 @@ class StopWatch extends StatefulWidget {
 }
 
 class _StopWatchState extends State<StopWatch> {
+  bool isSDbtnActive = false;
   Future<void> _checkNullStopWatch(BuildContext context) async {
     int hrs = countdownDuration.inHours;
     int min = countdownDuration.inMinutes;
@@ -78,11 +79,38 @@ class _StopWatchState extends State<StopWatch> {
     );
   }
 
+  Future<void> _checkForResetTimer(BuildContext context, String titleText, String contextText, VoidCallback stopTimerFunc) async {
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('${titleText}'),
+        content: Text('${contextText}'),
+        actions: <Widget>[
+          RaisedButton(
+            child: Text('NO'),
+            onPressed: () {
+              Navigator.of(ctx).pop(false);
+            },
+          ),
+          RaisedButton(
+            child: Text('Yes'),
+            onPressed: () {
+              stopTimerFunc();
+              Navigator.of(ctx).pop(false);
+
+              isSDbtnActive = false;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Duration userDuration = Duration();
 
   static var countdownDuration = Duration(
-    hours: 1,
-    minutes: 0,
+    hours: 0,
+    minutes: 1,
     seconds: 0,
   );
 
@@ -161,10 +189,11 @@ class _StopWatchState extends State<StopWatch> {
         child: Column(
           children: <Widget>[
             RaisedButton(
-                child: Text('Select Duration'),
-                onPressed: () {
-                  selctionOfClassDuration(ctx);
-                }),
+              child: Text('Select Duration'),
+              onPressed: !isSDbtnActive ? () {
+                selctionOfClassDuration(ctx);
+              } : null,
+            ),
             Container(
               padding: EdgeInsets.only(
                 bottom: screenHeight * 0.02,
@@ -261,7 +290,8 @@ class _StopWatchState extends State<StopWatch> {
                 color: Colors.black,
                 textColor: Colors.white,
                 onPressed: () {
-                  stopTimer();
+                  _checkForResetTimer(ctx, 'Request For Reset!', 'Are your sure you want to Reset Timer?', stopTimer);
+                  // stopTimer();
 
                   // setState(() {
                   //   int minCnt = double.infinity as int;
@@ -288,6 +318,7 @@ class _StopWatchState extends State<StopWatch> {
               startTimer();
 
               setState(() {
+                isSDbtnActive = true;
                 int minCnt = ((countdownDuration.inHours * 60) +
                     countdownDuration.inMinutes);
                 Future.delayed(Duration(minutes: minCnt), () {

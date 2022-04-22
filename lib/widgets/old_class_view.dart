@@ -22,18 +22,110 @@ import '../models/place.dart';
 
 import '../providers/class_details.dart';
 
-class OldClassView extends StatefulWidget {
-  final ClassInformation classData;
+import '../screens/detail_class_screen.dart';
 
-  OldClassView(this.classData);
-  
-  @override
-  State<OldClassView> createState() => _OldClassViewState();
-}
+class OldClassView extends StatelessWidget {
+  @required
+  int indexClass;
+  @required
+  ClassInformation infoClass;
 
-class _OldClassViewState extends State<OldClassView> {
+  OldClassView({
+    required this.indexClass,
+    required this.infoClass,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var avlScreenHeight = screenHeight - topInsets - bottomInsets;
+
+    String classDuration = "";
+    int minVal = 0;
+    int hrVal = 0;
+    if (infoClass.durationOfClass < 60) {
+      classDuration = '${infoClass.durationOfClass} min';
+    } else {
+      hrVal = (infoClass.durationOfClass / 60) as int;
+      minVal = infoClass.durationOfClass - hrVal * 60;
+
+      if (minVal == 0) {
+        classDuration = '${hrVal} hrs';
+      } else {
+        classDuration = '${hrVal} hrs ${minVal} min';
+      }
+    }
+
+    void _goToDetailClassScreen(
+        BuildContext ctx, ClassInformation classInfoObj) {
+      Navigator.of(ctx).push(
+        MaterialPageRoute(
+          builder: (_) {
+            return ClassDetailScreen(classInfoObj);
+          },
+        ),
+      );
+    }
+
+    return InkWell(
+      onTap: () {
+        _goToDetailClassScreen(context, infoClass);
+      },
+      splashColor: Theme.of(context).primaryColorDark,
+
+      ////////////
+      child: Card(
+        elevation: 10,
+        margin: EdgeInsets.only(
+          top: avlScreenHeight * 0.02,
+          bottom: avlScreenHeight * 0.01,
+          left: screenWidth * 0.03,
+          right: screenWidth * 0.03,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(screenWidth * 0.05),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: screenWidth * 0.05,
+            right: screenWidth * 0.15,
+            top: screenHeight * 0.02,
+            bottom: screenHeight * 0.02,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              CircleAvatar(
+                radius: screenWidth * 0.1,
+                child: Container(
+                  padding: EdgeInsets.all(
+                    screenWidth * 0.01,
+                  ),
+                  child: FittedBox(
+                    child: Icon(
+                      Icons.open_in_new_rounded,
+                      size: screenWidth * 0.40,
+                    ),
+                  ),
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('Students: ${infoClass.numOfStudents}'),
+                  Text('Duration: ${classDuration}'),
+                  Text(
+                      'Date: ${DateFormat('dd/MM/yyyy').format(infoClass.currDateTime)}'),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

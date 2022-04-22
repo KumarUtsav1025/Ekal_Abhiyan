@@ -27,7 +27,8 @@ class LiveLocation extends StatefulWidget {
   Function(List<Position>) userLoctionList;
   Function(List<Placemark>) userLocPlaceMarkList;
 
-  LiveLocation(this.checkUserLocation, this.userLoctionList, this.userLocPlaceMarkList);
+  LiveLocation(
+      this.checkUserLocation, this.userLoctionList, this.userLocPlaceMarkList);
 
   @override
   State<LiveLocation> createState() => _LiveLocationState();
@@ -149,12 +150,16 @@ class _LiveLocationState extends State<LiveLocation> {
                         ),
                       ),
                     ),
-                    onPressed: () {
-                      isCurrLocBtnActive = true;
-                      widget.checkUserLocation(
-                          isCurrLocBtnActive, isLiveLocBtnActive);
-                      _getLocation(context);
-                    },
+                    onPressed: !isCurrLocBtnActive
+                        ? () {
+                            isCurrLocBtnActive = true;
+                            widget.checkUserLocation(
+                              isCurrLocBtnActive,
+                              isLiveLocBtnActive,
+                            );
+                            _getLocation(context);
+                          }
+                        : null,
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
@@ -174,12 +179,14 @@ class _LiveLocationState extends State<LiveLocation> {
                         ),
                       ),
                     ),
-                    onPressed: () {
-                      isLiveLocBtnActive = true;
-                      widget.checkUserLocation(
-                          isCurrLocBtnActive, isLiveLocBtnActive);
-                      _listenLocation();
-                    },
+                    onPressed: !isLiveLocBtnActive
+                        ? () {
+                            isLiveLocBtnActive = true;
+                            widget.checkUserLocation(
+                                isCurrLocBtnActive, isLiveLocBtnActive);
+                            _listenLocation();
+                          }
+                        : null,
                   ),
                 ],
               ),
@@ -394,7 +401,8 @@ class _LiveLocationState extends State<LiveLocation> {
             d = radius * c;
 
             if (d > 0.150) {
-              _checkLocatoinService(context, "Out of Range", "Kindly go back to the Classroom.");
+              _checkLocatoinService(
+                  context, "Out of Range", "Kindly go back to the Classroom.");
             }
           }
         }
@@ -415,7 +423,7 @@ class _LiveLocationState extends State<LiveLocation> {
       addressValue.value =
           'Address: ${place.subLocality}, ${place.locality}, ${place.postalCode}.';
 
-          widget.userLocPlaceMarkList(placemarkUserLocationList);
+      widget.userLocPlaceMarkList(placemarkUserLocationList);
     });
   }
 }

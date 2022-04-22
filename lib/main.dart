@@ -13,6 +13,7 @@ import './screens/my_profile_screen.dart';
 import './screens/tabs_screen.dart';
 import './screens/login_screen.dart';
 import './screens/signup_screen.dart';
+import './screens/detail_class_screen.dart';
 
 import './providers/class_details.dart';
 

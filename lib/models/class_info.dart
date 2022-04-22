@@ -16,6 +16,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import './http_exeception.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import './place.dart';
 

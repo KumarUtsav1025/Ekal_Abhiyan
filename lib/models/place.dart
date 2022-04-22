@@ -17,6 +17,12 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import './http_exeception.dart';
 import 'package:sqflite/sqflite.dart' as sql;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+// part 'place.g.dart';
+
+// @JsonSerializable()
 
 class PlaceLocation {
   final double latitude;
@@ -29,6 +35,8 @@ class PlaceLocation {
     required this.address,
   });
 }
+
+@JsonSerializable()
 
 class Place {
   final String id;

@@ -18,6 +18,8 @@ import 'package:get/get.dart';
 
 import '../providers/class_details.dart';
 
+import '../widgets/old_class_view.dart';
+
 class PreviousClass extends StatefulWidget {
   static const routeName = '/previous-class-screen';
   @override
@@ -25,6 +27,8 @@ class PreviousClass extends StatefulWidget {
 }
 
 class _PreviousClassState extends State<PreviousClass> {
+  var _isInit = true;
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -32,7 +36,22 @@ class _PreviousClassState extends State<PreviousClass> {
     var topInsets = MediaQuery.of(context).viewInsets.top;
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
 
-    final classInfoData = Provider.of<ClassDetails>(context);
+    var classInfoData = Provider.of<ClassDetails>(context);
+
+    @override
+    void initState() {
+      super.initState();
+    }
+
+    @override
+    void didChangeDependencies() {
+      if (_isInit) {
+        Provider.of<ClassDetails>(context).fetchPrevClasses();
+        classInfoData = Provider.of<ClassDetails>(context);
+      }
+      _isInit = false;
+      super.didChangeDependencies();
+    }
 
     return Container(
       child: classInfoData.items.length == 0
@@ -41,6 +60,7 @@ class _PreviousClassState extends State<PreviousClass> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(
+                  alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(
                     horizontal: screenWidth * 0.25,
                   ),
@@ -55,7 +75,15 @@ class _PreviousClassState extends State<PreviousClass> {
                 ),
               ],
             )
-          : Text('Previous Classes Available.'),
+          : ListView.builder(
+              itemCount: classInfoData.items.length,
+              itemBuilder: (ctx, index) {
+                return OldClassView(
+                  indexClass: classInfoData.items.length-1-index,
+                  infoClass: classInfoData.items[index],
+                );
+              },
+            ),
     );
   }
 }

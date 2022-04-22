@@ -36,10 +36,11 @@ class CreateNewClass extends StatefulWidget {
 
 class _CreateNewClassState extends State<CreateNewClass> {
   final _numberOfStudents = TextEditingController();
-  final _durationOfClass = TextEditingController();
+  var _durationOfClass = 1;
   String dateBtnString = 'Choose Date';
-  DateTime _selectedDate = DateTime.now();
+  late DateTime _selectedDate;
 
+  bool isDateSet = false;
   bool isNumStudentsFilled = false;
   bool isClassDurationFilled = false;
   bool isCurrentLocSet = false;
@@ -66,66 +67,20 @@ class _CreateNewClassState extends State<CreateNewClass> {
       }
     }
 
-    // Checking the Duration of Class Field
-    if (_durationOfClass.text.length > 0) {
-      if (int.parse(_durationOfClass.text) > 0) {
-        isClassDurationFilled = true;
-      } else if (isClassDurationFilled == true &&
-          int.parse(_durationOfClass.text) <= 0) {
-        isClassDurationFilled = false;
-      }
-    }
-
     // Condition checking
-    if (!isNumStudentsFilled && !isClassDurationFilled) {
-      return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Invalid Input'),
-          content: Text(
-              'Enter Valid \nNumber of Students \nand \nDuration of Class.'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop(false);
-              },
-            ),
-          ],
-        ),
-      );
+    if (!isNumStudentsFilled && !isDateSet) {
+      String titleText = "Invalid Input.";
+      String contextText =
+          "Enter Valid \nNumber of Students \nand \nChoose a Valid Date.";
+      _checkForError(context, titleText, contextText);
     } else if (!isNumStudentsFilled) {
-      return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Invalid Input'),
-          content: Text('Enter Valid \nNumber of Students.'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop(false);
-              },
-            ),
-          ],
-        ),
-      );
-    } else if (!isClassDurationFilled) {
-      return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Invalid Input'),
-          content: Text('Enter Valid \nDuration of Class.'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop(false);
-              },
-            ),
-          ],
-        ),
-      );
+      String titleText = "Invalid Input";
+      String contextText = "Enter Valid \nNumber of Students.";
+      _checkForError(context, titleText, contextText);
+    } else if (!isDateSet) {
+      String titleText = "Invalid Input";
+      String contextText = "Choose a Valid \Date of the Class.";
+      _checkForError(context, titleText, contextText);
     } else {
       setState(() {
         isCard2Visible = true;
@@ -139,54 +94,18 @@ class _CreateNewClassState extends State<CreateNewClass> {
         isCard3Visible = true;
       });
     } else if (!isCurrentLocSet && !isLiveLocationOn) {
-      return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Current Location, Live Location Not Set'),
-          content: Text(
-              'Please Set Current Location and Turn On your Live Location.'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop(false);
-              },
-            ),
-          ],
-        ),
-      );
+      String titleText = "Current & Live Location Not Set";
+      String contextText =
+          "Please Turn On 'Add Current Location' and 'Live Location'.";
+      _checkForError(context, titleText, contextText);
     } else if (!isCurrentLocSet) {
-      return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Current Location Not Set'),
-          content: Text('Please Turn On Add Current Location'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop(false);
-              },
-            ),
-          ],
-        ),
-      );
+      String titleText = "Current Location Not Set";
+      String contextText = "Please Turn On 'Add Current Location'.";
+      _checkForError(context, titleText, contextText);
     } else {
-      return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Live Location is Off'),
-          content: Text('Please Turn On your \nLive Location.'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop(false);
-              },
-            ),
-          ],
-        ),
-      );
+      String titleText = "Live Location is Off";
+      String contextText = "Please Turn On your 'Live Location'.";
+      _checkForError(context, titleText, contextText);
     }
   }
 
@@ -196,70 +115,63 @@ class _CreateNewClassState extends State<CreateNewClass> {
         isCard4Visible = true;
       });
     } else {
-      return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Picture Not Clicked'),
-          content: Text('Please click live Image of the Class.'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop(false);
-              },
-            ),
-          ],
-        ),
-      );
+      String titleText = "Picture Not Clicked.";
+      String contextText = "Please click live Image of the Class.";
+      _checkForError(context, titleText, contextText);
     }
   }
 
   Future<void> _checkCard4Input(BuildContext context) async {
     if (!isCard5Visible) {
-      return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Class is On Going!'),
-          content: Text('Please wait for the Class to End...'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop(false);
-              },
-            ),
-          ],
-        ),
-      );
+      String titleText = "Class is On Going!";
+      String contextText = "Please wait for the Class to End...";
+      _checkForError(context, titleText, contextText);
     }
   }
 
   Future<void> _checkCard5Input(BuildContext context) async {
     if (isPic2Clicked) {
-      setState(() {
-        isCard6Visible = true;
-      });
+      String titleText = "Check the Input Fields!";
+      String contextText = "Are your sure the inputs are correct?";
+      _checkForConfirmation(context, titleText, contextText);
     } else {
-      return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Picture Not Clicked'),
-          content: Text('Please click live Image of the Class.'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop(false);
-              },
-            ),
-          ],
-        ),
-      );
+      String titleText = "Picture Not Clicked";
+      String contextText = "Please click live Image of the Class.";
+      _checkForError(context, titleText, contextText);
     }
   }
 
-  Future<void> _checkForError(
+  Future<void> _checkForConfirmation(
       BuildContext context, String titleText, String contextText) async {
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('${titleText}'),
+        content: Text('${contextText}'),
+        actions: <Widget>[
+          RaisedButton(
+            child: Text('No'),
+            onPressed: () {
+              Navigator.of(ctx).pop(false);
+            },
+          ),
+          RaisedButton(
+            child: Text('yes'),
+            onPressed: () {
+              setState(() {
+                isCard6Visible = true;
+              });
+              Navigator.of(ctx).pop(false);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _checkForError(
+      BuildContext context, String titleText, String contextText,
+      {bool popVal = false}) async {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -269,7 +181,12 @@ class _CreateNewClassState extends State<CreateNewClass> {
           RaisedButton(
             child: Text('OK'),
             onPressed: () {
-              Navigator.of(ctx).pop(false);
+              if (popVal == false) {
+                Navigator.of(ctx).pop(false);
+              }
+              else {
+                Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+              }
             },
           ),
         ],
@@ -288,7 +205,8 @@ class _CreateNewClassState extends State<CreateNewClass> {
         return;
       } else {
         setState(() {
-          _selectedDate = pickedDate;
+          isDateSet = true;
+          _selectedDate = DateTime.now();
           dateBtnString = "Change Date";
         });
       }
@@ -296,6 +214,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
   }
 
   //////////////////////////////////////////////////////
+  bool _isSubmitLoading = false;
   late File _pickedImage1;
   late File _pickedImage2;
 
@@ -311,9 +230,12 @@ class _CreateNewClassState extends State<CreateNewClass> {
   static List<Placemark> userLocationPlaceMarkList = [];
 
   Future<void> _sumbitNewCreatedClass(BuildContext funcContext) async {
+    setState(() {
+      _isSubmitLoading = true;
+    });
     DateTime finalDateTime = _selectedDate;
     int finalNumStudents = int.parse(_numberOfStudents.text);
-    int finalClassDuration = int.parse(_durationOfClass.text);
+    int finalClassDuration = _durationOfClass;
 
     int l = userLocationPlaceMarkList.length;
     int ll = userLocationLatLong.length;
@@ -348,16 +270,28 @@ class _CreateNewClassState extends State<CreateNewClass> {
     List<Position> finalLocList = userLocationLatLong;
 
     try {
-      Provider.of<ClassDetails>(funcContext, listen: false).addNewClass(
+      Provider.of<ClassDetails>(funcContext, listen: false)
+          .addNewClass(
         finalDateTime,
         finalNumStudents,
         finalClassDuration,
         placeValue1,
         placeValue2,
         finalLocList,
-      );
-
-      Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+      )
+          .catchError((onError) {
+        _checkForError(
+          funcContext,
+          'Error Occoured',
+          'Something went Wrong...',
+          popVal: true,
+        );
+      }).then((_) {
+        setState(() {
+          _isSubmitLoading = false;
+        });
+        Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+      });
     } catch (errorVal) {
       print(errorVal);
       _checkForError(funcContext, 'Error Detected', 'Something went Wrong...');
@@ -403,9 +337,9 @@ class _CreateNewClassState extends State<CreateNewClass> {
                           children: <Widget>[
                             Expanded(
                               child: Text(
-                                _selectedDate == null
+                                isDateSet == false
                                     ? 'Select Date -> '
-                                    : 'Date: ${DateFormat.yMd().format(_selectedDate)}',
+                                    : 'Date: ${DateFormat('dd/MM/yyyy').format(_selectedDate)}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -420,9 +354,11 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              onPressed: () {
-                                _presentDatePicker;
-                              },
+                              onPressed: !isCard4Visible
+                                  ? () {
+                                      _presentDatePicker(context);
+                                    }
+                                  : null,
                             ),
                           ],
                         ),
@@ -450,31 +386,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                               }
                             });
                           },
-                        ),
-                      ),
-
-                      // Input for Duration of the Class
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.02,
-                          vertical: screenHeight * 0.01,
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                              labelText: 'Duration of Class (In Minutes): '),
-                          controller: _durationOfClass,
-                          keyboardType: TextInputType.number,
-                          onSubmitted: (_) {},
-                          onChanged: (newDuration) {
-                            setState(() {
-                              if (_durationOfClass.text.length == 0 ||
-                                  int.parse(_durationOfClass.text) <= 0) {
-                                isClassDurationFilled = false;
-                                isCard2Visible = false;
-                                _durationOfClass.text = newDuration;
-                              }
-                            });
-                          },
+                          readOnly: isCard4Visible ? true : false,
                         ),
                       ),
                     ],
@@ -568,6 +480,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                     //   });
                                     // }),
                                     ImageInput(
+                                      isCard4Visible,
                                       (btnClicked) {
                                         setState(() {
                                           isPic1Clicked = btnClicked;
@@ -612,8 +525,8 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                               StopWatch(
                                                   (isBtnActive, totTimeInMin) {
                                                 setState(() {
-                                                  _durationOfClass.text =
-                                                      totTimeInMin.toString();
+                                                  _durationOfClass =
+                                                      totTimeInMin;
                                                   isCard5Visible = true;
                                                 });
                                               }),
@@ -654,6 +567,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                                         ),
                                                         // 2nd Picture of the Classroom
                                                         ImageInput(
+                                                          isCard6Visible,
                                                           (btnClicked) {
                                                             setState(() {
                                                               isPic2Clicked =
@@ -711,27 +625,31 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                                                         vertical:
                                                                             screenHeight *
                                                                                 0.01),
-                                                                    child: RaisedButton(
-                                                                        elevation: 10,
-                                                                        color: Colors.amber,
-                                                                        child: Text(
-                                                                          'Submit',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            fontSize:
-                                                                                screenHeight * 0.025,
-                                                                          ),
-                                                                        ),
-                                                                        onPressed: () {
-                                                                          _sumbitNewCreatedClass(context);
-                                                                            // Future.delayed(Duration(seconds: 10), () {
-                                                                            //   Navigator.of(context)
-                                                                            //   .pushReplacementNamed(TabsScreen.routeName);
-                                                                            // });
-                                                                          
-                                                                        }),
+                                                                    child:
+                                                                        RaisedButton(
+                                                                      elevation:
+                                                                          10,
+                                                                      color: Colors
+                                                                          .amber,
+                                                                      child: _isSubmitLoading
+                                                                          ? CircularProgressIndicator()
+                                                                          : Text(
+                                                                              'Submit',
+                                                                              style: TextStyle(
+                                                                                fontWeight: FontWeight.bold,
+                                                                                fontSize: screenHeight * 0.025,
+                                                                              ),
+                                                                            ),
+                                                                      onPressed:
+                                                                          () {
+                                                                        _sumbitNewCreatedClass(
+                                                                            context);
+                                                                        // Future.delayed(Duration(seconds: 10), () {
+                                                                        //   Navigator.of(context)
+                                                                        //   .pushReplacementNamed(TabsScreen.routeName);
+                                                                        // });
+                                                                      },
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),

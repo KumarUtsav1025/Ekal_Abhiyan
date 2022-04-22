@@ -16,11 +16,12 @@ import 'package:path_provider/path_provider.dart' as sysPaths;
 import 'package:image_picker/image_picker.dart';
 
 class ImageInput extends StatefulWidget {
+  var isDiableWidget = false;
   final Function(bool) checkPicClicked;
   final Function onSelectImage;
 
-  ImageInput(this.checkPicClicked, this.onSelectImage);
-  
+  ImageInput(this.isDiableWidget, this.checkPicClicked, this.onSelectImage);
+
   @override
   State<ImageInput> createState() => _ImageInputState();
 }
@@ -50,7 +51,8 @@ class _ImageInputState extends State<ImageInput> {
 
     final appDir = await sysPaths.getApplicationDocumentsDirectory();
     final fileName = path.basename(imageFile.path);
-    final savedImageFile = await File(imageFile.path).copy('${appDir.path}/${fileName}');
+    final savedImageFile =
+        await File(imageFile.path).copy('${appDir.path}/${fileName}');
 
     widget.onSelectImage(savedImageFile);
   }
@@ -103,16 +105,16 @@ class _ImageInputState extends State<ImageInput> {
             ),
             Container(
               height: (screenHeight * 0.40) * 0.15,
-                child: FlatButton.icon(
-                  color: Colors.grey.shade300,
-                  icon: Icon(Icons.camera),
-                  label: Text(
-                    '${imgPicBtnStr}',
-                    textAlign: TextAlign.center,
-                  ),
-                  textColor: Colors.blue.shade800,
-                  onPressed: _takePicture,
+              child: FlatButton.icon(
+                color: Colors.grey.shade300,
+                icon: Icon(Icons.camera),
+                label: Text(
+                  '${imgPicBtnStr}',
+                  textAlign: TextAlign.center,
                 ),
+                textColor: Colors.blue.shade800,
+                onPressed: !widget.isDiableWidget ? _takePicture : null,
+              ),
             ),
           ],
         ),
