@@ -27,7 +27,6 @@ class PreviousClass extends StatefulWidget {
 }
 
 class _PreviousClassState extends State<PreviousClass> {
-  var _isInit = true;
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +34,26 @@ class _PreviousClassState extends State<PreviousClass> {
     var screenWidth = MediaQuery.of(context).size.width;
     var topInsets = MediaQuery.of(context).viewInsets.top;
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var _isInit = true;
 
     var classInfoData = Provider.of<ClassDetails>(context);
 
     @override
     void initState() {
       super.initState();
+
+      // Future.delayed(Duration.zero).then((_) {
+      //   Provider.of<ClassDetails>(context).fetchUserPrevClasses();
+      // });
     }
 
     @override
     void didChangeDependencies() {
       if (_isInit) {
-        Provider.of<ClassDetails>(context).fetchPrevClasses();
-        classInfoData = Provider.of<ClassDetails>(context);
+        Provider.of<ClassDetails>(context).fetchUserPrevClasses();
       }
-      _isInit = false;
+      _isInit = true;
+
       super.didChangeDependencies();
     }
 

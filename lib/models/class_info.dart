@@ -21,6 +21,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 import './place.dart';
 
+// part 'class_info.g.dart';
+
+@JsonSerializable()
 class ClassInformation {
   final String unqId;
   final DateTime currDateTime;
@@ -40,3 +43,7 @@ class ClassInformation {
     required this.userClassLocationList,
   });
 }
+
+// factory ClassInformation.fromJson(Map<String, dynamic> json) => _$ClassInformationFromJson(json);
+
+// Map<String, dynamic> toJson() => _$ClassInformation(this);

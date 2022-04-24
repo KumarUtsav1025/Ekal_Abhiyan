@@ -60,7 +60,7 @@ class ClassDetails with ChangeNotifier {
 
     d = radius * c;
 
-    if (d >= 0.250) {
+    if (d >= 0.020) {
       return true;
     } else {
       return false;
@@ -113,7 +113,33 @@ class ClassDetails with ChangeNotifier {
 
     String timeDurationFormat = timeFormater(duration);
 
+    final startingClassImage = FirebaseStorage.instance
+        .ref()
+        .child('starting_class_image')
+        .child('${dtVal}+${numStudents}+${duration}+startImg.jpg');
+    final endingClassImage = FirebaseStorage.instance
+        .ref()
+        .child('ending_class_image')
+        .child('${dtVal}+${numStudents}+${duration}+endImg.jpg');
+
+    bool img1Upload = false;
+    bool img2Upload = false;
+    await startingClassImage.putFile(il1.image).whenComplete(
+      () {
+        img1Upload = true;
+      },
+    );
+    await endingClassImage.putFile(il2.image).whenComplete(
+      () {
+        img2Upload = true;
+      },
+    );
+
+    final startClassImgUrl = await startingClassImage.getDownloadURL();
+    final endClassImgUrl = await endingClassImage.getDownloadURL();
+
     try {
+      print('inside val');
       final response = await http.post(
         urlParse,
         body: json.encode(
@@ -122,15 +148,16 @@ class ClassDetails with ChangeNotifier {
             'students': numStudents,
             'duration': timeDurationFormat,
             'stClassTitle': il1.title.toString(),
-            'stClassImg': il1.image.toString(),
+            'stClassImg': startClassImgUrl.toString(),
             'stClassLatitude': il1.location.latitude.toString(),
             'stClassLongitude': il1.location.longitude.toString(),
             'stClassAddress': il1.location.address.toString(),
             'edClassTitle': il2.title.toString(),
-            'endingClassImg': il2.image.toString(),
+            'edClassImg': endClassImgUrl.toString(),
             'edClassLatitude': il2.location.latitude.toString(),
             'edClassLongitude': il2.location.longitude.toString(),
             'edClassAddress': il2.location.address.toString(),
+            'userPositionList': jsonEncode(userLocList),
             'flag': checkMaxDistance(userLocList).toString(),
           },
         ),
@@ -153,37 +180,21 @@ class ClassDetails with ChangeNotifier {
     }
   }
 
-  Future<void> fetchPrevClasses() async {
+  Future<void> fetchUserPrevClasses() async {
     final urlLink = Uri.https(
       'flutterdatabase-76af4-default-rtdb.firebaseio.com',
       '/userClassInformation.json',
     );
-
     final urlParse = Uri.parse(
       'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/userClassInformation.json',
     );
 
     try {
-      final fetchResponse = await http.get(urlLink);
-      final extractedData = json.decode(fetchResponse.body) as Map<String, dynamic>;
-
-      List<ClassInformation> loadedClasses = [];
-
-      // extractedData.forEach(
-      //   (classUnqId, classInfoData) {
-      //     ClassInformation clsInfo = new ClassInformation(
-      //       unqId: classUnqId,
-      //       currDateTime: HttpDate.parse(classInfoData['dateTime']),
-      //       numOfStudents: classInfoData['students'],
-      //       durationOfClass: classInfoData['duration'],
-      //       imgLocStart: ,
-      //       imgLocEnd: ,
-      //       userClassLocationList: ,
-      //     );
-      //     loadedClasses.add(clsInfo);
-      //   },
-      // );
-    } catch (errorVal) {
+      final fetchedResponse = await http.get(urlParse);
+      print(fetchedResponse);
+      print(json.encode(fetchedResponse.body));
+    }
+    catch(errorVal) {
       print(errorVal);
       throw (errorVal);
     }

@@ -183,9 +183,9 @@ class _CreateNewClassState extends State<CreateNewClass> {
             onPressed: () {
               if (popVal == false) {
                 Navigator.of(ctx).pop(false);
-              }
-              else {
-                Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+              } else {
+                Navigator.of(context)
+                    .pushReplacementNamed(TabsScreen.routeName);
               }
             },
           ),
@@ -215,6 +215,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
 
   //////////////////////////////////////////////////////
   bool _isSubmitLoading = false;
+  bool _liveLocationDeactive = false;
   late File _pickedImage1;
   late File _pickedImage2;
 
@@ -232,6 +233,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
   Future<void> _sumbitNewCreatedClass(BuildContext funcContext) async {
     setState(() {
       _isSubmitLoading = true;
+      _liveLocationDeactive = true;
     });
     DateTime finalDateTime = _selectedDate;
     int finalNumStudents = int.parse(_numberOfStudents.text);
@@ -432,7 +434,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                           ),
 
                           // Location of the User
-                          LiveLocation((btn1, btn2) {
+                          LiveLocation(_liveLocationDeactive, (btn1, btn2) {
                             setState(() {
                               isCurrentLocSet = btn1;
                               isLiveLocationOn = btn2;

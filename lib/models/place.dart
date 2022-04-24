@@ -22,7 +22,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 // part 'place.g.dart';
 
-// @JsonSerializable()
+@JsonSerializable()
 
 class PlaceLocation {
   final double latitude;
@@ -51,3 +51,7 @@ class Place {
     required this.image,
   });
 }
+
+// factory Place.fromJson(Map<String, dynamic> json) => _$PlaceFromJson(json);
+
+// Map<String, dynamic> toJson() => _$Place(this);

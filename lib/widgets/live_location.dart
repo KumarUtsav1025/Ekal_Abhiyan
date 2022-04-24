@@ -23,12 +23,18 @@ import './live_map.dart';
 class LiveLocation extends StatefulWidget {
   static const routeName = '/live-location';
 
+  final isSubmitted;
+
   Function(bool, bool) checkUserLocation;
   Function(List<Position>) userLoctionList;
   Function(List<Placemark>) userLocPlaceMarkList;
 
   LiveLocation(
-      this.checkUserLocation, this.userLoctionList, this.userLocPlaceMarkList);
+    this.isSubmitted,
+    this.checkUserLocation,
+    this.userLoctionList,
+    this.userLocPlaceMarkList,
+  );
 
   @override
   State<LiveLocation> createState() => _LiveLocationState();
@@ -54,6 +60,8 @@ class _LiveLocationState extends State<LiveLocation> {
   static List<Position> userLatLongList = [];
   int locListLgt = placemarkUserLocationList.length;
   int posListLgt = userLatLongList.length;
+
+  
 
   Future<void> _checkLocatoinService(
       BuildContext context, String titleText, String contextText) async {
@@ -111,6 +119,15 @@ class _LiveLocationState extends State<LiveLocation> {
   void initState() {
     super.initState();
     _requestPermission();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (widget.isSubmitted == true) {
+      _stopListening();
+    }
   }
 
   @override
@@ -313,7 +330,7 @@ class _LiveLocationState extends State<LiveLocation> {
     var status = await Permission.location.request();
 
     if (status.isGranted) {
-      print('done');
+      print('Stopped Live Location!');
     } else if (status.isDenied) {
       _requestPermission();
     } else if (status.isPermanentlyDenied) {

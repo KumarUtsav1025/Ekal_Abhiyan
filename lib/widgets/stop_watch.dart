@@ -18,7 +18,9 @@ import 'package:flutter_picker/flutter_picker.dart';
 class StopWatch extends StatefulWidget {
   final Function(bool, int) classDurationTime;
 
-  StopWatch(this.classDurationTime);
+  StopWatch(
+    this.classDurationTime,
+  );
 
   @override
   State<StopWatch> createState() => _StopWatchState();
@@ -79,7 +81,8 @@ class _StopWatchState extends State<StopWatch> {
     );
   }
 
-  Future<void> _checkForResetTimer(BuildContext context, String titleText, String contextText, VoidCallback stopTimerFunc) async {
+  Future<void> _checkForResetTimer(BuildContext context, String titleText,
+      String contextText, VoidCallback stopTimerFunc) async {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -190,9 +193,11 @@ class _StopWatchState extends State<StopWatch> {
           children: <Widget>[
             RaisedButton(
               child: Text('Select Duration'),
-              onPressed: !isSDbtnActive ? () {
-                selctionOfClassDuration(ctx);
-              } : null,
+              onPressed: !isSDbtnActive
+                  ? () {
+                      selctionOfClassDuration(ctx);
+                    }
+                  : null,
             ),
             Container(
               padding: EdgeInsets.only(
@@ -290,7 +295,8 @@ class _StopWatchState extends State<StopWatch> {
                 color: Colors.black,
                 textColor: Colors.white,
                 onPressed: () {
-                  _checkForResetTimer(ctx, 'Request For Reset!', 'Are your sure you want to Reset Timer?', stopTimer);
+                  _checkForResetTimer(ctx, 'Request For Reset!',
+                      'Are your sure you want to Reset Timer?', stopTimer);
                   // stopTimer();
 
                   // setState(() {
