@@ -12,7 +12,8 @@
    <application
         android:label="instructor_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
 
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDPLHp7VDJPRRQ0eCkyMu2kVT2FkYcWLJE" />
 

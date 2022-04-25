@@ -17,6 +17,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart' as sql;
+import 'package:pinput/pinput.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import './tabs_screen.dart';
 import './signup_screen.dart';
@@ -29,13 +33,40 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  Future<void> _userSignIn(BuildContext context, TextEditingController userPhoneNumber) async {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isOtpSent = false;
+  bool _isAuthenticationAccepted = false;
+  String _verificationId = "";
+  TextEditingController _userPhoneNumber = TextEditingController();
+  TextEditingController _userOtpValue = TextEditingController();
+  TextEditingController _otpValue = TextEditingController();
+
+  Future<void> _userSignIn(
+    BuildContext context,
+    TextEditingController userPhoneNumber,
+  ) async {
     if (userPhoneNumber.text.length != 10) {
       String titleText = "Invild Mobile Number";
-      String contextText = "Please Enter a Valid Number!";
+      String contextText = "Please Enter a Valid 10 Digit Number!";
       _checkForError(context, titleText, contextText);
+    } else if (int.tryParse(userPhoneNumber.text) == null) {
+      String titleText = "Invild Mobile Number";
+      String contextText = "Entered Number is Not Valid!";
+      _checkForError(context, titleText, contextText);
+    } else if (int.parse(userPhoneNumber.text) < 0) {
+      String titleText = "Invild Mobile Number";
+      String contextText = "Mobile Number Cannot be Negative!";
+      _checkForError(context, titleText, contextText);
+    } else {
+      String titleText = "Authentication";
+      String contextText = "Enter the Otp:";
+
+      _enterUserOtp(context, titleText, contextText);
+      _checkForAuthentication(context, _userPhoneNumber);
     }
   }
+
+  // Future<void> _otpVerification(BuildContext context)
 
   Future<void> _enterUserOtp(
     BuildContext context,
@@ -44,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
   ) async {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-    var _otpUserInput = TextEditingController();
 
     return showDialog(
       context: context,
@@ -53,6 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
         content: Text('${contextText}'),
         actions: <Widget>[
           Container(
+            height: screenHeight * 0.2,
+            width: screenWidth * 0.8,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.grey.shade100,
@@ -62,24 +94,104 @@ class _LoginScreenState extends State<LoginScreen> {
               vertical: screenHeight * 0.02,
             ),
             margin: EdgeInsets.all(screenWidth * 0.02),
-            child: TextField(
-              maxLength: 6,
-              decoration: InputDecoration(labelText: 'Phone Number: '),
-              controller: _otpUserInput,
-              keyboardType: TextInputType.number,
-              onSubmitted: (_) {},
-              onChanged: (newCount) {},
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextField(
+                  maxLength: 6,
+                  decoration: InputDecoration(labelText: 'Enter the OTP: '),
+                  controller: _userOtpValue,
+                  keyboardType: TextInputType.number,
+                  onSubmitted: (_) {},
+                ),
+              ],
             ),
           ),
           RaisedButton(
             child: Text('Submit'),
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+              AuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+                verificationId: this._verificationId,
+                smsCode: _otpValue.text,
+              );
+              signInWithPhoneAuthCred(context, phoneAuthCredential);
+              // Navigator.of(context).pushNamed(TabsScreen.routeName);
             },
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _checkForAuthentication(
+    BuildContext context,
+    TextEditingController phoneController,
+  ) async {
+
+    var funcAuth = await _auth.verifyPhoneNumber (
+      phoneNumber: "+91${phoneController.text}",
+
+      // After the Authentication has been Completed Successfully
+      verificationCompleted: (phoneAuthCredential) async {
+        setState(() {
+          _isAuthenticationAccepted = true;
+          print('auth successful');
+        });
+      },
+
+      // After the Authentication has been Failed/Declined
+      verificationFailed: (verificationFailed) {
+        setState(() {
+          _isOtpSent = false;
+          _isAuthenticationAccepted = false;
+        });
+        print('verification failed');
+        print(verificationFailed);
+        String titleText = "Authenticatoin Failed!";
+        String contextText = "Entered Otp is Invalid.";
+        _checkForError(context, titleText, contextText);
+      },
+
+      // After the OTP has been sent to Mobile Number Successfully
+      codeSent: (verificationID, resendingToken) async {
+        print('otp sent');
+        setState(() {
+          _isOtpSent = true;
+          _isAuthenticationAccepted = false;
+
+          this._verificationId = verificationID;
+          print(this._verificationId);
+        });
+      },
+
+      // After the Otp Timeout period
+      codeAutoRetrievalTimeout: (verificationID) async {
+        setState(() {
+          _isOtpSent = false;
+          _isAuthenticationAccepted = false;
+        });
+        String titleText = "Authenticatoin Timeout!";
+        String contextText = "Please Re-Try Again";
+        _checkForError(context, titleText, contextText);
+        Navigator.of(context).pushNamed(TabsScreen.routeName);
+      },
+    );
+  }
+
+
+  Future<void> signInWithPhoneAuthCred(
+      BuildContext context, AuthCredential phoneAuthCredential) async {
+    try {
+      final authCred = await _auth.signInWithCredential(phoneAuthCredential);
+
+      if (authCred.user != null) {
+        print('authentication complete!');
+      }
+    } on FirebaseAuthException catch (errorVal) {
+      String titleText = "Authentication has been Failed!";
+      String contextText = "Otp is InValid!";
+      _checkForError(context, titleText, contextText);
+    }
   }
 
   Future<void> _checkForError(
@@ -111,8 +223,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-
-    var _userPhoneNumber = TextEditingController();
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -168,14 +278,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       margin: EdgeInsets.all(screenWidth * 0.02),
                       child: TextField(
                         maxLength: 10,
-                        decoration: InputDecoration(labelText: 'Phone Number: '),
+                        decoration:
+                            InputDecoration(labelText: 'Phone Number: '),
                         controller: _userPhoneNumber,
                         keyboardType: TextInputType.number,
-                        onChanged: (cngValue) {
-                          setState(() {
-                            _userPhoneNumber.text = cngValue;
-                          });
-                        },
                         onSubmitted: (_) {},
                       ),
                     ),

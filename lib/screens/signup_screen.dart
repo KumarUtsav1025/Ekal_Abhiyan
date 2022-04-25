@@ -17,6 +17,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
+import './tabs_screen.dart';
+
 class SignUpScreen extends StatefulWidget {
   static const routeName = '/signup-screen';
   @override
@@ -24,45 +26,159 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  bool isDateSet = false;
+  String dateBtnString = "Enter D.O.B";
+
+  var _firstName = TextEditingController();
+  var _lastName = TextEditingController();
+  var _age = TextEditingController();
+  var _gender = TextEditingController();
+  late DateTime _dateOfBirth;
+  var _localAddress = TextEditingController();
+  var _permanentAddress = TextEditingController();
+  var _phoneNumber = TextEditingController();
+  var _districtName = TextEditingController();
+  var _stateName = TextEditingController();
+  var _postalCode = TextEditingController();
+  var _eduQualification = TextEditingController();
+
+  bool _isFirstNameSet = false;
+  bool _islastNameSet = false;
+  bool _isAgeSet = false;
+  bool _isDateTimeSet = false;
+  bool _isLocalAddressSet = false;
+  bool _isPermanentAddressSet = false;
+  bool _isPhoneNumberSet = false;
+  bool _isDistrictNameSet = false;
+  bool _isStateNameSet = false;
+  bool _isPostalCodeSet = false;
+  bool _isEducationQualificationSet = false;
+
+  Future<void> _checkInputFields(BuildContext context) async {
+    if (_firstName.text.trim().length == 0) {
+      String titleText = "Invalid First Name!";
+      String contextText = "Please enter your 'First Name'...";
+      _checkForError(context, titleText, contextText);
+    } else if (_firstName.text.trim().length <= 3) {
+      String titleText = "First Name is too Short";
+      String contextText = "'First Name' should have atleast 3 characters.";
+      _checkForError(context, titleText, contextText);
+    } else if (_lastName.text.trim().length == 0) {
+      String titleText = "Invalid Last Name!";
+      String contextText = "Please enter your 'Last Name'...";
+      _checkForError(context, titleText, contextText);
+    } else if (_firstName.text.trim().length <= 3) {
+      String titleText = "Last Name is too Short";
+      String contextText = "'Last Name' should have atleast 3 characters.";
+      _checkForError(context, titleText, contextText);
+    } else if (_age.text.trim().length == 0 || int.tryParse(_age.text) == null || int.parse(_age.text) > 10) {
+      String titleText = "Invalid Age";
+      String contextText = "Please enter your age!";
+      _checkForError(context, titleText, contextText);
+    } else if (isDateSet == false) {
+      String titleText = "Invali Date of Birth(D.O.B)";
+      String contextText = "Please enter your Date of Birth(D.O.B)!";
+      _checkForError(context, titleText, contextText);
+    } else if (_gender.text.trim().length == 0) {
+      String titleText = "Invalid Gender";
+      String contextText = "Please Enter your Gender/Sex!";
+      _checkForError(context, titleText, contextText);
+    } else if (_eduQualification.text.trim().length <= 5) {
+      String titleText = "Invalid Education Qualification";
+      String contextText = "Define in atleast 5 characters";
+      _checkForError(context, titleText, contextText);
+    } else if (_localAddress.text.trim().length <= 10) {
+      String titleText = "Invalid Address";
+      String contextText = "Please enter your complete address";
+      _checkForError(context, titleText, contextText);
+    } else if (_permanentAddress.text.trim().length == 0) {
+      String titleText = "Invalid Address";
+      String contextText = "Please enter your complete address";
+      _checkForError(context, titleText, contextText);
+    } else if (_districtName.text.trim().length < 2) {
+      String titleText = "Invalid District Name";
+      String contextText = "Please enter your District";
+      _checkForError(context, titleText, contextText);
+    } else if (_stateName.text.trim().length < 2) {
+      String titleText = "Invalid State Name";
+      String contextText = "Please enter your State";
+      _checkForError(context, titleText, contextText);
+    } else if (_postalCode.text.trim().length != 6 ||
+        int.tryParse(_postalCode.text) == null ||
+        int.parse(_postalCode.text) < 0) {
+      String titleText = "Invalid Pincode";
+      String contextText = "Please enter a valid Pin Code!";
+      _checkForError(context, titleText, contextText);
+    } else if (_postalCode.text.trim().length != 6) {
+      String titleText = "Invalid Pincode";
+      String contextText = "Please enter a valid Pin Code!";
+      _checkForError(context, titleText, contextText);
+    } else if (_phoneNumber.text.length != 10) {
+      String titleText = "Invild Mobile Number";
+      String contextText = "Please Enter a Valid 10 Digit Number!";
+      _checkForError(context, titleText, contextText);
+    } else if (int.tryParse(_phoneNumber.text) == null) {
+      String titleText = "Invild Mobile Number";
+      String contextText = "Entered Number is Not Valid!";
+      _checkForError(context, titleText, contextText);
+    } else if (int.parse(_phoneNumber.text) < 0) {
+      String titleText = "Invild Mobile Number";
+      String contextText = "Mobile Number Cannot be Negative!";
+      _checkForError(context, titleText, contextText);
+    }
+    else {
+
+    }
+  }
+
+  Future<void> _checkForError(
+      BuildContext context, String titleText, String contextText,
+      {bool popVal = false}) async {
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('${titleText}'),
+        content: Text('${contextText}'),
+        actions: <Widget>[
+          RaisedButton(
+            child: Text('OK'),
+            onPressed: () {
+              if (popVal == false) {
+                Navigator.of(ctx).pop(false);
+              } else {
+                Navigator.of(context)
+                    .pushReplacementNamed(TabsScreen.routeName);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _presentDatePicker(BuildContext context) {
+    showDatePicker(
+      context: context,
+      firstDate: DateTime(1950),
+      initialDate: DateTime(2002),
+      lastDate: DateTime(2005),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      } else {
+        setState(() {
+          isDateSet = true;
+          _dateOfBirth = pickedDate;
+          dateBtnString = "Change D.O.B";
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-
-    bool isDateSet = false;
-    String dateBtnString = "Enter D.O.B";
-
-    var _firstName = TextEditingController();
-    var _lastName = TextEditingController();
-    var _age = TextEditingController();
-    late DateTime _dateOfBirth;
-    var _localAddress = TextEditingController();
-    var _permanentAddress = TextEditingController();
-    var _phoneNumber = TextEditingController();
-    var _districtName = TextEditingController();
-    var _stateName = TextEditingController();
-    var _postalCode = TextEditingController();
-    var _eduQualification = TextEditingController();
-
-    void _presentDatePicker(BuildContext context) {
-      showDatePicker(
-        context: context,
-        initialDate: DateTime(2008),
-        firstDate: DateTime(1950),
-        lastDate: DateTime(2010),
-      ).then((pickedDate) {
-        if (pickedDate == null) {
-          return;
-        } else {
-          setState(() {
-            isDateSet = true;
-            _dateOfBirth = pickedDate;
-            dateBtnString = "Change D.O.B";
-            print(_dateOfBirth);
-          });
-        }
-      });
-    }
 
     return Scaffold(
       backgroundColor: Colors.white70,
@@ -132,12 +248,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             SizedBox(height: screenHeight * 0.005),
+            // Gender
+            TextFieldContainer(
+                context, "Gender", 20, _gender, TextInputType.name),
+            SizedBox(height: screenHeight * 0.005),
             // Education Qualification:
             TextFieldContainer(context, "Education Qualification", 80,
                 _eduQualification, TextInputType.name),
-            SizedBox(height: screenHeight * 0.005),
-            // Gender
-            TextFieldContainer(context, "Gender", 20, _age, TextInputType.name),
             SizedBox(height: screenHeight * 0.005),
             // Current Address
             TextFieldContainer(context, "Current Address", 100, _localAddress,
@@ -193,7 +310,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _checkInputFields(context);
+                    },
                   ),
                 )
               ],

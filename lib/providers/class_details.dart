@@ -102,13 +102,22 @@ class ClassDetails with ChangeNotifier {
     // );
     // _items.add(newClass);
 
+    // final urlLink = Uri.https(
+    //   'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+    //   '/userClassInformation.json',
+    // );
+
+    // final urlParse = Uri.parse(
+    //   'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/userClassInformation.json',
+    // );
+
     final urlLink = Uri.https(
-      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      'shikshakapplication-default-rtdb.firebaseio.com',
       '/userClassInformation.json',
     );
 
     final urlParse = Uri.parse(
-      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/userClassInformation.json',
+      'https://shikshakapplication-default-rtdb.firebaseio.com/userClassInformation.json',
     );
 
     String timeDurationFormat = timeFormater(duration);
@@ -182,15 +191,17 @@ class ClassDetails with ChangeNotifier {
 
   Future<void> fetchUserPrevClasses() async {
     final urlLink = Uri.https(
-      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      'shikshakapplication-default-rtdb.firebaseio.com',
       '/userClassInformation.json',
     );
+
     final urlParse = Uri.parse(
-      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/userClassInformation.json',
+      'https://shikshakapplication-default-rtdb.firebaseio.com/userClassInformation.json',
     );
 
     try {
       final fetchedResponse = await http.get(urlParse);
+      print('Fetch user data');
       print(fetchedResponse);
       print(json.encode(fetchedResponse.body));
     }
