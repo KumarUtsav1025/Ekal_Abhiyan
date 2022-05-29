@@ -334,26 +334,26 @@ class _NewClassScreenState extends State<NewClassScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: _isFloatingButtonActive ? () {
           setState(() {
             _isSpinnerLoading = true;
             _isFloatingButtonActive = false;
             _getLocation(context, DateTime.now().toString());
           });
-        },
+        } : null,
         label: !_isSpinnerLoading
             ? Text(
                 "Click a Pic",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: _isFloatingButtonActive ? Colors.white : Colors.black),
               )
             : CircularProgressIndicator(
-                color: Colors.white,
+                color: Color.fromARGB(255, 225, 176, 176),
               ),
         icon: Icon(
           Icons.class_,
-          color: Colors.white,
+          color: _isFloatingButtonActive ? Colors.white : Colors.black,
         ),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: _isFloatingButtonActive ? Colors.blueAccent : Colors.grey.shade200,
       ),
     );
   }
