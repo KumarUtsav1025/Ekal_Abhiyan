@@ -250,7 +250,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
     );
     Place placeValue1 = new Place(
       id: DateTime.now().toString(),
-      image: _pickedImage1,
+      // image: _pickedImage1,
       location: placeLoc1,
       title: 'User Info',
     );
@@ -264,40 +264,40 @@ class _CreateNewClassState extends State<CreateNewClass> {
     );
     Place placeValue2 = new Place(
       id: '${placeValue1.id} + ${DateTime.now()}',
-      image: _pickedImage2,
+      // image: _pickedImage2,
       location: placeLoc2,
       title: 'User Info',
     );
 
     List<Position> finalLocList = userLocationLatLong;
 
-    try {
-      Provider.of<ClassDetails>(funcContext, listen: false)
-          .addNewClass(
-        finalDateTime,
-        finalNumStudents,
-        finalClassDuration,
-        placeValue1,
-        placeValue2,
-        finalLocList,
-      )
-          .catchError((onError) {
-        _checkForError(
-          funcContext,
-          'Error Occoured',
-          'Something went Wrong...',
-          popVal: true,
-        );
-      }).then((_) {
-        setState(() {
-          _isSubmitLoading = false;
-        });
-        Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
-      });
-    } catch (errorVal) {
-      print(errorVal);
-      _checkForError(funcContext, 'Error Detected', 'Something went Wrong...');
-    }
+    // try {
+    //   Provider.of<ClassDetails>(funcContext, listen: false)
+    //       .addNewClass(
+    //     finalDateTime,
+    //     finalNumStudents,
+    //     finalClassDuration,
+    //     placeValue1,
+    //     placeValue2,
+    //     finalLocList,
+    //   )
+    //       .catchError((onError) {
+    //     _checkForError(
+    //       funcContext,
+    //       'Error Occoured',
+    //       'Something went Wrong...',
+    //       popVal: true,
+    //     );
+    //   }).then((_) {
+    //     setState(() {
+    //       _isSubmitLoading = false;
+    //     });
+    //     Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+    //   });
+    // } catch (errorVal) {
+    //   print(errorVal);
+    //   _checkForError(funcContext, 'Error Detected', 'Something went Wrong...');
+    // }
   }
 
   @override
@@ -308,6 +308,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
 
     final classInfoData = Provider.of<ClassDetails>(context);
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: ListView(

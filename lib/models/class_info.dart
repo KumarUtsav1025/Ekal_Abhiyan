@@ -26,21 +26,27 @@ import './place.dart';
 @JsonSerializable()
 class ClassInformation {
   final String unqId;
-  final DateTime currDateTime;
+  final String currDateTime;
+  final String currTime;
+  final String currDate;
   final int numOfStudents;
-  final int durationOfClass;
-  final Place imgLocStart;
-  final Place imgLocEnd;
-  final List<Position> userClassLocationList;
+  final double currLatitude;
+  final double currLongitude;
+  final String currAddress;
+  String classroomUrl;
+  final File imageFile;
 
   ClassInformation({
     required this.unqId,
     required this.currDateTime,
+    required this.currTime,
+    required this.currDate,
     required this.numOfStudents,
-    required this.durationOfClass,
-    required this.imgLocStart,
-    required this.imgLocEnd,
-    required this.userClassLocationList,
+    required this.currLatitude,
+    required this.currLongitude,
+    required this.currAddress,
+    required this.classroomUrl,
+    required this.imageFile,
   });
 }
 

@@ -82,39 +82,6 @@ class _LiveLocationState extends State<LiveLocation> {
     );
   }
 
-  // Future<void> calculateDistanceRange() async {
-  //   int l = 0;
-  //   double lgt = 0.0;
-  //   double latitude1 = 0.0, longitude1 = 0.0, latitude2 = 0.0, longitude2 = 0.0;
-  //   double dlat = 0.0, dlong = 0.0;
-  //   double radius = 6371.0; // km
-
-  //   if (userLatLongList.length <= 1) {
-  //     return;
-  //   }
-
-  //   double factorVal = 0.01744533;
-  //   l = userLatLongList.length;
-  //   latitude1 = userLatLongList[0].latitude;
-  //   longitude1 = userLatLongList[0].longitude;
-  //   latitude2 = userLatLongList[l - 1].latitude;
-  //   longitude2 = userLatLongList[l - 1].longitude;
-  //   dlat = factorVal * (latitude2 - latitude1);
-  //   dlong = factorVal * (longitude2 - longitude1);
-
-  //   double a = 0.0, c = 0.0, d = 0.0;
-  //   a = (sin(dlat / 2) * sin(dlat / 2)) +
-  //       cos(factorVal * latitude1) *
-  //           cos(factorVal * latitude2) *
-  //           sin(dlong / 2) *
-  //           sin(dlong / 2);
-  //   c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-  //   d = radius * c;
-
-  //   print(d);
-  // }
-
   @override
   void initState() {
     super.initState();

@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:math';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/models/class_info.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +29,18 @@ class PreviousClass extends StatefulWidget {
 }
 
 class _PreviousClassState extends State<PreviousClass> {
+  ClassInformation nullClassInfo = new ClassInformation(
+    unqId: "",
+    currDateTime: "",
+    currTime: "",
+    currDate: "",
+    numOfStudents: 0,
+    currLatitude: 0.0,
+    currLongitude: 0.0,
+    currAddress: "",
+    classroomUrl: "",
+    imageFile: File(""),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +63,9 @@ class _PreviousClassState extends State<PreviousClass> {
 
     @override
     void didChangeDependencies() {
-      if (_isInit) {
-        Provider.of<ClassDetails>(context).fetchUserPrevClasses();
-      }
+      // if (_isInit) {
+      //   Provider.of<ClassDetails>(context).fetchUserPrevClasses();
+      // }
       _isInit = true;
 
       super.didChangeDependencies();
@@ -82,10 +96,34 @@ class _PreviousClassState extends State<PreviousClass> {
           : ListView.builder(
               itemCount: classInfoData.items.length,
               itemBuilder: (ctx, index) {
-                return OldClassView(
-                  indexClass: classInfoData.items.length-1-index,
-                  infoClass: classInfoData.items[index],
-                );
+                // return OldClassView(
+                //   indexClass: classInfoData.items.length-1-index,
+                //   infoClass: classInfoData.items[index],
+                // );
+                if (index % 2 == 0) {
+                  if (index == classInfoData.items.length - 1) {
+                    return OldClassView(
+                      indexClass1: classInfoData.items.length - 1 - index,
+                      indexClass2: -1,
+                      infoClass1: classInfoData
+                          .items[classInfoData.items.length - 1 - index],
+                      infoClass2: nullClassInfo,
+                    );
+                  } else {
+                    return OldClassView(
+                      indexClass1: classInfoData.items.length - 2 - index,
+                      indexClass2: classInfoData.items.length - 1 - index,
+                      infoClass1: classInfoData
+                          .items[classInfoData.items.length - 2 - index],
+                      infoClass2: classInfoData
+                          .items[classInfoData.items.length - 1 - index],
+                    );
+                  }
+                } else {
+                  return SizedBox(
+                    height: 0,
+                  );
+                }
               },
             ),
     );

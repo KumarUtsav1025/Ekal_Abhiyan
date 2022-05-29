@@ -25,6 +25,11 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import './tabs_screen.dart';
 import './signup_screen.dart';
 
+enum MobileVerificationState {
+  SHOW_MOBILE_FORM_STATE,
+  SHOW_OTP_FORM_STATE,
+}
+
 class LoginScreen extends StatefulWidget {
   static String routeName = "/login-screen";
 
@@ -33,9 +38,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  MobileVerificationState _currentState = MobileVerificationState.SHOW_MOBILE_FORM_STATE;
+  
   FirebaseAuth _auth = FirebaseAuth.instance;
+
   bool _isOtpSent = false;
   bool _isAuthenticationAccepted = false;
+  bool _showLoading = false;
   String _verificationId = "";
   TextEditingController _userPhoneNumber = TextEditingController();
   TextEditingController _userOtpValue = TextEditingController();
@@ -60,6 +69,10 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       String titleText = "Authentication";
       String contextText = "Enter the Otp:";
+
+      setState(() {
+        _showLoading = true;
+      });
 
       _enterUserOtp(context, titleText, contextText);
       _checkForAuthentication(context, _userPhoneNumber);
@@ -108,14 +121,13 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           RaisedButton(
-            child: Text('Submit'),
-            onPressed: () {
-              AuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+            child: Text('Submit Otp'),
+            onPressed: () async {
+              PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
                 verificationId: this._verificationId,
                 smsCode: _otpValue.text,
               );
               signInWithPhoneAuthCred(context, phoneAuthCredential);
-              // Navigator.of(context).pushNamed(TabsScreen.routeName);
             },
           ),
         ],
@@ -128,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
     TextEditingController phoneController,
   ) async {
 
-    var funcAuth = await _auth.verifyPhoneNumber (
+    await _auth.verifyPhoneNumber (
       phoneNumber: "+91${phoneController.text}",
 
       // After the Authentication has been Completed Successfully
@@ -137,6 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
           _isAuthenticationAccepted = true;
           print('auth successful');
         });
+        // signInWithPhoneAuthCred(context, phoneAuthCredential);
       },
 
       // After the Authentication has been Failed/Declined
@@ -144,22 +157,27 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isOtpSent = false;
           _isAuthenticationAccepted = false;
+          _showLoading = false;
         });
         print('verification failed');
         print(verificationFailed);
         String titleText = "Authenticatoin Failed!";
-        String contextText = "Entered Otp is Invalid.";
+        String contextText = "Unable to generate the OTP.";
         _checkForError(context, titleText, contextText);
+
+        // _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text("${verificationFailed.message}")));
       },
 
       // After the OTP has been sent to Mobile Number Successfully
-      codeSent: (verificationID, resendingToken) async {
+      codeSent: (verificationId, resendingToken) async {
+        _currentState = MobileVerificationState.SHOW_OTP_FORM_STATE;
         print('otp sent');
         setState(() {
           _isOtpSent = true;
           _isAuthenticationAccepted = false;
+          _showLoading = false;
 
-          this._verificationId = verificationID;
+          this._verificationId = verificationId;
           print(this._verificationId);
         });
       },
@@ -169,6 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isOtpSent = false;
           _isAuthenticationAccepted = false;
+          _showLoading = false;
         });
         String titleText = "Authenticatoin Timeout!";
         String contextText = "Please Re-Try Again";
@@ -178,19 +197,37 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future<void> signInWithPhoneAuthCred (
+      BuildContext context, PhoneAuthCredential phoneAuthCredential) async {
 
-  Future<void> signInWithPhoneAuthCred(
-      BuildContext context, AuthCredential phoneAuthCredential) async {
+        setState(() {
+          _showLoading = true;
+        });
+
     try {
-      final authCred = await _auth.signInWithCredential(phoneAuthCredential);
+      final authCredential = await _auth.signInWithCredential(phoneAuthCredential);
 
-      if (authCred.user != null) {
+      setState(() {
+        _showLoading = false;
+      });
+
+      if (authCredential.user != null) {
         print('authentication complete!');
+        // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+        Navigator.push(context, MaterialPageRoute(builder: (ctx) => TabsScreen()));
       }
     } on FirebaseAuthException catch (errorVal) {
-      String titleText = "Authentication has been Failed!";
+      setState(() {
+        _showLoading = false;
+      });
+
+      String titleText = "Authentication Failed!";
       String contextText = "Otp is InValid!";
       _checkForError(context, titleText, contextText);
+
+      print(errorVal.message);
+
+      // _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text("${errorVal.message}")));
     }
   }
 
@@ -208,9 +245,6 @@ class _LoginScreenState extends State<LoginScreen> {
             onPressed: () {
               if (popVal == false) {
                 Navigator.of(ctx).pop(false);
-              } else {
-                Navigator.of(context)
-                    .pushReplacementNamed(TabsScreen.routeName);
               }
             },
           ),
@@ -219,6 +253,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -226,7 +262,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
+      child: Scaffold (
+        key: _scaffoldKey,
         backgroundColor: Colors.white70,
         body: SingleChildScrollView(
           child: Column(

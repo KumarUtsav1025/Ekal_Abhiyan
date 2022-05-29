@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import './screens/home_screen.dart';
+import './screens/new_class_screen.dart';
 import './screens/create_class_screen.dart';
 import './screens/previous_class_screen.dart';
 import './screens/my_profile_screen.dart';
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Instructor Monitor',
+        title: 'Shikshak',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           accentColor: Colors.amber,
@@ -60,12 +61,13 @@ class MyApp extends StatelessWidget {
               ),
         ),
         // initialRoute: ,
-        home: LoginScreen(),
+        home: TabsScreen(),
         routes: {
           LoginScreen.routeName: (ctx) => LoginScreen(),
           SignUpScreen.routeName: (ctx) => SignUpScreen(),
           TabsScreen.routeName: (ctx) => TabsScreen(),
           HomeScreen.routeName: (ctx) => HomeScreen(),
+          NewClassScreen.routeName: (ctx) => NewClassScreen(),
           CreateNewClass.routeName: (ctx) => CreateNewClass(),
           PreviousClass.routeName: (ctx) => PreviousClass(),
           MyProfile.routeName: (ctx) => MyProfile(),

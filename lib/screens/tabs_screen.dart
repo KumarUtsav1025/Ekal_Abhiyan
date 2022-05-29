@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 import './home_screen.dart';
 import './create_class_screen.dart';
+import './new_class_screen.dart';
 import './previous_class_screen.dart';
 import './my_profile_screen.dart';
 
@@ -21,7 +22,7 @@ class _TabsScreenState extends State<TabsScreen> {
   void initState() {
     _pages = [
       {'page': HomeScreen(), 'title': 'Home'},
-      {'page': CreateNewClass(), 'title': 'New Class'},
+      {'page': NewClassScreen(), 'title': 'New Class'},
       {'page': PreviousClass(), 'title': 'Your Classes'},
       {'page': MyProfile(), 'title': 'My Profile'},
     ];

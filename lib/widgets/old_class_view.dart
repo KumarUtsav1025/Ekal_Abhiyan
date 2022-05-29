@@ -26,13 +26,19 @@ import '../screens/detail_class_screen.dart';
 
 class OldClassView extends StatelessWidget {
   @required
-  int indexClass;
+  int indexClass1;
   @required
-  ClassInformation infoClass;
+  int indexClass2;
+  @required
+  ClassInformation infoClass1;
+  @required
+  ClassInformation infoClass2;
 
   OldClassView({
-    required this.indexClass,
-    required this.infoClass,
+    required this.indexClass1,
+    required this.indexClass2,
+    required this.infoClass1,
+    required this.infoClass2,
   });
 
   @override
@@ -43,28 +49,18 @@ class OldClassView extends StatelessWidget {
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
     var avlScreenHeight = screenHeight - topInsets - bottomInsets;
 
-    String classDuration = "";
-    int minVal = 0;
-    int hrVal = 0;
-    if (infoClass.durationOfClass < 60) {
-      classDuration = '${infoClass.durationOfClass} min';
-    } else {
-      hrVal = (infoClass.durationOfClass / 60) as int;
-      minVal = infoClass.durationOfClass - hrVal * 60;
-
-      if (minVal == 0) {
-        classDuration = '${hrVal} hrs';
-      } else {
-        classDuration = '${hrVal} hrs ${minVal} min';
-      }
-    }
-
     void _goToDetailClassScreen(
-        BuildContext ctx, ClassInformation classInfoObj) {
+      BuildContext ctx,
+      ClassInformation classInfoObj1,
+      ClassInformation classInfoObj2,
+    ) {
       Navigator.of(ctx).push(
         MaterialPageRoute(
           builder: (_) {
-            return ClassDetailScreen(classInfoObj);
+            return ClassDetailScreen(
+              detailInfoClass1: classInfoObj1,
+              detailInfoClass2: classInfoObj2,
+            );
           },
         ),
       );
@@ -72,7 +68,7 @@ class OldClassView extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        _goToDetailClassScreen(context, infoClass);
+        _goToDetailClassScreen(context, infoClass1, infoClass2);
       },
       splashColor: Theme.of(context).primaryColorDark,
 
@@ -116,10 +112,13 @@ class OldClassView extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('Students: ${infoClass.numOfStudents}'),
-                  Text('Duration: ${classDuration}'),
-                  Text(
-                      'Date: ${DateFormat('dd/MM/yyyy').format(infoClass.currDateTime)}'),
+                  // Text('Students: ${infoClass.numOfStudents}'),
+                  // Text('Duration: ${classDuration}'),
+                  // Text(
+                  //   'Date: ${DateFormat('dd/MM/yyyy').format(infoClass.currDateTime)}',
+                  // ),
+                  Text("Date: ${infoClass1.currDate}"),
+                  Text("Starting Time: ${infoClass1.currTime}"),
                 ],
               )
             ],

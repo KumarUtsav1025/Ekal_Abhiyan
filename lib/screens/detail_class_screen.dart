@@ -25,8 +25,12 @@ import '../providers/class_details.dart';
 class ClassDetailScreen extends StatelessWidget {
   static const routeName = '/class-detail-screen';
 
-  final ClassInformation detailInfoClass;
-  ClassDetailScreen(this.detailInfoClass);
+  final ClassInformation detailInfoClass1;
+  final ClassInformation detailInfoClass2;
+  ClassDetailScreen({
+    required this.detailInfoClass1,
+    required this.detailInfoClass2,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,23 +40,13 @@ class ClassDetailScreen extends StatelessWidget {
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
     var avlScreenHeight = screenHeight - topInsets - bottomInsets;
 
-    String classDuration = "";
-    int minVal = 0;
-    int hrVal = 0;
-    if (detailInfoClass.durationOfClass < 60) {
-      classDuration = '${detailInfoClass.durationOfClass} min';
-    } else {
-      hrVal = (detailInfoClass.durationOfClass / 60) as int;
-      minVal = detailInfoClass.durationOfClass - hrVal * 60;
-
-      if (minVal == 0) {
-        classDuration = '${hrVal} hrs';
-      } else {
-        classDuration = '${hrVal} hrs ${minVal} min';
-      }
+    bool _isCompleteInfo = false;
+    if (detailInfoClass2.unqId.length != 0) {
+      _isCompleteInfo = true;
     }
 
-
+    String classDuration = "";
+    int minVal = 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -73,17 +67,225 @@ class ClassDetailScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('Date: ${DateFormat.yMMMEd().format(detailInfoClass.currDateTime)}'),
-              Text('Time: ${DateFormat('hh:mma').format(detailInfoClass.currDateTime)}'),
-              Text('Number of Students: ${detailInfoClass.numOfStudents}'),
-              Text('Duration: ${classDuration}'),
-              Text('Address: ${detailInfoClass.imgLocEnd.location.address}'),
-              Text('Beginning of the Class:'),
-              Image.file(detailInfoClass.imgLocStart.image),
-              Text('Ending of the Class:'),
-              Image.file(detailInfoClass.imgLocEnd.image),
+              !_isCompleteInfo
+                  ? partialInfoWidget(
+                      context,
+                      detailInfoClass1,
+                    )
+                  : completeInfoWidget(
+                      context,
+                      detailInfoClass1,
+                      detailInfoClass2,
+                    )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget partialInfoWidget(BuildContext ctx, ClassInformation classInfo1) {
+    var screenHeight = MediaQuery.of(ctx).size.height;
+    var screenWidth = MediaQuery.of(ctx).size.width;
+    var topInsets = MediaQuery.of(ctx).viewInsets.top;
+    var bottomInsets = MediaQuery.of(ctx).viewInsets.bottom;
+    var usableHeight = screenHeight - topInsets - bottomInsets;
+
+    return Card(
+      elevation: 2,
+      child: Container(
+        height: usableHeight * 0.9,
+        width: screenWidth * 0.95,
+        child: Column(
+          children: <Widget>[
+            Text(
+              "Starting of the Class",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: usableHeight * 0.0025,
+            ),
+            Container(
+              alignment: Alignment.center,
+              width: screenWidth * 0.9,
+              height: usableHeight * 0.45,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: Colors.grey,
+                ),
+              ),
+              child: Image.file(
+                classInfo1.imageFile,
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+            ),
+            SizedBox(
+              height: usableHeight * 0.01,
+            ),
+            Text(
+              "Date: ${classInfo1.currDate}",
+            ),
+            SizedBox(
+              height: usableHeight * 0.002,
+            ),
+            Text(
+              "Time: ${classInfo1.currTime}",
+            ),
+            SizedBox(
+              height: usableHeight * 0.002,
+            ),
+            Text(
+              "Number Of Students: ${classInfo1.numOfStudents}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: usableHeight * 0.002,
+            ),
+            Text(
+              "Address: \n${classInfo1.currAddress}",
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget completeInfoWidget(BuildContext ctx, ClassInformation classInfo1,
+      ClassInformation classInfo2) {
+    var screenHeight = MediaQuery.of(ctx).size.height;
+    var screenWidth = MediaQuery.of(ctx).size.width;
+    var topInsets = MediaQuery.of(ctx).viewInsets.top;
+    var bottomInsets = MediaQuery.of(ctx).viewInsets.bottom;
+    var usableHeight = screenHeight - topInsets - bottomInsets;
+
+    return Card(
+      elevation: 2,
+      child: Container(
+        height: usableHeight * 1.7,
+        width: screenWidth * 0.95,
+        child: Column(
+          children: <Widget>[
+            Text(
+              "Starting of the Class",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: usableHeight * 0.0025,
+            ),
+            Container(
+              alignment: Alignment.center,
+              width: screenWidth * 0.9,
+              height: usableHeight * 0.45,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: Colors.grey,
+                ),
+              ),
+              child: Image.file(
+                classInfo1.imageFile,
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+            ),
+            SizedBox(
+              height: usableHeight * 0.01,
+            ),
+            Text(
+              "Date: ${classInfo1.currDate}",
+            ),
+            SizedBox(
+              height: usableHeight * 0.002,
+            ),
+            Text(
+              "Time: ${classInfo1.currTime}",
+            ),
+            SizedBox(
+              height: usableHeight * 0.002,
+            ),
+            Text(
+              "Number Of Students: ${classInfo1.numOfStudents}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: usableHeight * 0.05,
+            ),
+            Text(
+              "Ending of the Class",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: usableHeight * 0.0025,
+            ),
+            Container(
+              alignment: Alignment.center,
+              width: screenWidth * 0.9,
+              height: usableHeight * 0.45,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                  color: Colors.grey,
+                ),
+              ),
+              child: Image.file(
+                classInfo2.imageFile,
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+            ),
+            SizedBox(
+              height: usableHeight * 0.01,
+            ),
+            Text(
+              "Date: ${classInfo1.currDate}",
+            ),
+            SizedBox(
+              height: usableHeight * 0.002,
+            ),
+            Text(
+              "Time: ${classInfo1.currTime}",
+            ),
+            SizedBox(
+              height: usableHeight * 0.002,
+            ),
+            Text(
+              "Number Of Students: ${classInfo2.numOfStudents}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: usableHeight * 0.02,
+            ),
+            Text(
+              "Address: \n${classInfo1.currAddress}",
+            ),
+            SizedBox(
+              height: usableHeight * 0.005,
+            ),
+            Text(
+              "Duration: ",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(
+              height: usableHeight * 0.005,
+            ),
+            
+          ],
         ),
       ),
     );

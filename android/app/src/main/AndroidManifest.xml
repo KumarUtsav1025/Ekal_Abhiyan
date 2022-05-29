@@ -16,6 +16,7 @@
         android:usesCleartextTraffic="true">
 
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDPLHp7VDJPRRQ0eCkyMu2kVT2FkYcWLJE" />
+        <meta-data android:name="com.google.mlkit.vision.DEPENDENCIES" android:value="face" />
 
         <activity
             android:name=".MainActivity"
