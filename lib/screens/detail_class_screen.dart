@@ -156,13 +156,34 @@ class ClassDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget completeInfoWidget(BuildContext ctx, ClassInformation classInfo1,
-      ClassInformation classInfo2) {
+  Widget completeInfoWidget(
+    BuildContext ctx,
+    ClassInformation classInfo1,
+    ClassInformation classInfo2,
+  ) {
     var screenHeight = MediaQuery.of(ctx).size.height;
     var screenWidth = MediaQuery.of(ctx).size.width;
     var topInsets = MediaQuery.of(ctx).viewInsets.top;
     var bottomInsets = MediaQuery.of(ctx).viewInsets.bottom;
     var usableHeight = screenHeight - topInsets - bottomInsets;
+
+    DateTime t1 = DateTime.parse(classInfo1.currDateTime);
+    DateTime t2 = DateTime.parse(classInfo2.currDateTime);
+
+    final diff_dy = t2.difference(t1).inDays;
+    final diff_hr = t2.difference(t1).inHours;
+    final diff_mn = t2.difference(t1).inMinutes;
+
+    String classDuration = "";
+    if (diff_hr == 0) {
+      classDuration = "${diff_mn} min";
+    }
+    else if (diff_mn == 0) {
+      classDuration = "${diff_hr} hr";
+    }
+    else {
+      classDuration = "${diff_hr} hr ${diff_mn} min";
+    }
 
     return Card(
       elevation: 2,
@@ -273,18 +294,17 @@ class ClassDetailScreen extends StatelessWidget {
               "Address: \n${classInfo1.currAddress}",
             ),
             SizedBox(
-              height: usableHeight * 0.005,
+              height: usableHeight * 0.01,
             ),
             Text(
-              "Duration: ",
+              "Duration: ${classDuration}",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(
-              height: usableHeight * 0.005,
+              height: usableHeight * 0.01,
             ),
-            
           ],
         ),
       ),
