@@ -19,6 +19,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 
 import '../providers/class_details.dart';
+import '../providers/user_details.dart';
 
 import '../widgets/old_class_view.dart';
 
@@ -42,34 +43,35 @@ class _PreviousClassState extends State<PreviousClass> {
     imageFile: File(""),
   );
 
+  var _isInit = true;
+
+  // @override
+  //   void initState() {
+  //     super.initState();
+
+  //     // Future.delayed(Duration.zero).then((_) {
+  //     //   Provider.of<ClassDetails>(context).fetchUserPrevClasses();
+  //     // });
+  //   }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      Provider.of<ClassDetails>(context).fetchPreviousClasses();
+    }
+    _isInit = true;
+
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
     var topInsets = MediaQuery.of(context).viewInsets.top;
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
-    var _isInit = true;
 
     var classInfoData = Provider.of<ClassDetails>(context);
-
-    @override
-    void initState() {
-      super.initState();
-
-      // Future.delayed(Duration.zero).then((_) {
-      //   Provider.of<ClassDetails>(context).fetchUserPrevClasses();
-      // });
-    }
-
-    @override
-    void didChangeDependencies() {
-      // if (_isInit) {
-      //   Provider.of<ClassDetails>(context).fetchUserPrevClasses();
-      // }
-      _isInit = true;
-
-      super.didChangeDependencies();
-    }
 
     return Container(
       child: classInfoData.items.length == 0
@@ -96,12 +98,33 @@ class _PreviousClassState extends State<PreviousClass> {
           : ListView.builder(
               itemCount: classInfoData.items.length,
               itemBuilder: (ctx, index) {
-                // return OldClassView(
-                //   indexClass: classInfoData.items.length-1-index,
-                //   infoClass: classInfoData.items[index],
-                // );
-                if (index % 2 == 0) {
-                  if (index == classInfoData.items.length - 1) {
+                if (classInfoData.items.length % 2 == 0) {
+                  if (index % 2 == 0) {
+                    if (index == classInfoData.items.length - 1) {
+                      return OldClassView(
+                        indexClass1: classInfoData.items.length - 1 - index,
+                        indexClass2: -1,
+                        infoClass1: classInfoData
+                            .items[classInfoData.items.length - 1 - index],
+                        infoClass2: nullClassInfo,
+                      );
+                    } else {
+                      return OldClassView(
+                        indexClass1: classInfoData.items.length - 2 - index,
+                        indexClass2: classInfoData.items.length - 1 - index,
+                        infoClass1: classInfoData
+                            .items[classInfoData.items.length - 2 - index],
+                        infoClass2: classInfoData
+                            .items[classInfoData.items.length - 1 - index],
+                      );
+                    }
+                  } else {
+                    return SizedBox(
+                      height: 0,
+                    );
+                  }
+                } else {
+                  if (index == 0) {
                     return OldClassView(
                       indexClass1: classInfoData.items.length - 1 - index,
                       indexClass2: -1,
@@ -109,20 +132,30 @@ class _PreviousClassState extends State<PreviousClass> {
                           .items[classInfoData.items.length - 1 - index],
                       infoClass2: nullClassInfo,
                     );
+                  } else if (index % 2 != 0) {
+                    if (index == classInfoData.items.length - 1) {
+                      return OldClassView(
+                        indexClass1: classInfoData.items.length - 1 - index,
+                        indexClass2: -1,
+                        infoClass1: classInfoData
+                            .items[classInfoData.items.length - 1 - index],
+                        infoClass2: nullClassInfo,
+                      );
+                    } else {
+                      return OldClassView(
+                        indexClass1: classInfoData.items.length - 2 - index,
+                        indexClass2: classInfoData.items.length - 1 - index,
+                        infoClass1: classInfoData
+                            .items[classInfoData.items.length - 2 - index],
+                        infoClass2: classInfoData
+                            .items[classInfoData.items.length - 1 - index],
+                      );
+                    }
                   } else {
-                    return OldClassView(
-                      indexClass1: classInfoData.items.length - 2 - index,
-                      indexClass2: classInfoData.items.length - 1 - index,
-                      infoClass1: classInfoData
-                          .items[classInfoData.items.length - 2 - index],
-                      infoClass2: classInfoData
-                          .items[classInfoData.items.length - 1 - index],
+                    return SizedBox(
+                      height: 0,
                     );
                   }
-                } else {
-                  return SizedBox(
-                    height: 0,
-                  );
                 }
               },
             ),

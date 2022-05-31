@@ -117,11 +117,16 @@ class ClassDetailScreen extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
-              child: Image.file(
-                classInfo1.imageFile,
+              child: Image.network(
+                classInfo1.classroomUrl,
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
+              // Image.file(
+              //   classInfo1.imageFile,
+              //   fit: BoxFit.cover,
+              //   width: double.infinity,
+              // ),
             ),
             SizedBox(
               height: usableHeight * 0.01,
@@ -177,11 +182,9 @@ class ClassDetailScreen extends StatelessWidget {
     String classDuration = "";
     if (diff_hr == 0) {
       classDuration = "${diff_mn} min";
-    }
-    else if (diff_mn == 0) {
+    } else if (diff_mn == 0) {
       classDuration = "${diff_hr} hr";
-    }
-    else {
+    } else {
       classDuration = "${diff_hr} hr ${diff_mn} min";
     }
 
@@ -211,11 +214,16 @@ class ClassDetailScreen extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
-              child: Image.file(
-                classInfo1.imageFile,
+              child: Image.network(
+                classInfo1.classroomUrl,
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
+              // Image.file(
+              //   classInfo1.imageFile,
+              //   fit: BoxFit.cover,
+              //   width: double.infinity,
+              // ),
             ),
             SizedBox(
               height: usableHeight * 0.01,
@@ -260,11 +268,16 @@ class ClassDetailScreen extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
-              child: Image.file(
-                classInfo2.imageFile,
+              child: Image.network(
+                classInfo2.classroomUrl,
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
+              // Image.file(
+              //   classInfo2.imageFile,
+              //   fit: BoxFit.cover,
+              //   width: double.infinity,
+              // ),
             ),
             SizedBox(
               height: usableHeight * 0.01,

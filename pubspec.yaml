@@ -51,6 +51,8 @@ dependencies:
   firebase_messaging: ^11.2.14
   firebase_analytics: ^9.1.6
   firebase_ml_vision: ^0.9.10
+  snippet_coder_utils: ^1.0.12
+  localstorage: ^4.0.0+1
 
 dev_dependencies:
   build_runner: ^2.1.10
@@ -72,6 +74,7 @@ flutter:
   assets:
     - assets/images/login.png
     - assets/images/register.png
+    - assets/images/uProfile.png
     - assets/images/bck1.jpg
     - assets/images/bck2.jpg
     - assets/images/bck3.jpg

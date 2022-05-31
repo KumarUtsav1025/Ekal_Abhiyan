@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:localstorage/localstorage.dart';
 
 import '../models/http_exeception.dart';
 import '../models/class_info.dart';
@@ -31,16 +33,30 @@ class ClassDetails with ChangeNotifier {
     return [..._items];
   }
 
+  int numberOfClassesTaken() {
+    int numOfclass = _items.length / 2 as int;
+
+    print(numOfclass);
+    return numOfclass;
+  }
+
   Future<void> addNewClass(
-      ClassInformation classInfo, File classroomImage) async {
-    print('inside the function.');
+    ClassInformation classInfo,
+    File classroomImage,
+  ) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    CollectionReference usersRef = db.collection("userPersonalInformation");
+
+    var currLoggedInUser = await FirebaseAuth.instance.currentUser;
+    var loggedInUserId = currLoggedInUser?.uid as String;
+
     final urlLink = Uri.https(
       'flutterdatabase-76af4-default-rtdb.firebaseio.com',
-      '/userClassInformation.json',
+      '/${loggedInUserId}/userClassInformation.json',
     );
 
     final urlParse = Uri.parse(
-      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/userClassInformation.json',
+      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/${loggedInUserId}/userClassInformation.json',
     );
 
     final imageOfTheClass = FirebaseStorage.instance
@@ -76,9 +92,64 @@ class ClassDetails with ChangeNotifier {
         ),
       );
 
-      _items.add(classInfo);
+      // _items.add(classInfo);
       notifyListeners();
     } catch (errorVal) {
+      print(errorVal);
+    }
+  }
+
+  Future<void> fetchPreviousClasses() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    CollectionReference usersRef = db.collection("userPersonalInformation");
+
+    var currLoggedInUser = await FirebaseAuth.instance.currentUser;
+    var loggedInUserId = currLoggedInUser?.uid as String;
+
+    final urlLink = Uri.https(
+      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      '/${loggedInUserId}/userClassInformation.json',
+    );
+
+    final urlParse = Uri.parse(
+      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/${loggedInUserId}/userClassInformation.json',
+    );
+
+    try {
+      final dataBaseResponse = await http.get(urlLink);
+      final extractedClass =
+          json.decode(dataBaseResponse.body) as Map<String, dynamic>;
+
+      final List<ClassInformation> loadedPreviousClasses = [];
+      extractedClass.forEach(
+        (classId, classData) {
+          // print('In...');
+          // print(classId);
+          // print(classData);
+          // print('Out...');
+
+          ClassInformation prevClass = new ClassInformation(
+            unqId: classId,
+            currDateTime: classData['currDateTime'],
+            currTime: classData['currTime'],
+            currDate: classData['currDate'],
+            numOfStudents: int.parse(classData['numberOfHeads']),
+            currLatitude: double.parse(classData['currLatitude']),
+            currLongitude: double.parse(classData['currLongitude']),
+            currAddress: classData['currAddress'],
+            classroomUrl: classData['imageLink'],
+            imageFile: File(""),
+          );
+
+          loadedPreviousClasses.add(prevClass);
+        },
+      );
+
+      _items = loadedPreviousClasses;
+
+      // print(json.decode(dataBaseResponse.body));
+    } catch (errorVal) {
+      print("Error Value");
       print(errorVal);
     }
   }

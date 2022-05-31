@@ -25,6 +25,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import './tabs_screen.dart';
 import './signup_screen.dart';
 
+import '../providers/user_details.dart';
+
 enum MobileVerificationState {
   SHOW_MOBILE_FORM_STATE,
   SHOW_OTP_FORM_STATE,
@@ -38,17 +40,34 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  MobileVerificationState _currentState = MobileVerificationState.SHOW_MOBILE_FORM_STATE;
-  
+  MobileVerificationState _currentState =
+      MobileVerificationState.SHOW_MOBILE_FORM_STATE;
+
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _isOtpSent = false;
   bool _isAuthenticationAccepted = false;
   bool _showLoading = false;
+  bool _userVerified = false;
+  bool _userExists = false;
+
   String _verificationId = "";
   TextEditingController _userPhoneNumber = TextEditingController();
   TextEditingController _userOtpValue = TextEditingController();
   TextEditingController _otpValue = TextEditingController();
+
+  Future<void> _checkIfUserExists(BuildContext context) async {
+    // var userPhoneNumberList = await FirebaseFirestore.instance.collection('ExistingUserInformation/dEHY1va25b84g5eiGUAl/userPhoneNumber');
+    await FirebaseFirestore.instance
+        .collection(
+            'ExistingUserInformation/dEHY1va25b84g5eiGUAl/userPhoneNumber')
+        .snapshots()
+        .listen(
+      (event) {
+        print(event.docs[0]['phoneNum']);
+      },
+    );
+  }
 
   Future<void> _userSignIn(
     BuildContext context,
@@ -74,6 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _showLoading = true;
       });
 
+      // _checkIfUserExists(context);
       _enterUserOtp(context, titleText, contextText);
       _checkForAuthentication(context, _userPhoneNumber);
     }
@@ -123,9 +143,12 @@ class _LoginScreenState extends State<LoginScreen> {
           RaisedButton(
             child: Text('Submit Otp'),
             onPressed: () async {
-              PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+              print(_otpValue.text);
+              print(_userOtpValue.text);
+              PhoneAuthCredential phoneAuthCredential =
+                  PhoneAuthProvider.credential(
                 verificationId: this._verificationId,
-                smsCode: _otpValue.text,
+                smsCode: _userOtpValue.text,
               );
               signInWithPhoneAuthCred(context, phoneAuthCredential);
             },
@@ -139,8 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
     BuildContext context,
     TextEditingController phoneController,
   ) async {
-
-    await _auth.verifyPhoneNumber (
+    await _auth.verifyPhoneNumber(
       phoneNumber: "+91${phoneController.text}",
 
       // After the Authentication has been Completed Successfully
@@ -165,7 +187,8 @@ class _LoginScreenState extends State<LoginScreen> {
         String contextText = "Unable to generate the OTP.";
         _checkForError(context, titleText, contextText);
 
-        // _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text("${verificationFailed.message}")));
+        _scaffoldKey.currentState
+            ?.showSnackBar(SnackBar(content: Text("${contextText}")));
       },
 
       // After the OTP has been sent to Mobile Number Successfully
@@ -189,32 +212,43 @@ class _LoginScreenState extends State<LoginScreen> {
           _isAuthenticationAccepted = false;
           _showLoading = false;
         });
-        String titleText = "Authenticatoin Timeout!";
-        String contextText = "Please Re-Try Again";
-        _checkForError(context, titleText, contextText);
-        Navigator.of(context).pushNamed(TabsScreen.routeName);
+
+        if (!_userVerified) {
+          String titleText = "Authenticatoin Timeout!";
+          String contextText = "Please Re-Try Again";
+          _checkForError(context, titleText, contextText);
+        }
       },
     );
   }
 
-  Future<void> signInWithPhoneAuthCred (
-      BuildContext context, PhoneAuthCredential phoneAuthCredential) async {
-
-        setState(() {
-          _showLoading = true;
-        });
+  void signInWithPhoneAuthCred(
+    BuildContext context,
+    PhoneAuthCredential phoneAuthCredential,
+  ) async {
+    setState(() {
+      _showLoading = true;
+    });
 
     try {
-      final authCredential = await _auth.signInWithCredential(phoneAuthCredential);
+      final authCredential =
+          await _auth.signInWithCredential(phoneAuthCredential);
 
       setState(() {
         _showLoading = false;
       });
 
+      print('AuthCredential');
+      print(authCredential);
+      print(authCredential.user);
+
       if (authCredential.user != null) {
         print('authentication complete!');
-        // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
-        Navigator.push(context, MaterialPageRoute(builder: (ctx) => TabsScreen()));
+        setState(() {
+          _userVerified = true;
+        });
+
+        Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
       }
     } on FirebaseAuthException catch (errorVal) {
       setState(() {
@@ -227,7 +261,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       print(errorVal.message);
 
-      // _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text("${errorVal.message}")));
+      _scaffoldKey.currentState
+          ?.showSnackBar(SnackBar(content: Text("Firebase Error!")));
     }
   }
 
@@ -262,7 +297,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold (
+      child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white70,
         body: SingleChildScrollView(
@@ -336,7 +371,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: screenHeight * 0.025,
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           _userSignIn(context, _userPhoneNumber);
                         },
                       ),
