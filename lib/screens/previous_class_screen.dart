@@ -64,6 +64,11 @@ class _PreviousClassState extends State<PreviousClass> {
     super.didChangeDependencies();
   }
 
+  Future<void> _refreshPreviousClasses(BuildContext context) async {
+    await Provider.of<ClassDetails>(context, listen: false)
+        .fetchPreviousClasses();
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -75,25 +80,28 @@ class _PreviousClassState extends State<PreviousClass> {
 
     return Container(
       child: classInfoData.items.length == 0
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.25,
-                  ),
-                  child: Text(
-                    'No Classes Taken Yet!',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                      fontSize: screenWidth * 0.1,
+          ? RefreshIndicator(
+              onRefresh: () => _refreshPreviousClasses(context),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.25,
+                    ),
+                    child: Text(
+                      'No Classes Taken Yet!',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        fontSize: screenWidth * 0.1,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           : ListView.builder(
               itemCount: classInfoData.items.length,

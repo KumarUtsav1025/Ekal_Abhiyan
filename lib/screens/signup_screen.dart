@@ -25,6 +25,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 
 import './tabs_screen.dart';
 
+import '../providers/class_details.dart';
 import '../providers/user_details.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -34,6 +35,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _isOtpSent = false;
@@ -49,6 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isDateSet = false;
   String dateBtnString = "Enter D.O.B";
 
+  File _profilePicture = new File("");
   var _firstName = TextEditingController();
   var _lastName = TextEditingController();
   var _age = TextEditingController();
@@ -65,6 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var _postalCode = TextEditingController();
   var _eduQualification = TextEditingController();
 
+  bool _isProfilePicTaken = false;
   bool _isFirstNameSet = false;
   bool _islastNameSet = false;
   bool _isAgeSet = false;
@@ -172,11 +176,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _checkForError(context, titleText, contextText);
     } else if (_state_SAMBHAG_Name.text.trim().length < 2) {
       String titleText = "Invalid State Name";
-      String contextText = "Please enter your State";
+      String contextText = "Please enter your State/Sambhag";
       _checkForError(context, titleText, contextText);
     } else if (_district_BHAG_Name.text.trim().length < 2) {
       String titleText = "Invalid District Name";
-      String contextText = "Please enter your District";
+      String contextText = "Please enter your District/Bhag";
+      _checkForError(context, titleText, contextText);
+    } else if (_block_ANCHAL_Name.text.trim().length < 2) {
+      String titleText = "Invalid Block Name";
+      String contextText = "Please enter your Block/Anchal";
+      _checkForError(context, titleText, contextText);
+    } else if (_groupVillage_SANCH_Name.text.trim().length < 2) {
+      String titleText = "Invalid Group Village Name";
+      String contextText = "Please enter your Group Village/Sanch";
+      _checkForError(context, titleText, contextText);
+    } else if (_village_Village_Name.text.trim().length < 2) {
+      String titleText = "Invalid Village Name";
+      String contextText = "Please enter your Village";
       _checkForError(context, titleText, contextText);
     } else if (_postalCode.text.trim().length != 6 ||
         int.tryParse(_postalCode.text) == null ||
@@ -208,9 +224,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _showLoading = true;
       });
 
-      _enterUserOtp(context, titleText, contextText);
+      // _enterUserOtp(context, titleText, contextText);
+      _scaffoldKey.currentState
+          ?.showSnackBar(SnackBar(content: Text("Verifiying your Number...")));
       _checkForAuthentication(context, _userPhoneNumber);
     }
+  }
+
+  Future<void> openOtpSubmittingWidget() async {
+    _scaffoldKey.currentState
+        ?.showSnackBar(SnackBar(content: Text("Otp Sent To the Number...")));
+    String titleText = "Authentication";
+    String contextText = "Enter the Otp:";
+    _enterUserOtp(context, titleText, contextText);
   }
 
   Future<void> _checkForError(
@@ -287,8 +313,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -307,6 +331,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            SizedBox(height: screenHeight * 0.01),
+            imageContainer(
+              context,
+            ),
             SizedBox(height: screenHeight * 0.01),
             // First Name
             TextFieldContainer(
@@ -428,9 +456,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // District Name:
             TextFieldContainer(
               context,
-              "District",
+              "BHAG/District",
               50,
               _district_BHAG_Name,
+              TextInputType.name,
+            ),
+            SizedBox(height: screenHeight * 0.005),
+            // Block Level Name:
+            TextFieldContainer(
+              context,
+              "ANCHAL/Block",
+              50,
+              _block_ANCHAL_Name,
+              TextInputType.name,
+            ),
+            SizedBox(height: screenHeight * 0.005),
+            // Group Village Name:
+            TextFieldContainer(
+              context,
+              "SANCH/Village Group",
+              50,
+              _groupVillage_SANCH_Name,
+              TextInputType.name,
+            ),
+            SizedBox(height: screenHeight * 0.005),
+            // Village Name:
+            TextFieldContainer(
+              context,
+              "Village",
+              50,
+              _village_Village_Name,
               TextInputType.name,
             ),
             SizedBox(height: screenHeight * 0.005),
@@ -729,13 +784,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // After the OTP has been sent to Mobile Number Successfully
       codeSent: (verificationId, resendingToken) async {
         print('otp sent');
+
+        openOtpSubmittingWidget();
+
         setState(() {
           _isOtpSent = true;
           _isAuthenticationAccepted = false;
           _showLoading = false;
 
           this._verificationId = verificationId;
-          print(this._verificationId);
         });
       },
 
@@ -770,53 +827,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final authCredential =
           await _auth.signInWithCredential(phoneAuthCredential);
 
-      final userAuthInfo = Provider.of<UserDetails>(context);
-      UserCredential userAuthenticationCredentials = authCredential;
-
       setState(() {
         _showLoading = false;
       });
 
       if (authCredential.user != null) {
         print('authentication completed!');
+        _scaffoldKey.currentState
+            ?.showSnackBar(SnackBar(content: Text("Creating your Account...")));
         setState(() {
           _userVerified = true;
         });
 
-        await FirebaseFirestore.instance
-            .collection('userPersonalInformation')
-            .doc(authCredential.user?.uid)
-            .set({
-          'first_Name': _firstName.text.toString(),
-          'last_Name': _lastName.text.toString(),
-          'age': _age.text.toString(),
-          'date_Of_Birth':
-              DateFormat('dd/MM/yyyy').format(_dateOfBirth).toString(),
-          'gender': _gender.text.toString(),
-          'education_Qualification': _eduQualification.text.toString(),
-          'current_Address': _localAddress.text.toString(),
-          'permanent_Address': _permanentAddress.text.toString(),
-          'state': _state_SAMBHAG_Name.text.toString(),
-          'district': _district_BHAG_Name.text.toString(),
-          'postal_Code': _postalCode.text.toString(),
-          'phone_Number': _userPhoneNumber.text.toString(),
-          'creation_Timing': DateTime.now().toString(),
-        });
+        Provider.of<UserDetails>(context, listen: false)
+            .upLoadNewUserPersonalInformation(
+          context,
+          authCredential,
+          _firstName,
+          _lastName,
+          _age,
+          _dateOfBirth,
+          _gender,
+          _eduQualification,
+          _localAddress,
+          _permanentAddress,
+          _state_SAMBHAG_Name,
+          _district_BHAG_Name,
+          _block_ANCHAL_Name,
+          _groupVillage_SANCH_Name,
+          _village_Village_Name,
+          _postalCode,
+          _userPhoneNumber,
+          _isProfilePicTaken,
+          _profilePicture,
+        );
 
-        _scaffoldKey.currentState
-            ?.showSnackBar(SnackBar(content: Text("Creating your Account")));
-
-        userAuthInfo.setUserCredentials(userAuthenticationCredentials);
-        Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
-
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => TabsScreen(
-        //       userAuthenticationCredentials,
-        //     ),
-        //   ),
-        // );
+        // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
       }
     } on FirebaseAuthException catch (errorVal) {
       setState(() {
@@ -832,5 +878,230 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _scaffoldKey.currentState
           ?.showSnackBar(SnackBar(content: Text("Firebase Error!")));
     }
+  }
+
+  ////////////////////// Image Container /////////////////////////
+
+  Widget imageContainer(
+    BuildContext context,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    String preUploading = "Tap To Upload Image";
+    String postUploading = "Tap To Change Image";
+    final defaultImg = 'assets/images/uProfile.png';
+
+    return InkWell(
+      onTap: () {
+        _seclectImageUploadingType(
+          context,
+          "Set your Profile Picture",
+          "Image Picker",
+        );
+      },
+      child: Container(
+        height: screenHeight * 0.4,
+        padding: EdgeInsets.symmetric(
+          vertical: screenHeight * 0.010,
+          horizontal: screenWidth * 0.015,
+        ),
+        margin: EdgeInsets.symmetric(
+          vertical: screenHeight * 0.0025,
+        ),
+        child: Card(
+          elevation: 5,
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 0.3 * screenHeight,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey.shade100,
+                ),
+                padding: EdgeInsets.only(
+                  top: screenHeight * 0.01,
+                  bottom: screenHeight * 0.025,
+                ),
+                alignment: Alignment.center,
+                child: CircleAvatar(
+                  radius: screenWidth * 0.4,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(screenWidth),
+                    child: ClipOval(
+                      child: _isProfilePicTaken
+                          ? Image.file(
+                              _profilePicture,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            )
+                          : Image.asset(defaultImg),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: screenHeight * 0.02,
+              ),
+              Text(
+                !_isProfilePicTaken ? "${preUploading}" : "${postUploading}",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _seclectImageUploadingType(
+    BuildContext context,
+    String titleText,
+    String contextText,
+  ) async {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    String str1 = "Pick From Galary";
+    String str2 = "Click a Picture";
+
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('${titleText}'),
+        content: Text('${contextText}'),
+        actions: <Widget>[
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.purple.shade300,
+                  ),
+                  height: screenHeight * 0.08,
+                  padding: EdgeInsets.only(
+                    left: screenWidth * 0.06,
+                  ),
+                  margin: EdgeInsets.only(
+                    left: screenWidth * 0.008,
+                    bottom: screenHeight * 0.008,
+                  ),
+                  child: Icon(
+                    Icons.photo_size_select_actual_rounded,
+                  ),
+                ),
+                Container(
+                  width: screenWidth * 0.6,
+                  height: screenHeight * 0.08,
+                  margin: EdgeInsets.only(
+                    right: screenWidth * 0.02,
+                    bottom: screenHeight * 0.008,
+                  ),
+                  child: RaisedButton(
+                    color: Colors.purple.shade300,
+                    child: Text(
+                      '${str1}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () async {
+                      final picker = ImagePicker();
+                      final imageFile = await picker.getImage(
+                        source: ImageSource.gallery,
+                        imageQuality: 80,
+                        maxHeight: 650,
+                        maxWidth: 650,
+                      );
+
+                      if (imageFile == null) {
+                        return;
+                      }
+
+                      setState(() {
+                        _profilePicture = File(imageFile.path);
+                        _isProfilePicTaken = true;
+                      });
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: screenHeight * 0.02,
+          ),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.purple.shade300,
+                  ),
+                  height: screenHeight * 0.08,
+                  padding: EdgeInsets.only(
+                    left: screenWidth * 0.06,
+                  ),
+                  margin: EdgeInsets.only(
+                    left: screenWidth * 0.008,
+                    bottom: screenHeight * 0.008,
+                  ),
+                  child: Icon(Icons.camera_alt_rounded),
+                ),
+                Container(
+                  width: screenWidth * 0.6,
+                  height: screenHeight * 0.08,
+                  margin: EdgeInsets.only(
+                    right: screenWidth * 0.02,
+                    bottom: screenHeight * 0.008,
+                  ),
+                  child: RaisedButton(
+                    color: Colors.purple.shade300,
+                    child: Text(
+                      '${str2}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () async {
+                      final picker = ImagePicker();
+                      final imageFile = await picker.getImage(
+                        source: ImageSource.camera,
+                        imageQuality: 80,
+                        maxHeight: 650,
+                        maxWidth: 650,
+                      );
+
+                      if (imageFile == null) {
+                        return;
+                      }
+
+                      Navigator.of(context).pop(false);
+                      setState(() {
+                        _profilePicture = File(imageFile.path);
+                        _isProfilePicTaken = true;
+                      });
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

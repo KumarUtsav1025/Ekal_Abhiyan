@@ -17,6 +17,7 @@ import 'package:path_provider/path_provider.dart' as sysPath;
 import 'package:image_picker/image_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
+import 'package:charts_flutter/flutter.dart';
 
 import '../providers/class_details.dart';
 import '../providers/user_details.dart';
@@ -28,6 +29,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isInit = false;
+  String userName = "";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (!_isInit) {
+      Provider.of<ClassDetails>(context, listen: false).fetchPreviousClasses();
+    }
+    _isInit = true;
+
+    Provider.of<UserDetails>(context, listen: false).setUserInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -40,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var classInfoData = Provider.of<ClassDetails>(context);
     // classInfoData.fetchPreviousClasses();
     // var userInfoDetails = Provider.of<UserDetails>(context);
+    // userInfoDetails.setUserInformation();
 
     int cntClasses = classInfoData.items.length;
 
@@ -71,10 +87,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: Text(
                   "Welcome Back!",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: useableHeight * 0.03,
-                  ),
                 ),
               ),
             ),
@@ -89,15 +101,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: Text(
                   "No of Classes Taken = ${cntClasses}",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: useableHeight * 0.02,
-                  ),
                 ),
               ),
             ),
           ),
-          // Text(unqId)
         ],
       ),
     );

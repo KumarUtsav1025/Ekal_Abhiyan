@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_complete_guide/providers/user_details.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,8 @@ import './screens/signup_screen.dart';
 import './screens/detail_class_screen.dart';
 
 import './providers/class_details.dart';
+import './providers/user_details.dart';
+import './providers/auth_details.dart';
 
 import './widgets/live_location.dart';
 
@@ -55,6 +58,12 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(
           value: ClassDetails(),
+        ),
+        ChangeNotifierProvider.value(
+          value: UserDetails(),
+        ),
+        ChangeNotifierProvider.value(
+          value: AuthDetails(),
         ),
       ],
       child: MaterialApp(
@@ -85,8 +94,7 @@ class MyApp extends StatelessWidget {
           builder: (ctx, userSnapShot) {
             if (userSnapShot.hasData) {
               return TabsScreen();
-            }
-            else {
+            } else {
               return LoginScreen();
             }
           },

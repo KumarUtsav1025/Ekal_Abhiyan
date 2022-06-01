@@ -27,8 +27,9 @@ import './create_class_screen.dart';
 import './new_class_screen.dart';
 import './previous_class_screen.dart';
 import './my_profile_screen.dart';
-
 import './login_screen.dart';
+
+import '../providers/user_details.dart';
 
 class TabsScreen extends StatefulWidget {
   static const routeName = '/tab-screen';
@@ -138,15 +139,17 @@ class _TabsScreenState extends State<TabsScreen> {
         content: Text('${contextText}'),
         actions: <Widget>[
           RaisedButton(
-            child: Text('OK'),
+            child: Text('No'),
             onPressed: () {
-              if (popVal == false) {
-                Navigator.of(ctx).pop(false);
-              }
-              else {
-                _auth.signOut();
-                Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
-              }
+              Navigator.of(ctx).pop(false);
+            },
+          ),
+          RaisedButton(
+            child: Text('Yes'),
+            onPressed: () {
+              Provider.of<UserDetails>(context, listen: false).clearStateOfLoggedInUser();
+              _auth.signOut();
+              Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
             },
           ),
         ],

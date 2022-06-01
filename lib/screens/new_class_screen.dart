@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/user_details.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,7 @@ import '../models/class_info.dart';
 import '../models/place.dart';
 import '../models/http_exeception.dart';
 
+import '../providers/class_details.dart';
 import '../providers/class_details.dart';
 
 class NewClassScreen extends StatefulWidget {
@@ -163,11 +165,12 @@ class _NewClassScreenState extends State<NewClassScreen> {
           _isClassPictureTaken = false;
           _isSubmitLoadingSpinner = false;
           _getAddressFunc = false;
-          
+
           _isSubmitLoadingSpinner = false;
         });
 
-        Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+        // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+        Navigator.of(context).pushNamedAndRemoveUntil("/tab-screen", (route) => false);
       });
     } catch (errorVal) {
       _checkForError(context, 'Error Detected', 'Something Went Wrong!');
@@ -184,8 +187,6 @@ class _NewClassScreenState extends State<NewClassScreen> {
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
 
     var useableHeight = screenHeight - topInsets - bottomInsets;
-
-    final classInfoData = Provider.of<ClassDetails>(context);
 
     return Scaffold(
       body: GestureDetector(
@@ -268,8 +269,8 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                         color: Colors.white,
                                       ),
                                 onPressed: () {
-                                  Scaffold.of(context).showSnackBar(
-                                      SnackBar(content: Text('Submitting the Class!')));
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text('Submitting the Class!')));
                                   setState(() {
                                     _isSubmitLoadingSpinner = true;
                                   });
@@ -334,17 +335,28 @@ class _NewClassScreenState extends State<NewClassScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _isFloatingButtonActive ? () {
-          setState(() {
-            _isSpinnerLoading = true;
-            _isFloatingButtonActive = false;
-            _getLocation(context, DateTime.now().toString());
-          });
-        } : null,
+        onPressed: _isFloatingButtonActive
+            ? () {
+                setState(
+                  () {
+                    _isSpinnerLoading = true;
+                    _isFloatingButtonActive = false;
+                    _getLocation(
+                      context,
+                      Provider.of<UserDetails>(context, listen: false)
+                          .getLoggedInUserUniqueId()
+                          .toString(),
+                    );
+                  },
+                );
+              }
+            : null,
         label: !_isSpinnerLoading
             ? Text(
                 "Click a Pic",
-                style: TextStyle(color: _isFloatingButtonActive ? Colors.white : Colors.black),
+                style: TextStyle(
+                    color:
+                        _isFloatingButtonActive ? Colors.white : Colors.black),
               )
             : CircularProgressIndicator(
                 color: Color.fromARGB(255, 225, 176, 176),
@@ -353,7 +365,8 @@ class _NewClassScreenState extends State<NewClassScreen> {
           Icons.class_,
           color: _isFloatingButtonActive ? Colors.white : Colors.black,
         ),
-        backgroundColor: _isFloatingButtonActive ? Colors.blueAccent : Colors.grey.shade200,
+        backgroundColor:
+            _isFloatingButtonActive ? Colors.blueAccent : Colors.grey.shade200,
       ),
     );
   }
@@ -364,7 +377,10 @@ class _NewClassScreenState extends State<NewClassScreen> {
     try {
       final loc.LocationData _locationResult = await location.getLocation();
 
-      await FirebaseFirestore.instance.collection('location').doc('user1').set(
+      await FirebaseFirestore.instance
+          .collection('location')
+          .doc('${userUniqueId}')
+          .set(
         {
           'latitude': _locationResult.latitude,
           'lontitude': _locationResult.longitude,
@@ -428,6 +444,13 @@ class _NewClassScreenState extends State<NewClassScreen> {
       _checkLocatoinService(context, titleText, contextText);
     }
 
+    if (!_isCameraOpened) {
+      setState(() {
+        _isCameraOpened = true;
+      });
+      _takePicture(context);
+    }
+
     streamSubscription =
         Geolocator.getPositionStream().listen((Position position) {
       latitudeValue.value = '${position.latitude}';
@@ -457,11 +480,6 @@ class _NewClassScreenState extends State<NewClassScreen> {
           'Place Name/No: ${place.name},\nStreet: ${place.street},\nArea: ${place.subLocality},\nDistrict: ${place.locality},\nState: ${place.administrativeArea},\nPostal Code: ${place.postalCode},\nAdm. Area: ${place.subAdministrativeArea},\nCountry: ${place.country}.';
 
       _isCurrentLocationTaken = true;
-
-      if (!_isCameraOpened) {
-        _isCameraOpened = true;
-        _takePicture(context);
-      }
     });
   }
 

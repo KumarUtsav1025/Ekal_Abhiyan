@@ -41,6 +41,9 @@ class _MyProfileState extends State<MyProfile> {
   TextEditingController _phoneNumber = TextEditingController();
   TextEditingController _stateName = TextEditingController();
   TextEditingController _districtName = TextEditingController();
+  TextEditingController _blockName = TextEditingController();
+  TextEditingController _villageGroupName = TextEditingController();
+  TextEditingController _villageName = TextEditingController();
   TextEditingController _postalCode = TextEditingController();
   TextEditingController _eduQualification = TextEditingController();
 
@@ -59,6 +62,10 @@ class _MyProfileState extends State<MyProfile> {
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
     var useableHeight = screenHeight - topInsets - bottomInsets;
 
+    var userInfoDetails = Provider.of<UserDetails>(context);
+    Map<String, String> userMapping =
+        userInfoDetails.getUserPersonalInformation();
+
     bool _isFirstNameSet = false;
     bool _isLastNameSet = false;
     bool _isAgeSet = false;
@@ -67,8 +74,11 @@ class _MyProfileState extends State<MyProfile> {
     bool _isLocalAddressSet = false;
     bool _isPermanentAddressSet = false;
     bool _isPhoneNumberSet = false;
-    bool _isDistrictNameSet = false;
     bool _isStateNameSet = false;
+    bool _isDistrictNameSet = false;
+    bool _isBlockNameSet = false;
+    bool _isVillageGroupNameSet = false;
+    bool _isVillageNameSet = false;
     bool _isPostalCodeSet = false;
     bool _isEducationQualificationSet = false;
 
@@ -82,6 +92,9 @@ class _MyProfileState extends State<MyProfile> {
     _phoneNumber.text = "Getting Phone Number...";
     _stateName.text = "Getting State...";
     _districtName.text = "Getting District...";
+    _blockName.text = "Getting Block...";
+    _villageGroupName.text = "Getting Village...";
+    _villageName.text = "Getting Village...";
     _postalCode.text = "Getting Postal Code...";
     _eduQualification.text = "Getting Edu Qualification...";
 
@@ -99,7 +112,7 @@ class _MyProfileState extends State<MyProfile> {
         } else {
           return ListView(
             children: <Widget>[
-              imageContainer(context, ""),
+              imageContainer(context, userMapping["profilePic_Url"] as String),
               SizedBox(
                 height: useableHeight * 0.0025,
               ),
@@ -140,6 +153,13 @@ class _MyProfileState extends State<MyProfile> {
               ),
               TextFildContainer(
                 context,
+                "Education \nQualification",
+                _eduQualification,
+                'education_Qualification',
+                _isEducationQualificationSet,
+              ),
+              TextFildContainer(
+                context,
                 "Phone No",
                 _phoneNumber,
                 'phone_Number',
@@ -161,17 +181,38 @@ class _MyProfileState extends State<MyProfile> {
               ),
               TextFildContainer(
                 context,
-                "State",
+                "SAMBHAG/\nState",
                 _stateName,
                 'state',
                 _isStateNameSet,
               ),
               TextFildContainer(
                 context,
-                "District",
+                "BHAG/\nDistrict",
                 _districtName,
                 'district',
                 _isDistrictNameSet,
+              ),
+              TextFildContainer(
+                context,
+                "ANCHAL/\nBlock",
+                _blockName,
+                'block_Level',
+                _isBlockNameSet,
+              ),
+              TextFildContainer(
+                context,
+                "SANCH/\nVillage Group",
+                _villageGroupName,
+                'village_Group',
+                _isVillageGroupNameSet,
+              ),
+              TextFildContainer(
+                context,
+                "Village",
+                _villageName,
+                'village',
+                _isVillageNameSet,
               ),
               TextFildContainer(
                 context,
@@ -223,9 +264,11 @@ class _MyProfileState extends State<MyProfile> {
             radius: screenWidth * 0.4,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(screenWidth * 0.4),
-              child: isImageAvailable
-                  ? Image.network(imgUrl)
-                  : Image.asset(defaultImg),
+              child: ClipOval(
+                child: isImageAvailable
+                    ? Image.network(imgUrl)
+                    : Image.asset(defaultImg),
+              ),
             ),
           ),
         ),
@@ -246,7 +289,8 @@ class _MyProfileState extends State<MyProfile> {
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
     var useableHeight = screenHeight - topInsets - bottomInsets;
 
-    getUserInformation(context, infoType, textCtr, isSet);
+    // getUserInformation(context, infoType, textCtr, isSet);
+    setUserInfo(context, infoType, textCtr);
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -278,12 +322,6 @@ class _MyProfileState extends State<MyProfile> {
               SizedBox(
                 width: screenWidth * 0.001,
               ),
-              // Container(
-              //   child: FlatButton(
-              //     child: Icon(Icons.edit),
-              //     onPressed: () {},
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -291,30 +329,14 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  getUserInformation(
-    BuildContext context,
-    String infoType,
-    TextEditingController textCtr,
-    bool isSet,
-  ) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    CollectionReference usersRef = db.collection("userPersonalInformation");
+  void setUserInfo(
+      BuildContext context, String infoType, TextEditingController textCtr) {
+    var userInfoDetails = Provider.of<UserDetails>(context);
+    Map<String, String> userMapping =
+        userInfoDetails.getUserPersonalInformation();
 
-    var currLoggedInUser = await FirebaseAuth.instance.currentUser;
-    var loggedInUserId = currLoggedInUser?.uid as String;
-
-    if (!isSet) {
-      await FirebaseFirestore.instance
-          .collection('userPersonalInformation')
-          .doc(loggedInUserId)
-          .get()
-          .then(
-        (DocumentSnapshot ds) {
-          isSet = true;
-          textCtr.text = ds['${infoType}'].toString().toUpperCase();
-          print(textCtr.text);
-        },
-      );
+    if (userMapping[infoType] != Null) {
+      textCtr.text = userMapping[infoType] as String;
     }
   }
 }

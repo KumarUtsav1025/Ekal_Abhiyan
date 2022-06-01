@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -21,16 +22,14 @@ import 'package:pinput/pinput.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:event_listener/event_listener.dart';
+// import 'com.google.firebase.database.ValueEventListener';
 
 import './tabs_screen.dart';
 import './signup_screen.dart';
 
 import '../providers/user_details.dart';
-
-enum MobileVerificationState {
-  SHOW_MOBILE_FORM_STATE,
-  SHOW_OTP_FORM_STATE,
-}
+import '../providers/auth_details.dart';
 
 class LoginScreen extends StatefulWidget {
   static String routeName = "/login-screen";
@@ -39,11 +38,17 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  MobileVerificationState _currentState =
-      MobileVerificationState.SHOW_MOBILE_FORM_STATE;
-
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animeController;
+  late Animation<Size> _heightAnimation;
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<AuthDetails>(context, listen: false).getExistingUserPhoneNumbers();
+  }
 
   bool _isOtpSent = false;
   bool _isAuthenticationAccepted = false;
@@ -57,16 +62,13 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _otpValue = TextEditingController();
 
   Future<void> _checkIfUserExists(BuildContext context) async {
-    // var userPhoneNumberList = await FirebaseFirestore.instance.collection('ExistingUserInformation/dEHY1va25b84g5eiGUAl/userPhoneNumber');
-    await FirebaseFirestore.instance
-        .collection(
-            'ExistingUserInformation/dEHY1va25b84g5eiGUAl/userPhoneNumber')
-        .snapshots()
-        .listen(
-      (event) {
-        print(event.docs[0]['phoneNum']);
-      },
-    );
+
+    // var currLoggedInUser = await FirebaseAuth.instance.currentUser;
+    // var loggedInUserId = currLoggedInUser?.uid as String;
+    // DatabaseReference rootRef = await FirebaseDatabase.instance.reference();
+    // DatabaseReference uidRef = rootRef.child("UsersPhoneNumber").child(loggedInUserId);
+    // final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(functionName: '');
+
   }
 
   Future<void> _userSignIn(
@@ -94,12 +96,22 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       // _checkIfUserExists(context);
-      _enterUserOtp(context, titleText, contextText);
+      // _enterUserOtp(context, titleText, contextText);
+      _scaffoldKey.currentState
+          ?.showSnackBar(SnackBar(content: Text("Verifiying your Number...")));
+
       _checkForAuthentication(context, _userPhoneNumber);
     }
   }
 
   // Future<void> _otpVerification(BuildContext context)
+  Future<void> openOtpWidget() async {
+    _scaffoldKey.currentState
+        ?.showSnackBar(SnackBar(content: Text("Otp Sent!")));
+    String titleText = "Authentication";
+    String contextText = "Enter the Otp:";
+    _enterUserOtp(context, titleText, contextText);
+  }
 
   Future<void> _enterUserOtp(
     BuildContext context,
@@ -150,7 +162,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 verificationId: this._verificationId,
                 smsCode: _userOtpValue.text,
               );
+              _scaffoldKey.currentState
+            ?.showSnackBar(SnackBar(content: Text("Verifying the Entered Otp")));
               signInWithPhoneAuthCred(context, phoneAuthCredential);
+              Navigator.of(ctx).pop(false);
             },
           ),
         ],
@@ -193,15 +208,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // After the OTP has been sent to Mobile Number Successfully
       codeSent: (verificationId, resendingToken) async {
-        _currentState = MobileVerificationState.SHOW_OTP_FORM_STATE;
         print('otp sent');
+        openOtpWidget();
         setState(() {
           _isOtpSent = true;
           _isAuthenticationAccepted = false;
           _showLoading = false;
 
           this._verificationId = verificationId;
-          print(this._verificationId);
         });
       },
 
@@ -248,7 +262,8 @@ class _LoginScreenState extends State<LoginScreen> {
           _userVerified = true;
         });
 
-        Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+        // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+        Navigator.of(context).pushNamedAndRemoveUntil("/tab-screen", (route) => false);
       }
     } on FirebaseAuthException catch (errorVal) {
       setState(() {

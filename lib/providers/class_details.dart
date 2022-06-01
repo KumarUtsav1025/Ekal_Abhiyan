@@ -52,17 +52,18 @@ class ClassDetails with ChangeNotifier {
 
     final urlLink = Uri.https(
       'flutterdatabase-76af4-default-rtdb.firebaseio.com',
-      '/${loggedInUserId}/userClassInformation.json',
+      '/ExistingUser/${loggedInUserId}/userClassInformation.json',
     );
 
     final urlParse = Uri.parse(
-      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/${loggedInUserId}/userClassInformation.json',
+      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/ExistingUser/${loggedInUserId}/userClassInformation.json',
     );
 
+    String imageName = "${loggedInUserId}_${DateTime.now().toString()}_classImg.jpg";
     final imageOfTheClass = FirebaseStorage.instance
         .ref()
-        .child('pic_of_classroom')
-        .child('${classInfo.unqId}+${classInfo.numOfStudents}+classImg.jpg');
+        .child('ClassroomPictures/${loggedInUserId}/${classInfo.currDate.toString()}')
+        .child('${imageName}');
 
     bool classImgageUploaded = false;
     await imageOfTheClass.putFile(classroomImage).whenComplete(
@@ -108,11 +109,11 @@ class ClassDetails with ChangeNotifier {
 
     final urlLink = Uri.https(
       'flutterdatabase-76af4-default-rtdb.firebaseio.com',
-      '/${loggedInUserId}/userClassInformation.json',
+      '/ExistingUser/${loggedInUserId}/userClassInformation.json',
     );
 
     final urlParse = Uri.parse(
-      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/${loggedInUserId}/userClassInformation.json',
+      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/ExistingUser/${loggedInUserId}/userClassInformation.json',
     );
 
     try {
@@ -120,34 +121,35 @@ class ClassDetails with ChangeNotifier {
       final extractedClass =
           json.decode(dataBaseResponse.body) as Map<String, dynamic>;
 
-      final List<ClassInformation> loadedPreviousClasses = [];
-      extractedClass.forEach(
-        (classId, classData) {
-          // print('In...');
-          // print(classId);
-          // print(classData);
-          // print('Out...');
+      if (extractedClass != Null) {
+        final List<ClassInformation> loadedPreviousClasses = [];
+        extractedClass.forEach(
+          (classId, classData) {
+            // print('In...');
+            // print(classId);
+            // print(classData);
+            // print('Out...');
 
-          ClassInformation prevClass = new ClassInformation(
-            unqId: classId,
-            currDateTime: classData['currDateTime'],
-            currTime: classData['currTime'],
-            currDate: classData['currDate'],
-            numOfStudents: int.parse(classData['numberOfHeads']),
-            currLatitude: double.parse(classData['currLatitude']),
-            currLongitude: double.parse(classData['currLongitude']),
-            currAddress: classData['currAddress'],
-            classroomUrl: classData['imageLink'],
-            imageFile: File(""),
-          );
+            ClassInformation prevClass = new ClassInformation(
+              unqId: classId,
+              currDateTime: classData['currDateTime'],
+              currTime: classData['currTime'],
+              currDate: classData['currDate'],
+              numOfStudents: int.parse(classData['numberOfHeads']),
+              currLatitude: double.parse(classData['currLatitude']),
+              currLongitude: double.parse(classData['currLongitude']),
+              currAddress: classData['currAddress'],
+              classroomUrl: classData['imageLink'],
+              imageFile: File(""),
+            );
 
-          loadedPreviousClasses.add(prevClass);
-        },
-      );
+            loadedPreviousClasses.add(prevClass);
+          },
+        );
 
-      _items = loadedPreviousClasses;
-
-      // print(json.decode(dataBaseResponse.body));
+        _items = loadedPreviousClasses;
+        notifyListeners();
+      }
     } catch (errorVal) {
       print("Error Value");
       print(errorVal);
