@@ -35,6 +35,15 @@ class AuthDetails with ChangeNotifier {
     return [...this.existingUserPhoneNumberList];
   }
 
+  bool get isPhoneNumberListEmpty {
+    if (this.existingUserPhoneNumberList.isEmpty) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   Future<void> getExistingUserPhoneNumbers() async {
     // var currLoggedInUser = await FirebaseAuth.instance.currentUser;
     // var loggedInUserId = currLoggedInUser?.uid as String;
@@ -57,8 +66,7 @@ class AuthDetails with ChangeNotifier {
         final List<String> phoneNumberList = [];
         extractedClass.forEach(
           (phoneId, phoneData) {
-            print(phoneData['phoneNumber:']);
-            phoneNumberList.add(phoneData['phoneNumber:']);
+            phoneNumberList.add(phoneData['phoneNumber']);
           },
         );
 

@@ -47,7 +47,8 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void initState() {
     super.initState();
-    Provider.of<AuthDetails>(context, listen: false).getExistingUserPhoneNumbers();
+    Provider.of<AuthDetails>(context, listen: false)
+        .getExistingUserPhoneNumbers();
   }
 
   bool _isOtpSent = false;
@@ -55,6 +56,8 @@ class _LoginScreenState extends State<LoginScreen>
   bool _showLoading = false;
   bool _userVerified = false;
   bool _userExists = false;
+  bool _signInClicked = false;
+  bool _submitOtpClicked = false;
 
   String _verificationId = "";
   TextEditingController _userPhoneNumber = TextEditingController();
@@ -62,13 +65,11 @@ class _LoginScreenState extends State<LoginScreen>
   TextEditingController _otpValue = TextEditingController();
 
   Future<void> _checkIfUserExists(BuildContext context) async {
-
     // var currLoggedInUser = await FirebaseAuth.instance.currentUser;
     // var loggedInUserId = currLoggedInUser?.uid as String;
     // DatabaseReference rootRef = await FirebaseDatabase.instance.reference();
     // DatabaseReference uidRef = rootRef.child("UsersPhoneNumber").child(loggedInUserId);
     // final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(functionName: '');
-
   }
 
   Future<void> _userSignIn(
@@ -93,12 +94,17 @@ class _LoginScreenState extends State<LoginScreen>
 
       setState(() {
         _showLoading = true;
+        _signInClicked = true;
       });
 
       // _checkIfUserExists(context);
       // _enterUserOtp(context, titleText, contextText);
-      _scaffoldKey.currentState
-          ?.showSnackBar(SnackBar(content: Text("Verifiying your Number...")));
+      _scaffoldKey.currentState?.showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text("Verifiying your Phone Number..."),
+        ),
+      );
 
       _checkForAuthentication(context, _userPhoneNumber);
     }
@@ -106,9 +112,13 @@ class _LoginScreenState extends State<LoginScreen>
 
   // Future<void> _otpVerification(BuildContext context)
   Future<void> openOtpWidget() async {
-    _scaffoldKey.currentState
-        ?.showSnackBar(SnackBar(content: Text("Otp Sent!")));
-    String titleText = "Authentication";
+    _scaffoldKey.currentState?.showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text("Otp Sent!"),
+      ),
+    );
+    String titleText = "Mobile Authentication";
     String contextText = "Enter the Otp:";
     _enterUserOtp(context, titleText, contextText);
   }
@@ -153,17 +163,28 @@ class _LoginScreenState extends State<LoginScreen>
             ),
           ),
           RaisedButton(
-            child: Text('Submit Otp'),
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(screenWidth * 0.5),
+            ),
+            color: Colors.blue.shade400,
+            child: !_submitOtpClicked
+                ? Text('Submit Otp')
+                : CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
             onPressed: () async {
-              print(_otpValue.text);
-              print(_userOtpValue.text);
               PhoneAuthCredential phoneAuthCredential =
                   PhoneAuthProvider.credential(
                 verificationId: this._verificationId,
                 smsCode: _userOtpValue.text,
               );
-              _scaffoldKey.currentState
-            ?.showSnackBar(SnackBar(content: Text("Verifying the Entered Otp")));
+              _scaffoldKey.currentState?.showSnackBar(
+                SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  content: Text("Verifying the Entered Otp"),
+                ),
+              );
               signInWithPhoneAuthCred(context, phoneAuthCredential);
               Navigator.of(ctx).pop(false);
             },
@@ -180,6 +201,9 @@ class _LoginScreenState extends State<LoginScreen>
     await _auth.verifyPhoneNumber(
       phoneNumber: "+91${phoneController.text}",
 
+      // Setting the Otp Timeout Duration
+      timeout: Duration(seconds: 60),
+
       // After the Authentication has been Completed Successfully
       verificationCompleted: (phoneAuthCredential) async {
         setState(() {
@@ -190,26 +214,33 @@ class _LoginScreenState extends State<LoginScreen>
       },
 
       // After the Authentication has been Failed/Declined
-      verificationFailed: (verificationFailed) {
+      verificationFailed: (verificationFailed) async {
         setState(() {
           _isOtpSent = false;
           _isAuthenticationAccepted = false;
           _showLoading = false;
+          _signInClicked = false;
         });
         print('verification failed');
         print(verificationFailed);
+
         String titleText = "Authenticatoin Failed!";
         String contextText = "Unable to generate the OTP.";
         _checkForError(context, titleText, contextText);
 
-        _scaffoldKey.currentState
-            ?.showSnackBar(SnackBar(content: Text("${contextText}")));
+        _scaffoldKey.currentState?.showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text("${contextText}"),
+          ),
+        );
       },
 
       // After the OTP has been sent to Mobile Number Successfully
       codeSent: (verificationId, resendingToken) async {
         print('otp sent');
         openOtpWidget();
+
         setState(() {
           _isOtpSent = true;
           _isAuthenticationAccepted = false;
@@ -225,6 +256,7 @@ class _LoginScreenState extends State<LoginScreen>
           _isOtpSent = false;
           _isAuthenticationAccepted = false;
           _showLoading = false;
+          _signInClicked = false;
         });
 
         if (!_userVerified) {
@@ -252,21 +284,26 @@ class _LoginScreenState extends State<LoginScreen>
         _showLoading = false;
       });
 
-      print('AuthCredential');
-      print(authCredential);
-      print(authCredential.user);
-
       if (authCredential.user != null) {
         print('authentication complete!');
         setState(() {
           _userVerified = true;
+          _isOtpSent = false;
+          _isAuthenticationAccepted = false;
+          _showLoading = false;
+          _userExists = false;
+          _signInClicked = false;
+          _submitOtpClicked = false;
         });
 
         // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
-        Navigator.of(context).pushNamedAndRemoveUntil("/tab-screen", (route) => false);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil("/tab-screen", (route) => false);
       }
     } on FirebaseAuthException catch (errorVal) {
       setState(() {
+        _signInClicked = false;
+        _submitOtpClicked = false;
         _showLoading = false;
       });
 
@@ -276,8 +313,12 @@ class _LoginScreenState extends State<LoginScreen>
 
       print(errorVal.message);
 
-      _scaffoldKey.currentState
-          ?.showSnackBar(SnackBar(content: Text("Firebase Error!")));
+      _scaffoldKey.currentState?.showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text("Firebase Error!"),
+        ),
+      );
     }
   }
 
@@ -353,46 +394,58 @@ class _LoginScreenState extends State<LoginScreen>
                 padding: EdgeInsets.all(5),
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey.shade100,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.05,
-                        vertical: screenHeight * 0.02,
-                      ),
-                      margin: EdgeInsets.all(screenWidth * 0.02),
-                      child: TextField(
-                        maxLength: 10,
-                        decoration:
-                            InputDecoration(labelText: 'Phone Number: '),
-                        controller: _userPhoneNumber,
-                        keyboardType: TextInputType.number,
-                        onSubmitted: (_) {},
+                    Card(
+                      elevation: 3,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey.shade100,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.05,
+                          vertical: screenHeight * 0.02,
+                        ),
+                        margin: EdgeInsets.all(screenWidth * 0.02),
+                        child: TextField(
+                          maxLength: 10,
+                          decoration:
+                              InputDecoration(labelText: 'Phone Number: '),
+                          controller: _userPhoneNumber,
+                          keyboardType: TextInputType.number,
+                          onSubmitted: (_) {},
+                        ),
                       ),
                     ),
                     SizedBox(
-                      height: screenHeight * 0.02,
+                      height: screenHeight * 0.025,
                     ),
                     ButtonTheme(
                       minWidth: screenWidth * 0.5,
                       height: screenHeight * 0.07,
                       child: RaisedButton(
-                        child: Text(
-                          'Sign-In',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: screenHeight * 0.025,
-                          ),
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(screenWidth * 0.5),
                         ),
+                        child: !_signInClicked
+                            ? Text(
+                                'Sign-In',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: screenHeight * 0.025,
+                                ),
+                              )
+                            : CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
                         onPressed: () async {
                           _userSignIn(context, _userPhoneNumber);
                         },
                       ),
                     ),
                     SizedBox(
-                      height: screenHeight * 0.02,
+                      height: screenHeight * 0.015,
                     ),
                     FlatButton(
                       onPressed: () {

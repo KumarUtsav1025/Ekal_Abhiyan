@@ -76,10 +76,10 @@ class OldClassView extends StatelessWidget {
       child: Card(
         elevation: 10,
         margin: EdgeInsets.only(
-          top: avlScreenHeight * 0.02,
-          bottom: avlScreenHeight * 0.01,
-          left: screenWidth * 0.03,
-          right: screenWidth * 0.03,
+          top: avlScreenHeight * 0.015,
+          bottom: avlScreenHeight * 0.005,
+          left: screenWidth * 0.025,
+          right: screenWidth * 0.025,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(screenWidth * 0.05),

@@ -91,73 +91,163 @@ class ClassDetailScreen extends StatelessWidget {
     var bottomInsets = MediaQuery.of(ctx).viewInsets.bottom;
     var usableHeight = screenHeight - topInsets - bottomInsets;
 
-    return Card(
-      elevation: 2,
-      child: Container(
-        height: usableHeight * 0.9,
-        width: screenWidth * 0.95,
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Starting of the Class",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        SizedBox(
+          height: screenHeight * 0.005,
+        ),
+        Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.01,
+          ),
+          width: double.infinity,
+          child: Text(
+            "Starting of the Class:",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: screenHeight * 0.025,
             ),
-            SizedBox(
-              height: usableHeight * 0.0025,
-            ),
-            Container(
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.0075,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Card(
+            elevation: 10,
+            child: Container(
               alignment: Alignment.center,
               width: screenWidth * 0.9,
               height: usableHeight * 0.45,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: Colors.grey,
-                ),
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.045,
+                vertical: screenHeight * 0.02,
               ),
               child: Image.network(
                 classInfo1.classroomUrl,
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
-              // Image.file(
-              //   classInfo1.imageFile,
-              //   fit: BoxFit.cover,
-              //   width: double.infinity,
-              // ),
             ),
-            SizedBox(
-              height: usableHeight * 0.01,
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.04,
+        ),
+        Container(
+          alignment: Alignment.center,
+          child: Text(
+            "Class Details",
+            style: TextStyle(
+              fontSize: screenHeight * 0.05,
             ),
-            Text(
-              "Date: ${classInfo1.currDate}",
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.01,
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
             ),
-            SizedBox(
-              height: usableHeight * 0.002,
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
             ),
-            Text(
-              "Time: ${classInfo1.currTime}",
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
             ),
-            SizedBox(
-              height: usableHeight * 0.002,
-            ),
-            Text(
+            child: Text(
               "Number Of Students: ${classInfo1.numOfStudents}",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
-              height: usableHeight * 0.002,
-            ),
-            Text(
-              "Address: \n${classInfo1.currAddress}",
-            ),
-          ],
+          ),
         ),
-      ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(200),
+            ),
+            child: Text(
+              "Date: ${classInfo1.currDate}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Text(
+              "Starting Time: ${classInfo1.currTime}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Text(
+              "Location  Details: \n\n${classInfo1.currAddress}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.025,
+        ),
+      ],
     );
   }
 
@@ -188,139 +278,356 @@ class ClassDetailScreen extends StatelessWidget {
       classDuration = "${diff_hr} hr ${diff_mn} min";
     }
 
-    return Card(
-      elevation: 2,
-      child: Container(
-        height: usableHeight * 1.7,
-        width: screenWidth * 0.95,
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Starting of the Class",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        SizedBox(
+          height: screenHeight * 0.005,
+        ),
+        Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.01,
+          ),
+          width: double.infinity,
+          child: Text(
+            "Starting of the Class:",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: screenHeight * 0.025,
             ),
-            SizedBox(
-              height: usableHeight * 0.0025,
-            ),
-            Container(
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.0075,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Card(
+            elevation: 10,
+            child: Container(
               alignment: Alignment.center,
               width: screenWidth * 0.9,
               height: usableHeight * 0.45,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: Colors.grey,
-                ),
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.045,
+                vertical: screenHeight * 0.02,
               ),
               child: Image.network(
                 classInfo1.classroomUrl,
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
-              // Image.file(
-              //   classInfo1.imageFile,
-              //   fit: BoxFit.cover,
-              //   width: double.infinity,
-              // ),
             ),
-            SizedBox(
-              height: usableHeight * 0.01,
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.04,
+        ),
+        Container(
+          alignment: Alignment.center,
+          child: Text(
+            "Class Details - 1",
+            style: TextStyle(
+              fontSize: screenHeight * 0.05,
             ),
-            Text(
-              "Date: ${classInfo1.currDate}",
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.01,
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
             ),
-            SizedBox(
-              height: usableHeight * 0.002,
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
             ),
-            Text(
-              "Time: ${classInfo1.currTime}",
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
             ),
-            SizedBox(
-              height: usableHeight * 0.002,
-            ),
-            Text(
+            child: Text(
               "Number Of Students: ${classInfo1.numOfStudents}",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
-              height: usableHeight * 0.05,
+          ),
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
             ),
-            Text(
-              "Ending of the Class",
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(200),
+            ),
+            child: Text(
+              "Date: ${classInfo1.currDate}",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
-              height: usableHeight * 0.0025,
+          ),
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
             ),
-            Container(
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Text(
+              "Starting Time: ${classInfo1.currTime}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Text(
+              "Location  Details: \n\n${classInfo1.currAddress}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.025,
+        ),
+        Container(
+            child: Divider(
+          color: Colors.black,
+        )),
+        SizedBox(
+          height: screenHeight * 0.025,
+        ),
+        Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.01,
+          ),
+          width: double.infinity,
+          child: Text(
+            "Ending of the Class:",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: screenHeight * 0.025,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.0075,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Card(
+            elevation: 10,
+            child: Container(
               alignment: Alignment.center,
               width: screenWidth * 0.9,
               height: usableHeight * 0.45,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 1,
-                  color: Colors.grey,
-                ),
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.045,
+                vertical: screenHeight * 0.02,
               ),
               child: Image.network(
                 classInfo2.classroomUrl,
                 fit: BoxFit.cover,
                 width: double.infinity,
               ),
-              // Image.file(
-              //   classInfo2.imageFile,
-              //   fit: BoxFit.cover,
-              //   width: double.infinity,
-              // ),
             ),
-            SizedBox(
-              height: usableHeight * 0.01,
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.04,
+        ),
+        Container(
+          alignment: Alignment.center,
+          child: Text(
+            "Class Details - 2",
+            style: TextStyle(
+              fontSize: screenHeight * 0.05,
             ),
-            Text(
-              "Date: ${classInfo1.currDate}",
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.01,
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
             ),
-            SizedBox(
-              height: usableHeight * 0.002,
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
             ),
-            Text(
-              "Time: ${classInfo1.currTime}",
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
             ),
-            SizedBox(
-              height: usableHeight * 0.002,
-            ),
-            Text(
+            child: Text(
               "Number Of Students: ${classInfo2.numOfStudents}",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
-              height: usableHeight * 0.02,
+          ),
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
             ),
-            Text(
-              "Address: \n${classInfo1.currAddress}",
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
             ),
-            SizedBox(
-              height: usableHeight * 0.01,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(200),
             ),
-            Text(
-              "Duration: ${classDuration}",
+            child: Text(
+              "Date: ${classInfo2.currDate}",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
-              height: usableHeight * 0.01,
-            ),
-          ],
+          ),
         ),
-      ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Text(
+              "Ending Time: ${classInfo2.currTime}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Text(
+              "Location  Details: \n\n${classInfo2.currAddress}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.025,
+        ),
+        Container(
+          child: Divider(
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.025,
+        ),
+        Card(
+          elevation: 5,
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.1,
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.005,
+              horizontal: screenWidth * 0.001,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Text(
+              "Class Duration: \n${classDuration}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: screenHeight * 0.025,
+                decoration: TextDecoration.underline,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: screenHeight * 0.01,
+        ),
+      ],
     );
   }
 }

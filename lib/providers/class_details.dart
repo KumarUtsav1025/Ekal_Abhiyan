@@ -123,6 +123,7 @@ class ClassDetails with ChangeNotifier {
 
       if (extractedClass != Null) {
         final List<ClassInformation> loadedPreviousClasses = [];
+
         extractedClass.forEach(
           (classId, classData) {
             // print('In...');

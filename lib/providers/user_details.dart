@@ -23,6 +23,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../screens/tabs_screen.dart';
+import '../screens/login_screen.dart';
 
 import '../models/http_exeception.dart';
 import '../models/class_info.dart';
@@ -47,8 +48,10 @@ class UserDetails with ChangeNotifier {
     return this.loggedInUserUniqueCred;
   }
 
-  Future<void> clearStateOfLoggedInUser() async {
+  Future<void> clearStateOfLoggedInUser(BuildContext context) async {
     this.mp = {};
+    FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
   }
 
   Future<void> setUserInfo() async {

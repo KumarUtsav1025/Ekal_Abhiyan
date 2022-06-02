@@ -42,6 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isAuthenticationAccepted = false;
   bool _showLoading = false;
   bool _userVerified = false;
+  bool _isSubmitClicked = false;
 
   String _verificationId = "";
   TextEditingController _userPhoneNumber = TextEditingController();
@@ -221,19 +222,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String contextText = "Enter the Otp:";
 
       setState(() {
+        _isSubmitClicked = true;
         _showLoading = true;
       });
 
       // _enterUserOtp(context, titleText, contextText);
-      _scaffoldKey.currentState
-          ?.showSnackBar(SnackBar(content: Text("Verifiying your Number...")));
+      _scaffoldKey.currentState?.showSnackBar(
+        SnackBar(
+          content: Text("Verifiying your Number..."),
+        ),
+      );
       _checkForAuthentication(context, _userPhoneNumber);
     }
   }
 
   Future<void> openOtpSubmittingWidget() async {
-    _scaffoldKey.currentState
-        ?.showSnackBar(SnackBar(content: Text("Otp Sent To the Number...")));
+    _scaffoldKey.currentState?.showSnackBar(
+      SnackBar(
+        content: Text("Otp Sent to your Number..."),
+      ),
+    );
     String titleText = "Authentication";
     String contextText = "Enter the Otp:";
     _enterUserOtp(context, titleText, contextText);
@@ -521,12 +529,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   child: RaisedButton(
                     color: Colors.amber.shade500,
-                    child: Text(
-                      'Submit',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: !_isSubmitClicked
+                        ? Text(
+                            'Submit',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : CircularProgressIndicator(),
                     onPressed: () {
                       _checkInputFields(context);
                     },
@@ -731,6 +741,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
           RaisedButton(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(screenWidth * 0.5),
+            ),
+            color: Colors.blue.shade400,
             child: Text('Submit Otp'),
             onPressed: () async {
               print(_otpValue.text);
@@ -765,11 +780,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       },
 
       // After the Authentication has been Failed/Declined
-      verificationFailed: (verificationFailed) {
+      verificationFailed: (verificationFailed) async {
         setState(() {
           _isOtpSent = false;
           _isAuthenticationAccepted = false;
           _showLoading = false;
+          _isSubmitClicked = false;
         });
         print('verification failed');
         print(verificationFailed);
@@ -791,6 +807,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _isOtpSent = true;
           _isAuthenticationAccepted = false;
           _showLoading = false;
+          _isSubmitClicked = false;
 
           this._verificationId = verificationId;
         });
@@ -802,6 +819,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _isOtpSent = false;
           _isAuthenticationAccepted = false;
           _showLoading = false;
+          _isSubmitClicked = false;
         });
 
         if (!_userVerified) {

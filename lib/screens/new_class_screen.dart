@@ -274,6 +274,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   setState(() {
                                     _isSubmitLoadingSpinner = true;
                                   });
+                                  
                                   _submitTheClassInformation(
                                     context,
                                     scaffoldKey,

@@ -147,9 +147,9 @@ class _TabsScreenState extends State<TabsScreen> {
           RaisedButton(
             child: Text('Yes'),
             onPressed: () {
-              Provider.of<UserDetails>(context, listen: false).clearStateOfLoggedInUser();
-              _auth.signOut();
-              Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+              Provider.of<UserDetails>(context, listen: false).clearStateOfLoggedInUser(context);
+              // _auth.signOut();
+              // Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
             },
           ),
         ],
