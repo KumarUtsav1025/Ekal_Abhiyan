@@ -29,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ekalVidyalayaImage = 'assets/images/Ekal-Vidyalaya.jpg';
   bool _isInit = false;
   String userName = "";
   @override
@@ -49,7 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
     var screenWidth = MediaQuery.of(context).size.width;
     var topInsets = MediaQuery.of(context).viewInsets.top;
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
-
     var useableHeight = screenHeight - topInsets - bottomInsets;
 
     var classInfoData = Provider.of<ClassDetails>(context);
@@ -59,53 +59,96 @@ class _HomeScreenState extends State<HomeScreen> {
 
     int cntClasses = classInfoData.items.length;
 
-    if (cntClasses%2 == 0) {
-      cntClasses = (cntClasses/2).floor(); 
-    }
-    else {
-      cntClasses = (cntClasses/2).floor();
+    if (cntClasses % 2 == 0) {
+      cntClasses = (cntClasses / 2).floor();
+    } else {
+      cntClasses = (cntClasses / 2).floor();
       cntClasses += 1;
     }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: ListView(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(
-              left: screenWidth * 0.01,
-              right: screenWidth * 0.01,
-              top: useableHeight * 0.0075,
-              bottom: useableHeight * 0.0025,
-            ),
-            child: Card(
-              elevation: 1,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.025,
-                  vertical: useableHeight * 0.01,
+      child: Container(
+        margin: EdgeInsets.only(
+          left: screenWidth * 0.0125,
+          right: screenWidth * 0.0125,
+          top: screenHeight * 0.00625,
+          bottom: screenHeight * 0.025,
+        ),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          elevation: 10,
+          child: ListView(
+            physics: ClampingScrollPhysics(),
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(
+                  left: screenWidth * 0.01,
+                  right: screenWidth * 0.01,
+                  top: useableHeight * 0.0075,
+                  bottom: useableHeight * 0.0025,
                 ),
-                child: Text(
-                  "Welcome Back!",
+                child: Card(
+                  elevation: 15,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.025,
+                      vertical: useableHeight * 0.01,
+                    ),
+                    child: Text("ऐप के अंदर आपका स्वागत है|",
+                        textAlign: TextAlign.center),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Container(
-            child: Card(
-              elevation: 1,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.025,
-                  vertical: useableHeight * 0.01,
-                ),
-                child: Text(
-                  "No of Classes Taken = ${cntClasses}",
+              Container(
+                alignment: Alignment.center,
+                child: Card(
+                  elevation: 20,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.025,
+                      vertical: useableHeight * 0.01,
+                    ),
+                    child: Image.asset(ekalVidyalayaImage),
+                  ),
                 ),
               ),
-            ),
+              Container(
+                child: Card(
+                  elevation: 15,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.025,
+                      vertical: useableHeight * 0.01,
+                    ),
+                    child: Text(
+                      "This Ekal Vidyalaya app is designed to take attendance of students present in the vidyalaya. \nयह एकल विद्यालय एप विद्यालय में प्रतिदिन आने वालों बच्चों की उपस्थिति दर्ज करने हेतु है|",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.02),
+              Container(
+                child: Card(
+                  elevation: 15,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.025,
+                      vertical: useableHeight * 0.01,
+                    ),
+                    child: Text(
+                      "आज तक ली गई आपकी कक्षाओं की संख्या = ${cntClasses}",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

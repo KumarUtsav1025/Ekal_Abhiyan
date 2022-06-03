@@ -238,6 +238,7 @@ class ClassDetailScreen extends StatelessWidget {
             ),
             child: Text(
               "Location  Details: \n\n${classInfo1.currAddress}",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -425,6 +426,7 @@ class ClassDetailScreen extends StatelessWidget {
             ),
             child: Text(
               "Location  Details: \n\n${classInfo1.currAddress}",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -581,6 +583,7 @@ class ClassDetailScreen extends StatelessWidget {
             ),
             child: Text(
               "Location  Details: \n\n${classInfo2.currAddress}",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

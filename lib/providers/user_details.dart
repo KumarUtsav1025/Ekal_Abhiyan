@@ -51,7 +51,8 @@ class UserDetails with ChangeNotifier {
   Future<void> clearStateOfLoggedInUser(BuildContext context) async {
     this.mp = {};
     FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+    // Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+    Navigator.of(context).pushNamedAndRemoveUntil("/login-screen", (route) => false);
   }
 
   Future<void> setUserInfo() async {

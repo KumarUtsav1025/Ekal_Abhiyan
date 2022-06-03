@@ -50,14 +50,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _otpValue = TextEditingController();
 
   bool isDateSet = false;
-  String dateBtnString = "Enter D.O.B";
+  String dateBtnString = "Enter D.O.B/";
 
   File _profilePicture = new File("");
   var _firstName = TextEditingController();
   var _lastName = TextEditingController();
   var _age = TextEditingController();
   var _gender = TextEditingController();
-  late DateTime _dateOfBirth;
+  late DateTime _dateOfBirth = DateTime.now();
   var _localAddress = TextEditingController();
   var _permanentAddress = TextEditingController();
   var _state_SAMBHAG_Name = TextEditingController();
@@ -82,7 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isPostalCodeSet = false;
   bool _isEducationQualificationSet = false;
 
-  final genderSelectionList = ["Male", "Female", "Others"];
+  final genderSelectionList = ["Male/पुरुष", "Female/नारी", "Others/अन्य लिंग"];
   List<dynamic> states_SAMBHAG_SelectionList = [
     {"id": 1, "stateName": "Andhra Pradesh"},
     {"id": 2, "stateName": "Arunachal Pradesh"},
@@ -133,6 +133,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   ];
 
   Future<void> _checkInputFields(BuildContext context) async {
+    if (_eduQualification.text.trim().length == 0) {
+      _eduQualification.text = "No Data Available/कोई डेटा मौजूद नहीं";
+    }
+    if (_postalCode.text.trim().length == 0) {
+      _postalCode.text = "No Data Available/कोई डेटा मौजूद नहीं";
+    }
     if (_firstName.text.trim().length == 0) {
       String titleText = "Invalid First Name!";
       String contextText = "Please enter your 'First Name'...";
@@ -149,12 +155,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Last Name is too Short";
       String contextText = "'Last Name' should have atleast 3 characters.";
       _checkForError(context, titleText, contextText);
-    } else if (_age.text.trim().length == 0 ||
-        int.tryParse(_age.text) == null ||
-        int.parse(_age.text) < 10) {
-      String titleText = "Invalid Age";
-      String contextText = "Please enter your age!";
-      _checkForError(context, titleText, contextText);
     } else if (isDateSet == false) {
       String titleText = "Invali Date of Birth(D.O.B)";
       String contextText = "Please enter your Date of Birth(D.O.B)!";
@@ -163,15 +163,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Invalid Gender";
       String contextText = "Please Enter your Gender/Sex!";
       _checkForError(context, titleText, contextText);
-    } else if (_eduQualification.text.trim().length <= 5) {
-      String titleText = "Invalid Education Qualification";
-      String contextText = "Define in atleast 5 characters";
-      _checkForError(context, titleText, contextText);
-    } else if (_localAddress.text.trim().length <= 10) {
+    } else if (_localAddress.text.trim().length <= 3) {
       String titleText = "Invalid Address";
       String contextText = "Please enter your complete address";
       _checkForError(context, titleText, contextText);
-    } else if (_permanentAddress.text.trim().length == 0) {
+    } else if (_permanentAddress.text.trim().length == 3) {
       String titleText = "Invalid Address";
       String contextText = "Please enter your complete address";
       _checkForError(context, titleText, contextText);
@@ -194,16 +190,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else if (_village_Village_Name.text.trim().length < 2) {
       String titleText = "Invalid Village Name";
       String contextText = "Please enter your Village";
-      _checkForError(context, titleText, contextText);
-    } else if (_postalCode.text.trim().length != 6 ||
-        int.tryParse(_postalCode.text) == null ||
-        int.parse(_postalCode.text) < 0) {
-      String titleText = "Invalid Pincode";
-      String contextText = "Please enter a valid Pin Code!";
-      _checkForError(context, titleText, contextText);
-    } else if (_postalCode.text.trim().length != 6) {
-      String titleText = "Invalid Pincode";
-      String contextText = "Please enter a valid Pin Code!";
       _checkForError(context, titleText, contextText);
     } else if (_userPhoneNumber.text.length != 10) {
       String titleText = "Invild Mobile Number";
@@ -282,10 +268,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (pickedDate == null) {
         return;
       } else {
+        DateTime t1 = _dateOfBirth;
+        DateTime t2 = DateTime.now();
+        final diff_dy = t2.difference(t1).inDays;
+        String ageVal = (diff_dy / 365).floor().toString();
+
         setState(() {
           isDateSet = true;
           _dateOfBirth = pickedDate;
           dateBtnString = "Change D.O.B";
+          _age.text = ageVal;
         });
       }
     });
@@ -330,9 +322,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: Colors.white70,
       appBar: AppBar(
         title: Text(
-          'Sign Up',
+          'Sign Up / साइन अप करें',
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
           ),
         ),
       ),
@@ -344,10 +337,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
               context,
             ),
             SizedBox(height: screenHeight * 0.01),
+            // Mobile Number
+            TextFieldContainer(
+              context,
+              "Mobile Number/मोबाइल नंबर *",
+              10,
+              _userPhoneNumber,
+              TextInputType.number,
+            ),
+            SizedBox(height: screenHeight * 0.005),
             // First Name
             TextFieldContainer(
               context,
-              "First Name",
+              "First Name/पहला नाम *",
               30,
               _firstName,
               TextInputType.name,
@@ -356,19 +358,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Last Name
             TextFieldContainer(
               context,
-              "Last Name",
+              "Last Name/उपनाम *",
               30,
               _lastName,
               TextInputType.name,
-            ),
-            SizedBox(height: screenHeight * 0.005),
-            // Age
-            TextFieldContainer(
-              context,
-              "Age",
-              2,
-              _age,
-              TextInputType.number,
             ),
             SizedBox(height: screenHeight * 0.005),
             // Date Of Birth
@@ -388,8 +381,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Expanded(
                     child: Text(
                       isDateSet == false
-                          ? 'Select D.0.B -> '
-                          : 'Your D.O.B: ${DateFormat('dd/MM/yyyy').format(_dateOfBirth)}',
+                          ? 'Date Of Birth  \nजन्म की तारीख *-> '
+                          : 'D.O.B/जन्म की तारीख: ${DateFormat('dd/MM/yyyy').format(_dateOfBirth)}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -419,13 +412,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
               context,
               genderSelectionList,
               _gender,
-              "Gender",
+              "Gender/लिंग *",
             ),
             SizedBox(height: screenHeight * 0.005),
             // Education Qualification:
             TextFieldContainer(
               context,
-              "Education Qualification",
+              "Education Qfy/शैक्षणिक योग्यता",
               80,
               _eduQualification,
               TextInputType.name,
@@ -434,7 +427,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Current Address
             TextFieldContainer(
               context,
-              "Current Address",
+              "Home Address/शिक्षक के घर का पता *",
               100,
               _localAddress,
               TextInputType.name,
@@ -443,7 +436,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Permanent Address
             TextFieldContainer(
               context,
-              "Permanent Address",
+              "School Address/स्कूल का पता *",
               100,
               _permanentAddress,
               TextInputType.name,
@@ -453,18 +446,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
               context,
               states_SAMBHAG_SelectionList,
               _state_SAMBHAG_Name,
-              "--Select State--",
+              "--Select State/राज्य चुनें--",
               "",
               "your State: ",
               "id",
               "stateName",
-              "SAMBHAG/State",
+              "State/सम्भाग *",
             ),
             SizedBox(height: screenHeight * 0.005),
             // District Name:
             TextFieldContainer(
               context,
-              "BHAG/District",
+              "District/भाग *",
               50,
               _district_BHAG_Name,
               TextInputType.name,
@@ -473,7 +466,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Block Level Name:
             TextFieldContainer(
               context,
-              "ANCHAL/Block",
+              "Block/आँचल *",
               50,
               _block_ANCHAL_Name,
               TextInputType.name,
@@ -482,7 +475,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Group Village Name:
             TextFieldContainer(
               context,
-              "SANCH/Village Group",
+              "Village Group/साँच *",
               50,
               _groupVillage_SANCH_Name,
               TextInputType.name,
@@ -491,7 +484,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Village Name:
             TextFieldContainer(
               context,
-              "Village",
+              "Village/गांव *",
               50,
               _village_Village_Name,
               TextInputType.name,
@@ -500,18 +493,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Postal Code:
             TextFieldContainer(
               context,
-              "Postal/Pin - Code",
+              "Pin Code/पिन कोड ",
               6,
               _postalCode,
-              TextInputType.number,
-            ),
-            SizedBox(height: screenHeight * 0.005),
-            // Phone Number:
-            TextFieldContainer(
-              context,
-              "Phone Number: ",
-              10,
-              _userPhoneNumber,
               TextInputType.number,
             ),
             SizedBox(height: screenHeight * 0.04),
@@ -531,7 +515,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     color: Colors.amber.shade500,
                     child: !_isSubmitClicked
                         ? Text(
-                            'Submit',
+                            'Submit/जमा करे',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -575,7 +559,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       child: TextField(
         maxLength: maxLgt,
-        decoration: InputDecoration(labelText: '${textLabel}: '),
+        decoration: InputDecoration(
+            labelText: '${textLabel}: ',
+            hintStyle: TextStyle(fontWeight: FontWeight.bold)),
         controller: _textCtr,
         keyboardType: keyBoardType,
         onSubmitted: (_) {},
@@ -883,18 +869,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
         // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
       }
     } on FirebaseAuthException catch (errorVal) {
-      setState(() {
-        _showLoading = false;
-      });
+      print(errorVal);
 
-      String titleText = "Authentication Failed!";
-      String contextText = "Otp is InValid!";
-      _checkForError(context, titleText, contextText);
+      if (_isOtpSent) {
+        setState(() {
+          _showLoading = false;
+        });
 
-      print(errorVal.message);
+        String titleText = "Authentication Failed!";
+        String contextText = "Otp is InValid!";
+        _checkForError(context, titleText, contextText);
 
-      _scaffoldKey.currentState
-          ?.showSnackBar(SnackBar(content: Text("Firebase Error!")));
+        print(errorVal.message);
+
+        // _scaffoldKey.currentState?.showSnackBar(
+        //   SnackBar(
+        //     behavior: SnackBarBehavior.floating,
+        //     content: Text("Firebase Error!"),
+        //   ),
+        // );
+      }
     }
   }
 
@@ -909,8 +903,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
     var useableHeight = screenHeight - topInsets - bottomInsets;
 
-    String preUploading = "Tap To Upload Image";
-    String postUploading = "Tap To Change Image";
+    String preUploading = "Tap To Upload Image\nछवि अपलोड करने के लिए टैप करें";
+    String postUploading = "Tap To Change Image\nछवि बदलने के लिए टैप करें";
     final defaultImg = 'assets/images/uProfile.png';
 
     return InkWell(
@@ -922,7 +916,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
       },
       child: Container(
-        height: screenHeight * 0.4,
+        height: screenHeight * 0.425,
         padding: EdgeInsets.symmetric(
           vertical: screenHeight * 0.010,
           horizontal: screenWidth * 0.015,
@@ -945,10 +939,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   bottom: screenHeight * 0.025,
                 ),
                 alignment: Alignment.center,
-                child: CircleAvatar(
-                  radius: screenWidth * 0.4,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(screenWidth),
+                child: Container(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.black,
+                    radius: screenWidth * 0.25,
                     child: ClipOval(
                       child: _isProfilePicTaken
                           ? Image.file(
@@ -966,6 +960,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               Text(
                 !_isProfilePicTaken ? "${preUploading}" : "${postUploading}",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),

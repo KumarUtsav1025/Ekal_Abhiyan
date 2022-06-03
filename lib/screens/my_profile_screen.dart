@@ -110,121 +110,136 @@ class _MyProfileState extends State<MyProfile> {
             ),
           );
         } else {
-          return ListView(
-            children: <Widget>[
-              imageContainer(context, userMapping["profilePic_Url"] as String),
-              SizedBox(
-                height: useableHeight * 0.0025,
+          return Container(
+            margin: EdgeInsets.only(
+              left: screenWidth * 0.0125,
+              right: screenWidth * 0.0125,
+              top: screenHeight * 0.00625,
+              bottom: screenHeight * 0.025,
+            ),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
-              TextFildContainer(
-                context,
-                "First Name",
-                _firstName,
-                'first_Name',
-                _isFirstNameSet,
+              elevation: 10,
+              child: ListView(
+                children: <Widget>[
+                  imageContainer(
+                      context, userMapping["profilePic_Url"] as String),
+                  SizedBox(
+                    height: useableHeight * 0.0025,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "First Name  \nपहला नाम",
+                    _firstName,
+                    'first_Name',
+                    _isFirstNameSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Last Name  \nउपनाम",
+                    _lastName,
+                    'last_Name',
+                    _isLastNameSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Age/आयु",
+                    _age,
+                    'age',
+                    _isAgeSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Gender/लिंग",
+                    _gender,
+                    'gender',
+                    _isGenderSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Date Of Birth  \nजन्म की तारीख",
+                    _dateOfBirth,
+                    'date_Of_Birth',
+                    _isDateTimeSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Edu Qfy  \nशैक्षणिक योग्यता",
+                    _eduQualification,
+                    'education_Qualification',
+                    _isEducationQualificationSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Mobile No  \nमोबाइल नंबर",
+                    _phoneNumber,
+                    'phone_Number',
+                    _isPhoneNumberSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Home Address \nघर का पता",
+                    _localAddress,
+                    'current_Address',
+                    _isLocalAddressSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "School Address \nस्कूल का पता",
+                    _permanentAddress,
+                    'permanent_Address',
+                    _isPermanentAddressSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "State  \nसम्भाग",
+                    _stateName,
+                    'state',
+                    _isStateNameSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "District  \nभाग",
+                    _districtName,
+                    'district',
+                    _isDistrictNameSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Block  \nआँचल",
+                    _blockName,
+                    'block_Level',
+                    _isBlockNameSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Village Group  \nसाँच",
+                    _villageGroupName,
+                    'village_Group',
+                    _isVillageGroupNameSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Village  \nगांव",
+                    _villageName,
+                    'village',
+                    _isVillageNameSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Pin Code  \nपिन कोड",
+                    _postalCode,
+                    'postal_Code',
+                    _isPostalCodeSet,
+                  ),
+                  SizedBox(
+                    height: useableHeight * 0.05,
+                  ),
+                ],
               ),
-              TextFildContainer(
-                context,
-                "Last Name",
-                _lastName,
-                'last_Name',
-                _isLastNameSet,
-              ),
-              TextFildContainer(
-                context,
-                "Age",
-                _age,
-                'age',
-                _isAgeSet,
-              ),
-              TextFildContainer(
-                context,
-                "Gender",
-                _gender,
-                'gender',
-                _isGenderSet,
-              ),
-              TextFildContainer(
-                context,
-                "Date Of Birth",
-                _dateOfBirth,
-                'date_Of_Birth',
-                _isDateTimeSet,
-              ),
-              TextFildContainer(
-                context,
-                "Education \nQualification",
-                _eduQualification,
-                'education_Qualification',
-                _isEducationQualificationSet,
-              ),
-              TextFildContainer(
-                context,
-                "Phone No",
-                _phoneNumber,
-                'phone_Number',
-                _isPhoneNumberSet,
-              ),
-              TextFildContainer(
-                context,
-                "Current \nAddress",
-                _localAddress,
-                'current_Address',
-                _isLocalAddressSet,
-              ),
-              TextFildContainer(
-                context,
-                "Permanent \nAddress",
-                _permanentAddress,
-                'permanent_Address',
-                _isPermanentAddressSet,
-              ),
-              TextFildContainer(
-                context,
-                "SAMBHAG/\nState",
-                _stateName,
-                'state',
-                _isStateNameSet,
-              ),
-              TextFildContainer(
-                context,
-                "BHAG/\nDistrict",
-                _districtName,
-                'district',
-                _isDistrictNameSet,
-              ),
-              TextFildContainer(
-                context,
-                "ANCHAL/\nBlock",
-                _blockName,
-                'block_Level',
-                _isBlockNameSet,
-              ),
-              TextFildContainer(
-                context,
-                "SANCH/\nVillage Group",
-                _villageGroupName,
-                'village_Group',
-                _isVillageGroupNameSet,
-              ),
-              TextFildContainer(
-                context,
-                "Village",
-                _villageName,
-                'village',
-                _isVillageNameSet,
-              ),
-              TextFildContainer(
-                context,
-                "Pin Code",
-                _postalCode,
-                'postal_Code',
-                _isPostalCodeSet,
-              ),
-              SizedBox(
-                height: useableHeight * 0.05,
-              ),
-            ],
+            ),
           );
         }
       },
@@ -252,7 +267,7 @@ class _MyProfileState extends State<MyProfile> {
         vertical: useableHeight * 0.0025,
       ),
       child: Card(
-        elevation: 5,
+        elevation: 15,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -297,7 +312,7 @@ class _MyProfileState extends State<MyProfile> {
         horizontal: screenWidth * 0.015,
       ),
       child: Card(
-        elevation: 3,
+        elevation: 13,
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: screenWidth * 0.025,

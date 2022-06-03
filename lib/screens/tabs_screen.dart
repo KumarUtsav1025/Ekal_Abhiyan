@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_complete_guide/providers/class_details.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ import 'package:pinput/pinput.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 import './home_screen.dart';
 import './create_class_screen.dart';
@@ -50,10 +52,10 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   void initState() {
     _pages = [
-      {'page': HomeScreen(), 'title': 'Home'},
-      {'page': NewClassScreen(), 'title': 'New Class'},
-      {'page': PreviousClass(), 'title': 'Your Classes'},
-      {'page': MyProfile(), 'title': 'My Profile'},
+      {'page': HomeScreen(), 'title': 'विद्यालय ऐप'},
+      {'page': NewClassScreen(), 'title': 'आज की कक्षा'},
+      {'page': PreviousClass(), 'title': 'पूर्व उपस्थिति की जानकारी'},
+      {'page': MyProfile(), 'title': 'बाह्य रूपरेखा'},
     ];
   }
 
@@ -65,22 +67,32 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    final iconItems = <Widget>[
+      Icon(Icons.home, size: 30),
+      Icon(Icons.add_card_rounded, size: 30),
+      Icon(Icons.analytics, size: 30),
+      Icon(Icons.person, size: 30),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           _pages[_selectedPageIndex]['title'] as String,
-        ),
-        leading: GestureDetector(
-          onTap: () {},
-          child: Icon(
-            Icons.menu,
+          style: TextStyle(
+            fontStyle: FontStyle.italic,
+            fontSize: screenWidth * 0.05,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: <Widget>[
           Container(
-            padding: EdgeInsets.only(
-              right: 20,
-            ),
+            padding: EdgeInsets.only(right: screenWidth*0.05),
             child: GestureDetector(
               onTap: () async {
                 String titleText = "Logout";
@@ -96,35 +108,51 @@ class _TabsScreenState extends State<TabsScreen> {
         ],
       ),
       body: _pages[_selectedPageIndex]['page'] as Widget,
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: _selectPage,
-        backgroundColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Colors.white,
-        selectedItemColor: Theme.of(context).accentColor,
-        currentIndex: _selectedPageIndex,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).primaryColor,
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).primaryColor,
-            icon: Icon(Icons.new_label),
-            label: 'Create Class',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).primaryColor,
-            icon: Icon(Icons.analytics),
-            label: 'Your Classes',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).primaryColor,
-            icon: Icon(Icons.info),
-            label: 'Profile',
-          ),
-        ],
+      // bottomNavigationBar: BottomNavigationBar(
+      //   onTap: _selectPage,
+      //   backgroundColor: Theme.of(context).primaryColor,
+      //   unselectedItemColor: Colors.white,
+      //   selectedItemColor: Theme.of(context).accentColor,
+      //   currentIndex: _selectedPageIndex,
+      //   type: BottomNavigationBarType.fixed,
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       backgroundColor: Theme.of(context).primaryColor,
+      //       icon: Icon(Icons.home),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       backgroundColor: Theme.of(context).primaryColor,
+      //       icon: Icon(Icons.add_card_rounded),
+      //       label: 'Create Class',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       backgroundColor: Theme.of(context).primaryColor,
+      //       icon: Icon(Icons.analytics),
+      //       label: 'Your Classes',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       backgroundColor: Theme.of(context).primaryColor,
+      //       icon: Icon(Icons.person),
+      //       label: 'Profile',
+      //     ),
+      //   ],
+      // ),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        child: CurvedNavigationBar(
+          onTap: _selectPage,
+          backgroundColor: Colors.transparent,
+          color: Theme.of(context).primaryColor,
+          buttonBackgroundColor: Theme.of(context).primaryColor,
+          index: 0,
+          height: screenHeight * 0.085,
+          animationCurve: Curves.easeInOut,
+          animationDuration: Duration(milliseconds: 300),
+          items: iconItems,
+        ),
       ),
     );
   }
@@ -147,7 +175,10 @@ class _TabsScreenState extends State<TabsScreen> {
           RaisedButton(
             child: Text('Yes'),
             onPressed: () {
-              Provider.of<UserDetails>(context, listen: false).clearStateOfLoggedInUser(context);
+              Provider.of<ClassDetails>(context, listen: false)
+                  .clearClassDetails(context);
+              Provider.of<UserDetails>(context, listen: false)
+                  .clearStateOfLoggedInUser(context);
               // _auth.signOut();
               // Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
             },

@@ -50,6 +50,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
   bool _isClassPictureTaken = false;
   bool _isSubmitLoadingSpinner = false;
   bool _getAddressFunc = false;
+  bool _isClassCreated = false;
 
   final loc.Location location = loc.Location();
   StreamSubscription<loc.LocationData>? _locationSubscription;
@@ -170,7 +171,8 @@ class _NewClassScreenState extends State<NewClassScreen> {
         });
 
         // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
-        Navigator.of(context).pushNamedAndRemoveUntil("/tab-screen", (route) => false);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil("/tab-screen", (route) => false);
       });
     } catch (errorVal) {
       _checkForError(context, 'Error Detected', 'Something Went Wrong!');
@@ -191,151 +193,179 @@ class _NewClassScreenState extends State<NewClassScreen> {
     return Scaffold(
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: ListView(
-          children: <Widget>[
-            _isFloatingButtonActive
-                ? Container(
-                    margin:
-                        EdgeInsets.symmetric(vertical: useableHeight * 0.35),
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    child: Text(
-                      "Take the Picture of the Classroom",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  )
-                : (!_isCurrentLocationTaken || !_isClassPictureTaken)
-                    ? SizedBox(
-                        height: 0,
-                      )
-                    : Container(
-                        height: useableHeight * 1.25,
-                        width: screenWidth * 0.9,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(
-                              height: useableHeight * 0.015,
-                            ),
-                            Container(
-                              child: Text(
-                                'Picture of the Class',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Card(
-                              elevation: 5,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: screenWidth * 0.01,
-                                  vertical: useableHeight * 0.005,
-                                ),
-                                height: useableHeight * 0.45,
-                                width: screenWidth * 0.95,
-                                child: Image.file(
-                                  _storedImage,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: useableHeight * 0.02,
-                            ),
-                            Container(
-                              height: useableHeight * 0.075,
-                              padding: EdgeInsets.symmetric(
-                                vertical: useableHeight * 0.001,
-                                horizontal: screenWidth * 0.01,
-                              ),
-                              margin: EdgeInsets.symmetric(
-                                vertical: useableHeight * 0.001,
-                                horizontal: screenWidth * 0.0075,
-                              ),
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                child: !_isSubmitLoadingSpinner
-                                    ? Text(
-                                        'Submit',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: useableHeight * 0.035,
-                                        ),
-                                      )
-                                    : CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                onPressed: () {
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text('Submitting the Class!')));
-                                  setState(() {
-                                    _isSubmitLoadingSpinner = true;
-                                  });
-                                  
-                                  _submitTheClassInformation(
-                                    context,
-                                    scaffoldKey,
-                                  );
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              height: useableHeight * 0.02,
-                            ),
-                            Container(
-                              child: Text(
-                                "Date: ${DateFormat.yMMMd('en_US').format(_picTiming)}.",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: useableHeight * 0.02,
-                            ),
-                            Container(
-                              child: Text(
-                                "Time: ${DateFormat.jm().format(_picTiming)}.",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: useableHeight * 0.02,
-                            ),
-                            Container(
-                              child: Text(
-                                "Number of Students: ${_numberOfStudents}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: useableHeight * 0.02,
-                            ),
-                            Container(
-                              child: Text(
-                                "Address: \n${addressValue.value}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: useableHeight * 0.1,
-                            ),
-                          ],
+        child: Container(
+          margin: EdgeInsets.only(
+            left: screenWidth * 0.0125,
+            right: screenWidth * 0.0125,
+            top: screenHeight * 0.00625,
+            bottom: screenHeight * 0.025,
+          ),
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            elevation: 10,
+            child: ListView(
+              children: <Widget>[
+                _isFloatingButtonActive
+                    ? Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: useableHeight * 0.35,
                         ),
-                      ),
-          ],
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        child: Text(
+                          "Take the Picture of the Classroom\n-------------------------------------------\nकक्षा की तस्वीर लें पर क्लिक करें",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    : (!_isCurrentLocationTaken || !_isClassPictureTaken)
+                        ? SizedBox(
+                            height: 0,
+                          )
+                        : Container(
+                            height: screenHeight * 1.35,
+                            width: screenWidth * 0.9,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: useableHeight * 0.015,
+                                ),
+                                Container(
+                                  child: Text(
+                                    'Picture of the Class\nकक्षा की तस्वीर',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Card(
+                                  elevation: 5,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: screenWidth * 0.01,
+                                      vertical: useableHeight * 0.005,
+                                    ),
+                                    height: useableHeight * 0.45,
+                                    width: screenWidth * 0.95,
+                                    child: Image.file(
+                                      _storedImage,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: useableHeight * 0.02,
+                                ),
+                                Container(
+                                  height: useableHeight * 0.075,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: useableHeight * 0.001,
+                                    horizontal: screenWidth * 0.01,
+                                  ),
+                                  margin: EdgeInsets.symmetric(
+                                    vertical: useableHeight * 0.001,
+                                    horizontal: screenWidth * 0.0075,
+                                  ),
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    child: !_isSubmitLoadingSpinner
+                                        ? Text(
+                                            'Submit the Class\nकक्षा जमा करें',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        : CircularProgressIndicator(
+                                            color: Colors.white,
+                                          ),
+                                    onPressed: () {
+                                      Scaffold.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              'Submitting the Class!\nजमा करने की प्रक्रिया में|'),
+                                        ),
+                                      );
+                                      setState(() {
+                                        _isSubmitLoadingSpinner = true;
+                                      });
+
+                                      _submitTheClassInformation(
+                                        context,
+                                        scaffoldKey,
+                                      );
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: useableHeight * 0.02,
+                                ),
+                                Container(
+                                  child: Text(
+                                    "Date/दिनांक: ${DateFormat.yMMMd('en_US').format(_picTiming)}.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: useableHeight * 0.02,
+                                ),
+                                Container(
+                                  child: Text(
+                                    "Time/समय: ${DateFormat.jm().format(_picTiming)}.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: useableHeight * 0.02,
+                                ),
+                                Container(
+                                  child: Text(
+                                    "No of Students/विद्यार्थियों की संख्या: ${_numberOfStudents}",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: useableHeight * 0.02,
+                                ),
+                                Container(
+                                  child: Text(
+                                    "--------------------------------------------\nClass Address/कक्षा का पता: \n\n${addressValue.value}",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: useableHeight * 0.1,
+                                ),
+                              ],
+                            ),
+                          ),
+              ],
+            ),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        elevation: 20,
         onPressed: _isFloatingButtonActive
             ? () {
                 setState(
@@ -354,7 +384,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
             : null,
         label: !_isSpinnerLoading
             ? Text(
-                "Click a Pic",
+                "Click a Pic\nतस्वीर क्लिक करें",
                 style: TextStyle(
                     color:
                         _isFloatingButtonActive ? Colors.white : Colors.black),
@@ -511,6 +541,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
       _storedImage = File(imageFile.path);
       _isClassPictureTaken = true;
       _isSpinnerLoading = false;
+      _isClassCreated = true;
     });
 
     final appDir = await sysPaths.getApplicationDocumentsDirectory();

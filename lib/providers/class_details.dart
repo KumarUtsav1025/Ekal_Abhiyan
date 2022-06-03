@@ -40,6 +40,10 @@ class ClassDetails with ChangeNotifier {
     return numOfclass;
   }
 
+  Future<void> clearClassDetails(BuildContext context) async {
+    this._items = [];
+  }
+
   Future<void> addNewClass(
     ClassInformation classInfo,
     File classroomImage,

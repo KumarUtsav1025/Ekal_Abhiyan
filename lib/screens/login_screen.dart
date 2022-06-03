@@ -40,6 +40,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
+  final ekalVidyalayaImage = 'assets/images/Ekal-Vidyalaya.jpg';
   late AnimationController _animeController;
   late Animation<Size> _heightAnimation;
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -168,11 +169,7 @@ class _LoginScreenState extends State<LoginScreen>
               borderRadius: BorderRadius.circular(screenWidth * 0.5),
             ),
             color: Colors.blue.shade400,
-            child: !_submitOtpClicked
-                ? Text('Submit Otp')
-                : CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
+            child: Text('Submit Otp'),
             onPressed: () async {
               PhoneAuthCredential phoneAuthCredential =
                   PhoneAuthProvider.credential(
@@ -182,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen>
               _scaffoldKey.currentState?.showSnackBar(
                 SnackBar(
                   behavior: SnackBarBehavior.floating,
-                  content: Text("Verifying the Entered Otp"),
+                  content: Text("Verifying the Entered Otp..."),
                 ),
               );
               signInWithPhoneAuthCred(context, phoneAuthCredential);
@@ -220,6 +217,7 @@ class _LoginScreenState extends State<LoginScreen>
           _isAuthenticationAccepted = false;
           _showLoading = false;
           _signInClicked = false;
+          _submitOtpClicked = false;
         });
         print('verification failed');
         print(verificationFailed);
@@ -301,24 +299,29 @@ class _LoginScreenState extends State<LoginScreen>
             .pushNamedAndRemoveUntil("/tab-screen", (route) => false);
       }
     } on FirebaseAuthException catch (errorVal) {
-      setState(() {
-        _signInClicked = false;
-        _submitOtpClicked = false;
-        _showLoading = false;
-      });
+      print(errorVal);
 
-      String titleText = "Authentication Failed!";
-      String contextText = "Otp is InValid!";
-      _checkForError(context, titleText, contextText);
+      if (_isOtpSent) {
+        setState(() {
+          _signInClicked = false;
+          _submitOtpClicked = false;
+          _showLoading = false;
+        });
 
-      print(errorVal.message);
+        String titleText = "Authentication Failed!";
+        String contextText =
+            "Entered Otp is InValid!\nदर्ज किया गया ओटीपी अमान्य है।";
+        _checkForError(context, titleText, contextText);
 
-      _scaffoldKey.currentState?.showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text("Firebase Error!"),
-        ),
-      );
+        print(errorVal.message);
+
+        // _scaffoldKey.currentState?.showSnackBar(
+        //   SnackBar(
+        //     behavior: SnackBarBehavior.floating,
+        //     content: Text("Firebase Error!"),
+        //   ),
+        // );
+      }
     }
   }
 
@@ -358,39 +361,54 @@ class _LoginScreenState extends State<LoginScreen>
         backgroundColor: Colors.white70,
         body: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              SizedBox(
+                height: screenHeight * 0.075,
+              ),
               Container(
-                alignment: Alignment.center,
-                height: screenHeight * 0.15,
-                color: Colors.blue.shade200,
-                padding: EdgeInsets.symmetric(
-                  vertical: screenHeight * 0.02,
-                  horizontal: screenWidth * 0.05,
-                ),
-                margin: EdgeInsets.only(
-                  top: screenHeight * 0.1,
-                  left: screenWidth * 0.1,
-                  right: screenWidth * 0.1,
-                  bottom: screenHeight * 0.05,
-                ),
-                child: Text(
-                  'Shikshak',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: screenWidth * 0.12,
-                    decorationStyle: TextDecorationStyle.wavy,
+                child: CircleAvatar(
+                  backgroundColor: Colors.black,
+                  radius: screenHeight * 0.11,
+                  child: CircleAvatar(
+                    radius: screenHeight * 0.1,
+                    backgroundImage:
+                        AssetImage('assets/images/Ekal-Vidyalaya.jpg'),
                   ),
                 ),
               ),
               SizedBox(
-                height: screenHeight * 0.05,
+                height: screenHeight * 0.02,
+              ),
+              Container(
+                color: Colors.blue.shade200,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: screenHeight * 0.01,
+                    horizontal: screenWidth * 0.025,
+                  ),
+                  margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                  child: Text(
+                    'Aacharya App',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: screenWidth * 0.05,
+                      decorationStyle: TextDecorationStyle.wavy,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: screenHeight * 0.04,
               ),
               Container(
                 alignment: Alignment.center,
                 color: Colors.white70,
                 height: screenHeight * 0.4,
                 width: screenWidth * 0.9,
+                margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 padding: EdgeInsets.all(5),
                 child: Column(
                   children: <Widget>[
@@ -408,8 +426,8 @@ class _LoginScreenState extends State<LoginScreen>
                         margin: EdgeInsets.all(screenWidth * 0.02),
                         child: TextField(
                           maxLength: 10,
-                          decoration:
-                              InputDecoration(labelText: 'Phone Number: '),
+                          decoration: InputDecoration(
+                              labelText: 'Mobile Number/मोबाइल नंबर: '),
                           controller: _userPhoneNumber,
                           keyboardType: TextInputType.number,
                           onSubmitted: (_) {},
@@ -431,9 +449,11 @@ class _LoginScreenState extends State<LoginScreen>
                         child: !_signInClicked
                             ? Text(
                                 'Sign-In',
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: screenHeight * 0.025,
+                                  color: Colors.white,
                                 ),
                               )
                             : CircularProgressIndicator(

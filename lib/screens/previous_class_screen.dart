@@ -82,90 +82,118 @@ class _PreviousClassState extends State<PreviousClass> {
       child: classInfoData.items.length == 0
           ? RefreshIndicator(
               onRefresh: () => _refreshPreviousClasses(context),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.25,
-                    ),
-                    child: Text(
-                      'No Classes Taken Yet!',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                        fontSize: screenWidth * 0.1,
-                      ),
-                    ),
+              child: Container(
+                margin: EdgeInsets.only(
+                  left: screenWidth * 0.0125,
+                  right: screenWidth * 0.0125,
+                  top: screenHeight * 0.00625,
+                  bottom: screenHeight * 0.025,
+                ),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                ],
+                  elevation: 10,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.1,
+                        ),
+                        child: Text(
+                          'No Classes has been Taken Yet!\n-----------------\nअभी तक कोई क्लास नहीं ली गई है।',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic,
+                            fontSize: screenWidth * 0.07,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             )
-          : ListView.builder(
-              itemCount: classInfoData.items.length,
-              itemBuilder: (ctx, index) {
-                if (classInfoData.items.length % 2 == 0) {
-                  if (index % 2 == 0) {
-                    if (index == classInfoData.items.length - 1) {
-                      return OldClassView(
-                        indexClass1: classInfoData.items.length - 1 - index,
-                        indexClass2: -1,
-                        infoClass1: classInfoData
-                            .items[classInfoData.items.length - 1 - index],
-                        infoClass2: nullClassInfo,
-                      );
+          : Container(
+              margin: EdgeInsets.only(
+                left: screenWidth * 0.0125,
+                right: screenWidth * 0.0125,
+                top: screenHeight * 0.00625,
+                bottom: screenHeight * 0.025,
+              ),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: ListView.builder(
+                  itemCount: classInfoData.items.length,
+                  itemBuilder: (ctx, index) {
+                    if (classInfoData.items.length % 2 == 0) {
+                      if (index % 2 == 0) {
+                        if (index == classInfoData.items.length - 1) {
+                          return OldClassView(
+                            indexClass1: classInfoData.items.length - 1 - index,
+                            indexClass2: -1,
+                            infoClass1: classInfoData
+                                .items[classInfoData.items.length - 1 - index],
+                            infoClass2: nullClassInfo,
+                          );
+                        } else {
+                          return OldClassView(
+                            indexClass1: classInfoData.items.length - 2 - index,
+                            indexClass2: classInfoData.items.length - 1 - index,
+                            infoClass1: classInfoData
+                                .items[classInfoData.items.length - 2 - index],
+                            infoClass2: classInfoData
+                                .items[classInfoData.items.length - 1 - index],
+                          );
+                        }
+                      } else {
+                        return SizedBox(
+                          height: 0,
+                        );
+                      }
                     } else {
-                      return OldClassView(
-                        indexClass1: classInfoData.items.length - 2 - index,
-                        indexClass2: classInfoData.items.length - 1 - index,
-                        infoClass1: classInfoData
-                            .items[classInfoData.items.length - 2 - index],
-                        infoClass2: classInfoData
-                            .items[classInfoData.items.length - 1 - index],
-                      );
+                      if (index == 0) {
+                        return OldClassView(
+                          indexClass1: classInfoData.items.length - 1 - index,
+                          indexClass2: -1,
+                          infoClass1: classInfoData
+                              .items[classInfoData.items.length - 1 - index],
+                          infoClass2: nullClassInfo,
+                        );
+                      } else if (index % 2 != 0) {
+                        if (index == classInfoData.items.length - 1) {
+                          return OldClassView(
+                            indexClass1: classInfoData.items.length - 1 - index,
+                            indexClass2: -1,
+                            infoClass1: classInfoData
+                                .items[classInfoData.items.length - 1 - index],
+                            infoClass2: nullClassInfo,
+                          );
+                        } else {
+                          return OldClassView(
+                            indexClass1: classInfoData.items.length - 2 - index,
+                            indexClass2: classInfoData.items.length - 1 - index,
+                            infoClass1: classInfoData
+                                .items[classInfoData.items.length - 2 - index],
+                            infoClass2: classInfoData
+                                .items[classInfoData.items.length - 1 - index],
+                          );
+                        }
+                      } else {
+                        return SizedBox(
+                          height: 0,
+                        );
+                      }
                     }
-                  } else {
-                    return SizedBox(
-                      height: 0,
-                    );
-                  }
-                } else {
-                  if (index == 0) {
-                    return OldClassView(
-                      indexClass1: classInfoData.items.length - 1 - index,
-                      indexClass2: -1,
-                      infoClass1: classInfoData
-                          .items[classInfoData.items.length - 1 - index],
-                      infoClass2: nullClassInfo,
-                    );
-                  } else if (index % 2 != 0) {
-                    if (index == classInfoData.items.length - 1) {
-                      return OldClassView(
-                        indexClass1: classInfoData.items.length - 1 - index,
-                        indexClass2: -1,
-                        infoClass1: classInfoData
-                            .items[classInfoData.items.length - 1 - index],
-                        infoClass2: nullClassInfo,
-                      );
-                    } else {
-                      return OldClassView(
-                        indexClass1: classInfoData.items.length - 2 - index,
-                        indexClass2: classInfoData.items.length - 1 - index,
-                        infoClass1: classInfoData
-                            .items[classInfoData.items.length - 2 - index],
-                        infoClass2: classInfoData
-                            .items[classInfoData.items.length - 1 - index],
-                      );
-                    }
-                  } else {
-                    return SizedBox(
-                      height: 0,
-                    );
-                  }
-                }
-              },
+                  },
+                ),
+              ),
             ),
     );
   }
