@@ -23,7 +23,6 @@ import './place.dart';
 
 // part 'class_info.g.dart';
 
-@JsonSerializable()
 class ClassInformation {
   final String unqId;
   final String currDateTime;
@@ -49,7 +48,3 @@ class ClassInformation {
     required this.imageFile,
   });
 }
-
-// factory ClassInformation.fromJson(Map<String, dynamic> json) => _$ClassInformationFromJson(json);
-
-// Map<String, dynamic> toJson() => _$ClassInformation(this);

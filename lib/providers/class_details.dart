@@ -59,14 +59,21 @@ class ClassDetails with ChangeNotifier {
       '/ExistingUser/${loggedInUserId}/userClassInformation.json',
     );
 
+    final urlLinkForCompleteClassDetails = Uri.https(
+      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      '/CompleteClassDetails/${loggedInUserId}/${DateFormat.jm().format(DateTime.now()).toString()}.json',
+    );
+
     final urlParse = Uri.parse(
       'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/ExistingUser/${loggedInUserId}/userClassInformation.json',
     );
 
-    String imageName = "${loggedInUserId}_${DateTime.now().toString()}_classImg.jpg";
+    String imageName =
+        "${loggedInUserId}_${DateTime.now().toString()}_classImg.jpg";
     final imageOfTheClass = FirebaseStorage.instance
         .ref()
-        .child('ClassroomPictures/${loggedInUserId}/${classInfo.currDate.toString()}')
+        .child(
+            'ClassroomPictures/${loggedInUserId}/${classInfo.currDate.toString()}')
         .child('${imageName}');
 
     bool classImgageUploaded = false;
@@ -80,7 +87,7 @@ class ClassDetails with ChangeNotifier {
 
     try {
       classInfo.classroomUrl = classroomImageUrl.toString();
-      final response = await http.post(
+      final responseForPartialClassDetails = await http.post(
         urlLink,
         body: json.encode(
           {
@@ -96,6 +103,59 @@ class ClassDetails with ChangeNotifier {
           },
         ),
       );
+
+      if (this._items.length % 2 != 0) {
+        DateTime t1 =
+            DateTime.parse(this._items[this._items.length - 1].currDateTime);
+        DateTime t2 = DateTime.parse(classInfo.currDateTime.toString());
+        final diff_hr = t2.difference(t1).inHours;
+        final diff_mn = t2.difference(t1).inMinutes;
+        final rmn_mn = diff_mn - (diff_hr*60);
+
+        String classDuration = "";
+        if (diff_hr == 0) {
+          classDuration = "${diff_mn} min";
+        } else if (diff_mn == 0) {
+          classDuration = "${diff_hr} hr";
+        } else {
+          classDuration = "${diff_hr} hr ${rmn_mn} min";
+        }
+
+        final responseForCompleteClassDetails = await http.post(
+          urlLinkForCompleteClassDetails,
+          body: json.encode(
+            {
+              'currDateTime_1':
+                  this._items[this._items.length - 1].currDateTime.toString(),
+              'currTime_1':
+                  this._items[this._items.length - 1].currTime.toString(),
+              'currDate_1':
+                  this._items[this._items.length - 1].currDate.toString(),
+              'numberOfHeads_1':
+                  this._items[this._items.length - 1].numOfStudents.toString(),
+              'currLatitude_1':
+                  this._items[this._items.length - 1].currLatitude.toString(),
+              'currLongitude_1':
+                  this._items[this._items.length - 1].currLongitude.toString(),
+              'currAddress_1':
+                  this._items[this._items.length - 1].currAddress.toString(),
+              'imageLink_1':
+                  this._items[this._items.length - 1].classroomUrl.toString(),
+
+              'currDateTime_2': classInfo.currDateTime.toString(),
+              'currTime_2': classInfo.currTime.toString(),
+              'currDate_2': classInfo.currDate.toString(),
+              'numberOfHeads_2': classInfo.numOfStudents.toString(),
+              'currLatitude_2': classInfo.currLatitude.toString(),
+              'currLongitude_2': classInfo.currLongitude.toString(),
+              'currAddress_2': classInfo.currAddress.toString(),
+              'imageLink_2': classroomImageUrl.toString(),
+
+              'class_duration': classDuration,
+            },
+          ),
+        );
+      }
 
       // _items.add(classInfo);
       notifyListeners();

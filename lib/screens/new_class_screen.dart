@@ -80,10 +80,11 @@ class _NewClassScreenState extends State<NewClassScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (_isCurrentLocationTaken == true) {
-      print(addressValue.value);
-      _stopListening();
-    }
+    setState(() {
+      if (_isCurrentLocationTaken == true) {
+        _stopListening();
+      }
+    });
   }
 
   Future<void> _checkForError(
@@ -129,7 +130,9 @@ class _NewClassScreenState extends State<NewClassScreen> {
   }
 
   Future<void> _submitTheClassInformation(
-      BuildContext context, GlobalKey<ScaffoldState> sKey) async {
+    BuildContext context,
+    GlobalKey<ScaffoldState> sKey,
+  ) async {
     ClassInformation classInfo = new ClassInformation(
       unqId: DateTime.now().toString() + _picTiming.toString(),
       currDateTime: _picTiming.toString(),
@@ -187,7 +190,6 @@ class _NewClassScreenState extends State<NewClassScreen> {
     var screenWidth = MediaQuery.of(context).size.width;
     var topInsets = MediaQuery.of(context).viewInsets.top;
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
-
     var useableHeight = screenHeight - topInsets - bottomInsets;
 
     return Scaffold(
@@ -385,6 +387,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
         label: !_isSpinnerLoading
             ? Text(
                 "Click a Pic\nतस्वीर क्लिक करें",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                     color:
                         _isFloatingButtonActive ? Colors.white : Colors.black),

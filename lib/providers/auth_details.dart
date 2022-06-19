@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -38,8 +39,7 @@ class AuthDetails with ChangeNotifier {
   bool get isPhoneNumberListEmpty {
     if (this.existingUserPhoneNumberList.isEmpty) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -59,12 +59,12 @@ class AuthDetails with ChangeNotifier {
 
     try {
       final dataBaseResponse = await http.get(urlLink);
-      final extractedClass =
-          json.decode(dataBaseResponse.body) as Map<String, dynamic>;
+      final extractedUserPhoneNumbers = json.decode(dataBaseResponse.body) as Map<String, dynamic>;
 
-      if (extractedClass != Null) {
+      if (extractedUserPhoneNumbers.length !=
+          this.existingUserPhoneNumberList.length) {
         final List<String> phoneNumberList = [];
-        extractedClass.forEach(
+        extractedUserPhoneNumbers.forEach(
           (phoneId, phoneData) {
             phoneNumberList.add(phoneData['phoneNumber']);
           },
@@ -77,5 +77,58 @@ class AuthDetails with ChangeNotifier {
       print("Error Value");
       print(errorVal);
     }
+  }
+
+  Future<bool> checkIfEnteredNumberExists(
+    BuildContext context,
+    TextEditingController userPhoneNumber,
+  ) async {
+    String enteredNumber = userPhoneNumber.text.toString();
+
+    if (this.existingUserPhoneNumberList.length == 0) {
+      return false;
+    }
+    else {
+      bool isUserPresent = false;
+
+      bool checkForResponse = await Future.forEach(
+        this.existingUserPhoneNumberList,
+        (phoneNum) {
+          if (!isUserPresent && phoneNum.toString() == enteredNumber) {
+            isUserPresent = true;
+            return true;
+          }
+        },
+      ).then((value) {
+        return isUserPresent;
+      });
+
+      return checkForResponse;
+    }
+
+    // final urlLink = Uri.https(
+    //   'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+    //   '/UsersPhoneNumber.json',
+    // );
+
+    // try {
+    //   final dataBaseResponse = await http.get(urlLink);
+    //   final extractedUserPhoneNumbers = json.decode(dataBaseResponse.body) as Map<String, dynamic>;
+
+    //   if (extractedUserPhoneNumbers.length == 0) {
+    //     return false;
+    //   } else {
+    //     bool checkForResponse = await Future.forEach(
+    //       extractedUserPhoneNumbers,
+    //       (phoneElement) => {
+    //         print(phoneElement)
+    //       },
+    //     ).then((value) => false);
+
+    //     return checkForResponse;
+    //   }
+    // } catch (errorVal) {
+    //   print(errorVal);
+    // }
   }
 }

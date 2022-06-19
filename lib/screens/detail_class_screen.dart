@@ -269,6 +269,7 @@ class ClassDetailScreen extends StatelessWidget {
     final diff_dy = t2.difference(t1).inDays;
     final diff_hr = t2.difference(t1).inHours;
     final diff_mn = t2.difference(t1).inMinutes;
+    final rmn_mn = diff_mn - (diff_hr*60);
 
     String classDuration = "";
     if (diff_hr == 0) {
@@ -276,7 +277,7 @@ class ClassDetailScreen extends StatelessWidget {
     } else if (diff_mn == 0) {
       classDuration = "${diff_hr} hr";
     } else {
-      classDuration = "${diff_hr} hr ${diff_mn} min";
+      classDuration = "${diff_hr} hr ${rmn_mn} min";
     }
 
     return Column(

@@ -90,24 +90,39 @@ class _LoginScreenState extends State<LoginScreen>
       String contextText = "Mobile Number Cannot be Negative!";
       _checkForError(context, titleText, contextText);
     } else {
-      String titleText = "Authentication";
-      String contextText = "Enter the Otp:";
-
-      setState(() {
-        _showLoading = true;
-        _signInClicked = true;
-      });
-
+      // String titleText = "Authentication";
+      // String contextText = "Enter the Otp:";
       // _checkIfUserExists(context);
       // _enterUserOtp(context, titleText, contextText);
-      _scaffoldKey.currentState?.showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          content: Text("Verifiying your Phone Number..."),
-        ),
-      );
 
-      _checkForAuthentication(context, _userPhoneNumber);
+
+
+
+      if ((await Provider.of<AuthDetails>(context, listen: false)
+              .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
+          true) {
+        print('User Already Exists!');
+
+        setState(() {
+          _showLoading = true;
+          _signInClicked = true;
+        });
+
+        _scaffoldKey.currentState?.showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text("Verifiying your Phone Number..."),
+          ),
+        );
+
+        _checkForAuthentication(context, _userPhoneNumber);
+      } else {
+        print("New User!");
+
+        String titleText = "New User";
+        String contextText = "Please Create your Account!\nकृपया अपना खाता बनाएं।";
+        _checkForError(context, titleText, contextText);
+      }
     }
   }
 

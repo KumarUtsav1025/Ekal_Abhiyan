@@ -52,7 +52,8 @@ class UserDetails with ChangeNotifier {
     this.mp = {};
     FirebaseAuth.instance.signOut();
     // Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
-    Navigator.of(context).pushNamedAndRemoveUntil("/login-screen", (route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil("/login-screen", (route) => false);
   }
 
   Future<void> setUserInfo() async {
@@ -74,23 +75,133 @@ class UserDetails with ChangeNotifier {
           .get()
           .then(
         (DocumentSnapshot ds) {
-          String firstName = ds.get('first_Name').toString().toUpperCase();
-          String lastName = ds.get('last_Name').toString().toUpperCase();
-          String age = ds.get('age').toString();
-          String gender = ds.get('gender').toString();
-          String dateOfBirth = ds.get('date_Of_Birth').toString();
-          String eduQualification =
-              ds.get('education_Qualification').toString();
-          String phone_Number = ds.get('phone_Number').toString();
-          String current_Address = ds.get('current_Address').toString();
-          String permanent_Address = ds.get('permanent_Address').toString();
-          String state = ds.get('state').toString();
-          String district = ds.get('district').toString();
-          String block = ds.get('block_Level').toString();
-          String villageGroup = ds.get('village_Group').toString();
-          String village = ds.get('village').toString();
-          String postal_Code = ds.get('postal_Code').toString();
-          String profilePic = ds.get('profilePic_Url').toString();
+          String designationType = "";
+          String designationRoleType = "";
+          String dayitvaType = "";
+
+          String firstName = "";
+          String lastName = "";
+          String age = "";
+          String gender = "";
+          String dateOfBirth = "";
+          String eduQualification = "";
+          String mobile_Number = "";
+          String home_Address = "";
+          String school_Address = "";
+          String postal_Code = "";
+          String profilePic = "";
+
+          String prabhag_LevelType = "";
+          String sambhag_LevelType = "";
+          String bhag_LevelType = "";
+          String anchal_LevelType = "";
+          String cluster_LevelType = "";
+          String sanch_LevelType = "";
+          String upSanch_LevelType = "";
+          String village_LevelType = "";
+
+
+          designationType = ds.get('designation_Type').toString();
+          designationRoleType = ds.get('designation_RoleType').toString();
+          dayitvaType = ds.get('dayitva_Type').toString();
+
+          // if ((ds as Map<String,dynamic>).containsKey('designation_Type')) {
+          //   designationType = ds.get('designation_Type').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('designation_RoleType')) {
+          //   designationRoleType = ds.get('designation_RoleType').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('dayitva_Type')) {
+          //   dayitvaType = ds.get('dayitva_Type').toString();
+          // }
+
+          firstName = ds.get('first_Name').toString().toUpperCase();
+          lastName = ds.get('last_Name').toString().toUpperCase();
+          age = ds.get('age').toString();
+          gender = ds.get('gender').toString();
+          dateOfBirth = ds.get('date_Of_Birth').toString();
+          eduQualification = ds.get('education_Qualification').toString();
+          mobile_Number = ds.get('mobile_Number').toString();
+          home_Address = ds.get('home_Address').toString();
+          school_Address = ds.get('school_Address').toString();
+          postal_Code = ds.get('postal_Code').toString();
+          profilePic = ds.get('profilePic_Url').toString();
+
+
+          // if ((ds as Map<String,dynamic>).containsKey('first_Name')) {
+          //   firstName = ds.get('first_Name').toString().toUpperCase();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('last_Name')) {
+          //   lastName = ds.get('last_Name').toString().toUpperCase();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('age')) {
+          //   age = ds.get('age').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('gender')) {
+          //   gender = ds.get('gender').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('date_Of_Birth')) {
+          //   dateOfBirth = ds.get('date_Of_Birth').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('education_Qualification')) {
+          //   eduQualification = ds.get('education_Qualification').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('mobile_Name')) {
+          //   mobile_Number = ds.get('mobile_Number').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('home_Address')) {
+          //   home_Address = ds.get('current_Address').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('school_Address')) {
+          //   school_Address = ds.get('school_Address').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('postal_Code')) {
+          //   postal_Code = ds.get('postal_Code').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('profilePic_Url')) {
+          //   profilePic = ds.get('profilePic_Url').toString();
+          // }
+
+          prabhag_LevelType = ds.get('prabhag_LevelType').toString();
+          sambhag_LevelType = ds.get('sambhag_LevelType').toString();
+          bhag_LevelType = ds.get('bhag_LevelType').toString();
+          anchal_LevelType = ds.get('anchal_LevelType').toString();
+          cluster_LevelType = ds.get('cluster_LevelType').toString();
+          sanch_LevelType = ds.get('sanch_LevelType').toString();
+          upSanch_LevelType = ds.get('upSanch_LevelType').toString();
+          village_LevelType = ds.get('village_LevelType').toString();
+
+
+          // if ((ds as Map<String,dynamic>).containsKey('prabhag_LevelType')) {
+          //   prabhag_LevelType = ds.get('prabhag_LevelType').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('sambsambhag_LevelTypehag')) {
+          //   sambsambhag_LevelTypehag = ds.get('sambsambhag_LevelTypehag').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('bhag_LevelType')) {
+          //   bhag_LevelType = ds.get('bhag_LevelType').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('anchal_LevelType')) {
+          //   anchal_LevelType = ds.get('anchal_LevelType').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('cluster_LevelType')) {
+          //   cluster_LevelType = ds.get('cluster_LevelType').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('sanch_LevelType')) {
+          //   sanch_LevelType = ds.get('sanch_LevelType').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('upSanch_LevelType')) {
+          //   upSanch_LevelType = ds.get('upSanch_LevelType').toString();
+          // }
+          // if ((ds as Map<String,dynamic>).containsKey('village_LevelType')) {
+          //   village_LevelType = ds.get('village_LevelType').toString();
+          // }
+
+          
+
+          mp["designation_Type"] = designationType;
+          mp["designation_RoleType"] = designationRoleType;
+          mp["dayitva_Type"] = dayitvaType;
 
           mp["first_Name"] = firstName;
           mp["last_Name"] = lastName;
@@ -98,16 +209,21 @@ class UserDetails with ChangeNotifier {
           mp["gender"] = gender;
           mp["date_Of_Birth"] = dateOfBirth;
           mp["education_Qualification"] = eduQualification;
-          mp["phone_Number"] = phone_Number;
-          mp["current_Address"] = current_Address;
-          mp["permanent_Address"] = permanent_Address;
-          mp["state"] = state;
-          mp["district"] = district;
-          mp["block_Level"] = block;
-          mp["village_Group"] = villageGroup;
-          mp["village"] = village;
+          mp["mobile_Number"] = mobile_Number;
+          mp["home_Address"] = home_Address;
+          mp["school_Address"] = school_Address;
           mp["postal_Code"] = postal_Code;
           mp["profilePic_Url"] = profilePic;
+
+          mp["prabhag_LevelType"] = prabhag_LevelType;
+          mp["sambhag_LevelType"] = sambhag_LevelType; 
+          mp["bhag_LevelType"] = bhag_LevelType; 
+          mp["anchal_LevelType"] = anchal_LevelType; 
+          mp["cluster_LevelType"] = cluster_LevelType; 
+          mp["sanch_LevelType"] = sanch_LevelType; 
+          mp["upSanch_LevelType"] = upSanch_LevelType; 
+          mp["village_LevelType"] = village_LevelType; 
+
         },
       );
     }
@@ -124,21 +240,37 @@ class UserDetails with ChangeNotifier {
   Future<void> upLoadNewUserPersonalInformation(
     BuildContext context,
     UserCredential authCredential,
+    TextEditingController designationType,
+    TextEditingController designationRoleType,
+    TextEditingController dayitvaType,
+
+    TextEditingController prabhagDayitva_Name,
+    TextEditingController sambhagDayitva_Name,
+    TextEditingController bhagDayitva_Name,
+    TextEditingController anchalDayitva_Name,
+    TextEditingController clusterDayitva_Name,
+    TextEditingController sanchDayitva_Name,
+    TextEditingController upSanchDayitva_Name,
+    TextEditingController villageDayitva_Name,
+
+    TextEditingController userPhoneNumber,
     TextEditingController firstName,
     TextEditingController lastName,
     TextEditingController age,
     DateTime dateOfBirth,
     TextEditingController gender,
     TextEditingController eduQualification,
-    TextEditingController localAddress,
-    TextEditingController permanentAddress,
-    TextEditingController state_SAMBHAG_Name,
-    TextEditingController district_BHAG_Name,
-    TextEditingController block_ANCHAL_Name,
-    TextEditingController groupVillage_SANCH_Name,
-    TextEditingController village_Village_Name,
+    TextEditingController homeAddress,
+    TextEditingController schoolAddress,
+    // TextEditingController state_Name,
+    // TextEditingController region_Name,
+    // TextEditingController district_Name,
+    // TextEditingController anchal_Name,
+    // TextEditingController sankul_Name,
+    // TextEditingController cluster_Name,
+    // TextEditingController subCluster_Name,
+    // TextEditingController village_Name,
     TextEditingController postalCode,
-    TextEditingController userPhoneNumber,
     bool profilePicAvailable,
     File profilePicFile,
   ) async {
@@ -151,6 +283,11 @@ class UserDetails with ChangeNotifier {
     final urlLinkForPhoneNumbers = Uri.https(
       'flutterdatabase-76af4-default-rtdb.firebaseio.com',
       '/UsersPhoneNumber.json',
+    );
+
+    final urlLinkForCompleteClassDetails = Uri.https(
+      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      '/CompleteClassDetails/${loggedInUserId}/${DateFormat.yMMMd('en_US').toString()}.json',
     );
 
     final response1 = await http.post(
@@ -168,34 +305,51 @@ class UserDetails with ChangeNotifier {
           .doc(authCredential.user?.uid)
           .set(
         {
+          'designation_Type': designationType.text.toString(),
+          'designation_RoleType': designationRoleType.text.toString(),
+          'dayitva_Type': dayitvaType.text.toString(),
+
+          'prabhag_LevelType': prabhagDayitva_Name.text.toString(),
+          'sambhag_LevelType': sambhagDayitva_Name.text.toString(),
+          'bhag_LevelType': bhagDayitva_Name.text.toString(),
+          'anchal_LevelType': anchalDayitva_Name.text.toString(),
+          'cluster_LevelType': clusterDayitva_Name.text.toString(),
+          'sanch_LevelType': sanchDayitva_Name.text.toString(),
+          'upSanch_LevelType': upSanchDayitva_Name.text.toString(),
+          'village_LevelType': villageDayitva_Name.text.toString(),
+
           'first_Name': firstName.text.toString(),
           'last_Name': lastName.text.toString(),
           'age': age.text.toString(),
-          'date_Of_Birth':
-              DateFormat('dd/MM/yyyy').format(dateOfBirth).toString(),
+          'date_Of_Birth': DateFormat('dd/MM/yyyy').format(dateOfBirth).toString(),
           'gender': gender.text.toString(),
           'education_Qualification': eduQualification.text.toString(),
-          'current_Address': localAddress.text.toString(),
-          'permanent_Address': permanentAddress.text.toString(),
-          'state': state_SAMBHAG_Name.text.toString(),
-          'district': district_BHAG_Name.text.toString(),
-          'block_Level': block_ANCHAL_Name.text.toString(),
-          'village_Group': groupVillage_SANCH_Name.text.toString(),
-          'village': village_Village_Name.text.toString(),
+          'home_Address': homeAddress.text.toString(),
+          'school_Address': schoolAddress.text.toString(),
           'postal_Code': postalCode.text.toString(),
-          'phone_Number': userPhoneNumber.text.toString(),
+          'mobile_Number': userPhoneNumber.text.toString(),
           'creation_Timing': DateTime.now().toString(),
           'profilePic_Url': "",
+          // 'state': state_Name.text.toString(),
+          // 'region': region_Name.text.toString(),
+          // 'district': district_Name.text.toString(),
+          // 'anchal': anchal_Name.text.toString(),
+          // 'sankul': sankul_Name.text.toString(),
+          // 'cluster': cluster_Name.text.toString(),
+          // 'sub_Cluster': subCluster_Name.text.toString(),
+          // 'village': village_Name.text.toString(),
         },
       );
 
       // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
-      Navigator.of(context).pushNamedAndRemoveUntil("/tab-screen", (route) => false);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil("/tab-screen", (route) => false);
     } else {
       String imageName =
           "${loggedInUserId}_${DateTime.now().toString()}_profilePicture.jpg";
 
-      String dateVal = DateFormat('dd/MM/yyyy').format(dateOfBirth).toString();
+      String dateVal =
+          DateFormat.yMMMMd('en_US').format(dateOfBirth).toString();
       final profilePicture = FirebaseStorage.instance
           .ref()
           .child(
@@ -217,29 +371,45 @@ class UserDetails with ChangeNotifier {
           .doc(authCredential.user?.uid)
           .set(
         {
+          'designation_Type': designationType.text.toString(),
+          'designation_RoleType': designationRoleType.text.toString(),
+          'dayitva_Type': dayitvaType.text.toString(),
+
+          'prabhag_LevelType': prabhagDayitva_Name.text.toString(),
+          'sambhag_LevelType': sambhagDayitva_Name.text.toString(),
+          'bhag_LevelType': bhagDayitva_Name.text.toString(),
+          'anchal_LevelType': anchalDayitva_Name.text.toString(),
+          'cluster_LevelType': clusterDayitva_Name.text.toString(),
+          'sanch_LevelType': sanchDayitva_Name.text.toString(),
+          'upSanch_LevelType': upSanchDayitva_Name.text.toString(),
+          'village_LevelType': villageDayitva_Name.text.toString(),
+
           'first_Name': firstName.text.toString(),
           'last_Name': lastName.text.toString(),
           'age': age.text.toString(),
-          'date_Of_Birth':
-              DateFormat('dd/MM/yyyy').format(dateOfBirth).toString(),
+          'date_Of_Birth': DateFormat('dd/MM/yyyy').format(dateOfBirth).toString(),
           'gender': gender.text.toString(),
           'education_Qualification': eduQualification.text.toString(),
-          'current_Address': localAddress.text.toString(),
-          'permanent_Address': permanentAddress.text.toString(),
-          'state': state_SAMBHAG_Name.text.toString(),
-          'district': district_BHAG_Name.text.toString(),
-          'block_Level': block_ANCHAL_Name.text.toString(),
-          'village_Group': groupVillage_SANCH_Name.text.toString(),
-          'village': village_Village_Name.text.toString(),
+          'home_Address': homeAddress.text.toString(),
+          'school_Address': schoolAddress.text.toString(),
           'postal_Code': postalCode.text.toString(),
-          'phone_Number': userPhoneNumber.text.toString(),
+          'mobile_Number': userPhoneNumber.text.toString(),
           'creation_Timing': DateTime.now().toString(),
           'profilePic_Url': classroomImageUrl.toString(),
+          // 'state': state_Name.text.toString(),
+          // 'region': region_Name.text.toString(),
+          // 'district': district_Name.text.toString(),
+          // 'anchal': anchal_Name.text.toString(),
+          // 'sankul': sankul_Name.text.toString(),
+          // 'cluster': cluster_Name.text.toString(),
+          // 'sub_Cluster': subCluster_Name.text.toString(),
+          // 'village': village_Name.text.toString(),
         },
       );
 
       // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
-      Navigator.of(context).pushNamedAndRemoveUntil("/tab-screen", (route) => false);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil("/tab-screen", (route) => false);
     }
   }
 }

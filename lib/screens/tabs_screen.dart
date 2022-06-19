@@ -25,9 +25,9 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 import './home_screen.dart';
-import './create_class_screen.dart';
 import './new_class_screen.dart';
 import './previous_class_screen.dart';
+import './capture_location_screen.dart';
 import './my_profile_screen.dart';
 import './login_screen.dart';
 
@@ -55,6 +55,7 @@ class _TabsScreenState extends State<TabsScreen> {
       {'page': HomeScreen(), 'title': 'विद्यालय ऐप'},
       {'page': NewClassScreen(), 'title': 'आज की कक्षा'},
       {'page': PreviousClass(), 'title': 'पूर्व उपस्थिति की जानकारी'},
+      {'page': CaptureLocationScreen(), 'title': 'स्थान की पुष्टि करें'},
       {'page': MyProfile(), 'title': 'बाह्य रूपरेखा'},
     ];
   }
@@ -77,6 +78,7 @@ class _TabsScreenState extends State<TabsScreen> {
       Icon(Icons.home, size: 30),
       Icon(Icons.add_card_rounded, size: 30),
       Icon(Icons.analytics, size: 30),
+      Icon(Icons.add_location_alt_rounded, size: 30),
       Icon(Icons.person, size: 30),
     ];
 

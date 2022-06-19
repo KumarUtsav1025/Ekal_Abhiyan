@@ -27,6 +27,8 @@ import './tabs_screen.dart';
 
 import '../providers/class_details.dart';
 import '../providers/user_details.dart';
+import '../providers/auth_details.dart';
+import '../providers/hardData_details.dart';
 
 class SignUpScreen extends StatefulWidget {
   static const routeName = '/signup-screen';
@@ -50,16 +52,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _otpValue = TextEditingController();
 
   bool isDateSet = false;
-  String dateBtnString = "Enter D.O.B/";
+  String dateBtnString = "Enter D.O.B";
 
   File _profilePicture = new File("");
+
+  var _designationType = TextEditingController();
+  var _designationRoleType = TextEditingController();
+  var _dayitvaType = TextEditingController();
+
+  var _defaultDayitva_PrabhagType = TextEditingController();
+  var _defaultDayitva_SambhagType = TextEditingController();
+  var _defaultDayitva_BhagType = TextEditingController();
+  var _defaultDayitva_AnchalType = TextEditingController();
+  var _defaultDayitva_ClusterType = TextEditingController();
+  var _defaultDayitva_SanchType = TextEditingController();
+  var _defaultDayitva_SubSanchType = TextEditingController();
+  var _defaultDayitva_VillageType = TextEditingController();
+
+  // var _liabilityType = TextEditingController();
+  // var _bhaagType = TextEditingController();
+  // var _sambhaagType = TextEditingController();
   var _firstName = TextEditingController();
   var _lastName = TextEditingController();
   var _age = TextEditingController();
   var _gender = TextEditingController();
   late DateTime _dateOfBirth = DateTime.now();
-  var _localAddress = TextEditingController();
-  var _permanentAddress = TextEditingController();
+  var _homeAddress = TextEditingController();
+  var _schoolAddress = TextEditingController();
   var _state_SAMBHAG_Name = TextEditingController();
   var _district_BHAG_Name = TextEditingController();
   var _block_ANCHAL_Name = TextEditingController();
@@ -70,6 +89,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var _eduQualification = TextEditingController();
 
   bool _isProfilePicTaken = false;
+  bool alterDropDown = false;
+  bool _isDesignationTypeSet = false;
+  bool _isDesignationRoleTypeSet = false;
+
+  bool _isPrabhaagType = false;
+  bool _isSambhaagType = false;
+  bool _isBhaagType = false;
+  bool _iSanchalType = false;
+  bool _isClusterType = false;
+  bool _isSanchType = false;
+  bool _isSubSanchType = false;
+  bool _isVillageType = false;
+
   bool _isFirstNameSet = false;
   bool _islastNameSet = false;
   bool _isAgeSet = false;
@@ -82,64 +114,260 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isPostalCodeSet = false;
   bool _isEducationQualificationSet = false;
 
+  bool _isStateDropDownSet = false;
+  bool _isRegionDropDownSet = false;
+  bool _isDistrictDropDownSet = false;
+  bool _isAnchalDropDownSet = false;
+  bool _isSankulDropDownSet = false;
+  bool _isClusterDropDownSet = false;
+  bool _isSubClusterDropDownSet = false;
+  bool _isVillageDropDownSet = false;
+  bool _submitOtpClicked = false;
+
+  TextEditingController defaultStateValue = TextEditingController();
+  TextEditingController defaultRegionValue = TextEditingController();
+  TextEditingController defaultDistrictValue = TextEditingController();
+  TextEditingController defaultAnchalValue = TextEditingController();
+  TextEditingController defaultSankulValue = TextEditingController();
+  TextEditingController defaultClusterValue = TextEditingController();
+  TextEditingController defaultSubClusterValue = TextEditingController();
+  TextEditingController defaultVillageValue = TextEditingController();
+
+  // defaultStateValue.text = "";
+  // defaultRegionValue.text = "";
+  // defaultDistrictValue.text = "";
+  // defaultAnchalValue.text = "";
+  // defaultSankulValue.text = "";
+  // defaultClusterValue.text = "";
+  // defaultSubClusterValue.text = "";
+  // defaultVillageValue.text = "";
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<AuthDetails>(context, listen: false)
+        .getExistingUserPhoneNumbers();
+  }
+
   final genderSelectionList = ["Male/पुरुष", "Female/नारी", "Others/अन्य लिंग"];
-  List<dynamic> states_SAMBHAG_SelectionList = [
-    {"id": 1, "stateName": "Andhra Pradesh"},
-    {"id": 2, "stateName": "Arunachal Pradesh"},
-    {"id": 3, "stateName": "Assam"},
-    {"id": 4, "stateName": "Bihar"},
-    {"id": 5, "stateName": "Chhattisgarh"},
-    {"id": 6, "stateName": "Goa"},
-    {"id": 7, "stateName": "Gujarat"},
-    {"id": 8, "stateName": "Haryana"},
-    {"id": 9, "stateName": "Himachal Pradesh"},
-    {"id": 10, "stateName": "Jammu and Kashmir"},
-    {"id": 11, "stateName": "Jharkhand"},
-    {"id": 12, "stateName": "Karnataka"},
-    {"id": 13, "stateName": "Kerala"},
-    {"id": 14, "stateName": "Madhya Pradesh"},
-    {"id": 15, "stateName": "Maharashtra"},
-    {"id": 16, "stateName": "Manipur"},
-    {"id": 17, "stateName": "Meghalaya"},
-    {"id": 18, "stateName": "Mizoram"},
-    {"id": 19, "stateName": "Nagaland"},
-    {"id": 20, "stateName": "Odisha"},
-    {"id": 21, "stateName": "Punjab"},
-    {"id": 22, "stateName": "Rajasthan"},
-    {"id": 23, "stateName": "Sikkim"},
-    {"id": 24, "stateName": "Tamil Nadu"},
-    {"id": 25, "stateName": "Telangana"},
-    {"id": 26, "stateName": "Tripura"},
-    {"id": 27, "stateName": "Uttar Pradesh"},
-    {"id": 28, "stateName": "Uttarakhand"},
-    {"id": 29, "stateName": "West Bengal"},
-    {"id": 30, "stateName": "Union Territory"},
+
+  final ekalCategorySelectionList = [
+    "Karyakarta -- कार्यकर्ता",
+    "Samiti -- समिति",
+    "Acharya -- आचार्य"
   ];
 
-  List<dynamic> district_BHAG_SelectionList = [
-    {"id": 1, "districtName": "Ambikapur", "parentStateID": 5}
+  final dayitvaTypeList = [
+    "Prabhaag -- प्रभाग",
+    "Sambhaag -- संभाग",
+    "Bhaag -- भाग",
+    "Anchal -- अंचल",
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव",
   ];
 
-  List<dynamic> block_ANCHAL_SelectionList = [
-    {"id": 1, "blockName": "Ambikapur", "parentDistrictID": 1}
+  final KaryakartaDaitvaList = [
+    "अभियान प्रमुख",
+    "संस्कार प्रमुख",
+    "ग्राम स्वराज मंच",
+    "महिला प्रमुख",
+    "आरोग्य प्रमुख",
+    "ग्रामोत्थान प्रमुख",
+    "युवा प्रमुख",
+    "संवाद प्रमुख",
+    "कार्यालय प्रमुख",
+    "व्यास",
   ];
 
-  List<dynamic> groupVillage_SANCH_SelectionList = [
-    {"id": 1, "groupVillageName": "Darima", "parentBlockID": 1}
+  final SamitiDaitvaList = [
+    "अभियान समिति",
+    "संस्कार समिति",
+    "ग्राम स्वराज मंच",
+    "महिला समिति",
+    "आरोग्य समिति",
+    "ग्रामोत्थान समिति",
+    "युवा समिति",
+    "संवाद समिति",
+    "कार्यालय प्रभारी",
   ];
 
-  List<dynamic> village_VILLAGE_SelectionList = [
-    {"id": 1, "villageName": "Damali", "parentGroupVillageID": 1}
+  final AcharyaDaitvaList = ["आचार्य"];
+
+  List<dynamic> ekalList = [];
+  List<dynamic> hierarchyDayitvaList = [];
+
+  final visibilityForPrabhag = [
+    "Prabhaag -- प्रभाग",
+    "Sambhaag -- संभाग",
+    "Bhaag -- भाग",
+    "Anchal -- अंचल",
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
   ];
+  final visibilityForSambhag = [
+    "Sambhaag -- संभाग",
+    "Bhaag -- भाग",
+    "Anchal -- अंचल",
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForBhag = [
+    "Bhaag -- भाग",
+    "Anchal -- अंचल",
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForAnchal = [
+    "Anchal -- अंचल",
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForCluster = [
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForSanch = [
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForUpSanch = ["Sub-Sanch -- उपसंच", "Village -- गाव"];
+  final visibilityForVillage = ["Village -- गाव"];
 
   Future<void> _checkInputFields(BuildContext context) async {
-    if (_eduQualification.text.trim().length == 0) {
-      _eduQualification.text = "No Data Available/कोई डेटा मौजूद नहीं";
-    }
-    if (_postalCode.text.trim().length == 0) {
-      _postalCode.text = "No Data Available/कोई डेटा मौजूद नहीं";
-    }
-    if (_firstName.text.trim().length == 0) {
+    if (_designationType.text.trim().length == 0) {
+      String titleText = "Invalid Designation Type!";
+      String contextText = "Please select your 'Designation'...";
+      _checkForError(context, titleText, contextText);
+    } else if (_designationRoleType.text == "") {
+      String titleText = "Invalid Karyakarta/Samiti Type!";
+      String contextText = "Please select your Karyakarta/Samiti Type...";
+      _checkForError(context, titleText, contextText);
+    } else if (_dayitvaType.text == "") {
+      String titleText = "Invalid Dayitva Level!";
+      String contextText = "Please select your Dayitva Level...";
+      _checkForError(context, titleText, contextText);
+    } else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+            _designationType.text == "Samiti -- समिति") &&
+        _dayitvaType.text == "Prabhaag -- प्रभाग" &&
+        _defaultDayitva_PrabhagType.text == "") {
+      String titleText = "Invalid Prabhag!";
+      String contextText = "Please select till Prabhag...";
+      _checkForError(context, titleText, contextText);
+    } else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+            _designationType.text == "Samiti -- समिति") &&
+        _dayitvaType.text == "Sambhaag -- संभाग" &&
+        _defaultDayitva_SambhagType.text == "") {
+      String titleText = "Invalid Sambhag!";
+      String contextText = "Please select till Sambhag...";
+      _checkForError(context, titleText, contextText);
+    } else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+            _designationType.text == "Samiti -- समिति") &&
+        _dayitvaType.text == "Bhaag -- भाग" &&
+        _defaultDayitva_BhagType.text == "") {
+      String titleText = "Invalid Bhag!";
+      String contextText = "Please select till Bhag...";
+      _checkForError(context, titleText, contextText);
+    } else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+            _designationType.text == "Samiti -- समिति") &&
+        _dayitvaType.text == "Anchal -- अंचल" &&
+        _defaultDayitva_AnchalType.text == "") {
+      String titleText = "Invalid Anchal!";
+      String contextText = "Please select till Anchal...";
+      _checkForError(context, titleText, contextText);
+    } else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+            _designationType.text == "Samiti -- समिति") &&
+        _dayitvaType.text == "Cluster -- क्लस्टर" &&
+        _defaultDayitva_ClusterType.text == "") {
+      String titleText = "Invalid Cluster!";
+      String contextText = "Please select till Cluster...";
+      _checkForError(context, titleText, contextText);
+    } else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+            _designationType.text == "Samiti -- समिति") &&
+        _dayitvaType.text == "Sanch -- संच" &&
+        _defaultDayitva_SanchType.text == "") {
+      String titleText = "Invalid Sanch!";
+      String contextText = "Please select till Sanch...";
+      _checkForError(context, titleText, contextText);
+    } else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+            _designationType.text == "Samiti -- समिति") &&
+        _dayitvaType.text == "Sub-Sanch -- उपसंच" &&
+        _defaultDayitva_SubSanchType.text == "") {
+      String titleText = "Invalid UpSanch!";
+      String contextText = "Please select till UpSanch...";
+      _checkForError(context, titleText, contextText);
+    } else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+            _designationType.text == "Samiti -- समिति") &&
+        _dayitvaType.text == "Village -- गाव" &&
+        _defaultDayitva_VillageType.text == "") {
+      String titleText = "Invalid Village!";
+      String contextText = "Please select till Village...";
+      _checkForError(context, titleText, contextText);
+    } else if (_designationType.text == "Acharya -- आचार्य" &&
+        _defaultDayitva_PrabhagType.text.length == 0) {
+      String titleText = "Invalid Prabhag!";
+      String contextText = "Please select your Prabhag...";
+      _checkForError(context, titleText, contextText);
+    } else if (_designationType.text == "Acharya -- आचार्य" &&
+        _defaultDayitva_SambhagType.text.length == 0) {
+      String titleText = "Invalid Sambhag!";
+      String contextText = "Please select your Sambhag...";
+      _checkForError(context, titleText, contextText);
+    } else if (_designationType.text == "Acharya -- आचार्य" &&
+        _defaultDayitva_BhagType.text.length == 0) {
+      String titleText = "Invalid Bhag!";
+      String contextText = "Please select your Bhag...";
+      _checkForError(context, titleText, contextText);
+    } else if (_designationType.text == "Acharya -- आचार्य" &&
+        _defaultDayitva_AnchalType.text.length == 0) {
+      String titleText = "Invalid Anchal!";
+      String contextText = "Please select your Anchal...";
+      _checkForError(context, titleText, contextText);
+    } else if (_designationType.text == "Acharya -- आचार्य" &&
+        _defaultDayitva_ClusterType.text.length == 0) {
+      String titleText = "Invalid Cluster!";
+      String contextText = "Please select your Cluster...";
+      _checkForError(context, titleText, contextText);
+    } else if (_designationType.text == "Acharya -- आचार्य" &&
+        _defaultDayitva_SanchType.text.length == 0) {
+      String titleText = "Invalid Sanch!";
+      String contextText = "Please select your Sanch...";
+      _checkForError(context, titleText, contextText);
+    } else if (_designationType.text == "Acharya -- आचार्य" &&
+        _defaultDayitva_SubSanchType.text.length == 0) {
+      String titleText = "Invalid UpSanch!";
+      String contextText = "Please select your UpSanch...";
+      _checkForError(context, titleText, contextText);
+    } else if (_designationType.text == "Acharya -- आचार्य" &&
+        _defaultDayitva_VillageType.text.length == 0) {
+      String titleText = "Invalid Village!";
+      String contextText = "Please select your Village...";
+      _checkForError(context, titleText, contextText);
+    } else if (_userPhoneNumber.text.length != 10) {
+      String titleText = "Invild Mobile Number";
+      String contextText = "Please Enter a Valid 10 Digit Number!";
+      _checkForError(context, titleText, contextText);
+    } else if (int.tryParse(_userPhoneNumber.text) == null) {
+      String titleText = "Invild Mobile Number";
+      String contextText = "Entered Number is Not Valid!";
+      _checkForError(context, titleText, contextText);
+    } else if (int.parse(_userPhoneNumber.text) < 0) {
+      String titleText = "Invild Mobile Number";
+      String contextText = "Mobile Number Cannot be Negative!";
+      _checkForError(context, titleText, contextText);
+    } else if (_firstName.text.trim().length == 0) {
       String titleText = "Invalid First Name!";
       String contextText = "Please enter your 'First Name'...";
       _checkForError(context, titleText, contextText);
@@ -163,62 +391,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Invalid Gender";
       String contextText = "Please Enter your Gender/Sex!";
       _checkForError(context, titleText, contextText);
-    } else if (_localAddress.text.trim().length <= 3) {
+    } else if (_homeAddress.text.trim().length <= 3) {
       String titleText = "Invalid Address";
       String contextText = "Please enter your complete address";
-      _checkForError(context, titleText, contextText);
-    } else if (_permanentAddress.text.trim().length == 3) {
-      String titleText = "Invalid Address";
-      String contextText = "Please enter your complete address";
-      _checkForError(context, titleText, contextText);
-    } else if (_state_SAMBHAG_Name.text.trim().length < 2) {
-      String titleText = "Invalid State Name";
-      String contextText = "Please enter your State/Sambhag";
-      _checkForError(context, titleText, contextText);
-    } else if (_district_BHAG_Name.text.trim().length < 2) {
-      String titleText = "Invalid District Name";
-      String contextText = "Please enter your District/Bhag";
-      _checkForError(context, titleText, contextText);
-    } else if (_block_ANCHAL_Name.text.trim().length < 2) {
-      String titleText = "Invalid Block Name";
-      String contextText = "Please enter your Block/Anchal";
-      _checkForError(context, titleText, contextText);
-    } else if (_groupVillage_SANCH_Name.text.trim().length < 2) {
-      String titleText = "Invalid Group Village Name";
-      String contextText = "Please enter your Group Village/Sanch";
-      _checkForError(context, titleText, contextText);
-    } else if (_village_Village_Name.text.trim().length < 2) {
-      String titleText = "Invalid Village Name";
-      String contextText = "Please enter your Village";
-      _checkForError(context, titleText, contextText);
-    } else if (_userPhoneNumber.text.length != 10) {
-      String titleText = "Invild Mobile Number";
-      String contextText = "Please Enter a Valid 10 Digit Number!";
-      _checkForError(context, titleText, contextText);
-    } else if (int.tryParse(_userPhoneNumber.text) == null) {
-      String titleText = "Invild Mobile Number";
-      String contextText = "Entered Number is Not Valid!";
-      _checkForError(context, titleText, contextText);
-    } else if (int.parse(_userPhoneNumber.text) < 0) {
-      String titleText = "Invild Mobile Number";
-      String contextText = "Mobile Number Cannot be Negative!";
       _checkForError(context, titleText, contextText);
     } else {
-      String titleText = "Authentication";
-      String contextText = "Enter the Otp:";
-
-      setState(() {
-        _isSubmitClicked = true;
-        _showLoading = true;
-      });
-
+      // String titleText = "Authentication";
+      // String contextText = "Enter the Otp:";
       // _enterUserOtp(context, titleText, contextText);
-      _scaffoldKey.currentState?.showSnackBar(
-        SnackBar(
-          content: Text("Verifiying your Number..."),
-        ),
-      );
-      _checkForAuthentication(context, _userPhoneNumber);
+
+      if ((await Provider.of<AuthDetails>(context, listen: false)
+              .checkIfEnteredNumberExists(context, _userPhoneNumber)) ==
+          false) {
+        print("New User");
+
+        setState(() {
+          if (_eduQualification.text.trim().length == 0) {
+            _eduQualification.text = "No Data Available\nकोई डेटा मौजूद नहीं";
+          }
+          if (_postalCode.text.trim().length == 0) {
+            _postalCode.text = "No Data Available\nकोई डेटा मौजूद नहीं";
+          }
+          _isSubmitClicked = true;
+          _showLoading = true;
+        });
+
+        _scaffoldKey.currentState?.showSnackBar(
+          SnackBar(
+            content: Text("Verifiying your Number..."),
+          ),
+        );
+        _checkForAuthentication(context, _userPhoneNumber);
+      } else {
+        print('User Already Exists!');
+
+        String titleText = "Account Already Exists!";
+        String contextText =
+            "Sign-In your Account!\nअपने खाते में साइन-इन करें।";
+        _checkForError(context, titleText, contextText);
+      }
     }
   }
 
@@ -268,9 +479,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (pickedDate == null) {
         return;
       } else {
-        DateTime t1 = _dateOfBirth;
+        DateTime t1 = pickedDate;
         DateTime t2 = DateTime.now();
-        final diff_dy = t2.difference(t1).inDays;
+        int diff_dy = t2.difference(t1).inDays;
         String ageVal = (diff_dy / 365).floor().toString();
 
         setState(() {
@@ -283,40 +494,73 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
-  Future<void> createUserInformationInDatabase(
-    BuildContext context,
-    UserCredential authCredential,
-  ) async {
-    // AuthResult _authResult = await _auth.
-    // FirebaseFirestore.instance.collection('userInformation').document();
-
-    await FirebaseFirestore.instance
-        .collection('userPersonalInformation')
-        .doc(authCredential.user?.uid)
-        .set({
-      'first_Name': _firstName.text.toString(),
-      'last_Name': _lastName.text.toString(),
-      'age': _age.text.toString(),
-      'date_Of_Birth': DateFormat('dd/MM/yyyy').format(_dateOfBirth).toString(),
-      'gender': _gender.text.toString(),
-      'education_Qualification': _eduQualification.text.toString(),
-      'current_Address': _localAddress.text.toString(),
-      'permanent_Address': _permanentAddress.text.toString(),
-      'state': _state_SAMBHAG_Name.text.toString(),
-      'district': _district_BHAG_Name.text.toString(),
-      'postal_Code': _postalCode.text.toString(),
-      'phone_Number': _userPhoneNumber.text.toString(),
-    });
-
-    _scaffoldKey.currentState
-        ?.showSnackBar(SnackBar(content: Text("Creating your Account")));
-    Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
-  }
-
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
+
+    ekalList = Provider.of<HardDataDetails>(context, listen: false)
+        .getEkalLocationCategoryList();
+
+    hierarchyDayitvaList = Provider.of<HardDataDetails>(context, listen: false)
+        .getHierarchyDayitvaLocationList();
+
+    setState(() {
+      if (_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+          _designationType.text == "Samiti -- समिति") {
+        alterDropDown = true;
+      }
+      if (_designationType.text == "Karyakarta -- कार्यकर्ता" &&
+          (SamitiDaitvaList.contains(_designationRoleType.text) ||
+              _designationRoleType.text == "आचार्य")) {
+        alterDropDown = true;
+
+        _designationRoleType.text = "";
+        _dayitvaType.text = "";
+        _defaultDayitva_VillageType.text = "";
+
+        _defaultDayitva_PrabhagType.text = "";
+        _defaultDayitva_SambhagType.text = "";
+        _defaultDayitva_BhagType.text = "";
+        _defaultDayitva_AnchalType.text = "";
+        _defaultDayitva_ClusterType.text = "";
+        _defaultDayitva_SanchType.text = "";
+        _defaultDayitva_SubSanchType.text = "";
+        _defaultDayitva_VillageType.text = "";
+      } else if (_designationType.text == "Samiti -- समिति" &&
+          (KaryakartaDaitvaList.contains(_designationRoleType.text) ||
+              _designationRoleType.text == "आचार्य")) {
+        alterDropDown = true;
+
+        _designationRoleType.text = "";
+        _dayitvaType.text = "";
+        _defaultDayitva_VillageType.text = "";
+
+        _defaultDayitva_PrabhagType.text = "";
+        _defaultDayitva_SambhagType.text = "";
+        _defaultDayitva_BhagType.text = "";
+        _defaultDayitva_AnchalType.text = "";
+        _defaultDayitva_ClusterType.text = "";
+        _defaultDayitva_SanchType.text = "";
+        _defaultDayitva_SubSanchType.text = "";
+        _defaultDayitva_VillageType.text = "";
+      } else if (_designationType.text == "Acharya -- आचार्य") {
+        _designationRoleType.text = "आचार्य";
+        _dayitvaType.text = "Village -- गाव";
+
+        if (alterDropDown) {
+          _defaultDayitva_PrabhagType.text = "";
+          _defaultDayitva_SambhagType.text = "";
+          _defaultDayitva_BhagType.text = "";
+          _defaultDayitva_AnchalType.text = "";
+          _defaultDayitva_ClusterType.text = "";
+          _defaultDayitva_SanchType.text = "";
+          _defaultDayitva_SubSanchType.text = "";
+          _defaultDayitva_VillageType.text = "";
+          alterDropDown = false;
+        }
+      }
+    });
 
     return Scaffold(
       backgroundColor: Colors.white70,
@@ -337,6 +581,259 @@ class _SignUpScreenState extends State<SignUpScreen> {
               context,
             ),
             SizedBox(height: screenHeight * 0.01),
+            // Designation Type
+            dropDownMenu(
+              context,
+              ekalCategorySelectionList,
+              _designationType,
+              "Designation Type/पदनाम प्रकार *",
+              true,
+              () => {},
+            ),
+            // SizedBox(height: screenHeight * 0.015),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey.shade100,
+              ),
+              margin: EdgeInsets.only(
+                top: screenHeight * 0.015,
+                left: screenWidth * 0.02,
+                right: screenWidth * 0.02,
+              ),
+              child: _designationType.text == ""
+                  ? SizedBox(height: 0)
+                  : _designationType.text == "Karyakarta -- कार्यकर्ता"
+                      ? dropDownMenu(
+                          context,
+                          KaryakartaDaitvaList,
+                          _designationRoleType,
+                          "Karyakarta Types/कार्यकर्ता प्रकार *",
+                          false,
+                          () => {},
+                        )
+                      : _designationType.text == "Samiti -- समिति"
+                          ? dropDownMenu(
+                              context,
+                              SamitiDaitvaList,
+                              _designationRoleType,
+                              "Samiti Types/समिति प्रकार *",
+                              false,
+                              () => {},
+                            )
+                          : dropDownMenu(
+                              context,
+                              AcharyaDaitvaList,
+                              _designationRoleType,
+                              "Archrya Types/आचार्य प्रकार *",
+                              false,
+                              () => {},
+                            ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey.shade100,
+              ),
+              margin: EdgeInsets.only(
+                top: screenHeight * 0.015,
+                left: screenWidth * 0.02,
+                right: screenWidth * 0.02,
+              ),
+              child: _designationType.text == ""
+                  ? SizedBox(height: 0)
+                  : dropDownMenu(
+                      context,
+                      dayitvaTypeList,
+                      _dayitvaType,
+                      "Dayitva Level/दयात्व स्तर *",
+                      false,
+                      () => {},
+                    ),
+            ),
+            SizedBox(height: screenHeight * 0.05),
+            Padding(
+              padding: EdgeInsets.all(0),
+              child: Container(
+                child: visibilityForPrabhag.contains(_dayitvaType.text)
+                    ? Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.004),
+                        child: dropDownMenuForPrabhagDayitva(
+                          context,
+                          _defaultDayitva_PrabhagType,
+                          "Prabhag",
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(0),
+              child: Container(
+                child: visibilityForSambhag.contains(_dayitvaType.text)
+                    ? Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.004),
+                        child: dropDownMenuForSambhagDayitva(
+                          context,
+                          _defaultDayitva_SambhagType,
+                          _defaultDayitva_PrabhagType,
+                          "Sambhag",
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(0),
+              child: Container(
+                child: visibilityForBhag.contains(_dayitvaType.text)
+                    ? Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.004),
+                        child: dropDownMenuForBhagDayitva(
+                          context,
+                          _defaultDayitva_BhagType,
+                          _defaultDayitva_PrabhagType,
+                          _defaultDayitva_SambhagType,
+                          "Bhag",
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(0),
+              child: Container(
+                child: visibilityForAnchal.contains(_dayitvaType.text)
+                    ? Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.004),
+                        child: dropDownMenuForAnchalDayitva(
+                          context,
+                          _defaultDayitva_AnchalType,
+                          _defaultDayitva_PrabhagType,
+                          _defaultDayitva_SambhagType,
+                          _defaultDayitva_BhagType,
+                          "Anchal",
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(0),
+              child: Container(
+                child: visibilityForCluster.contains(_dayitvaType.text)
+                    ? Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.004),
+                        child: dropDownMenuForClusterDayitva(
+                          context,
+                          _defaultDayitva_ClusterType,
+                          _defaultDayitva_PrabhagType,
+                          _defaultDayitva_SambhagType,
+                          _defaultDayitva_BhagType,
+                          _defaultDayitva_AnchalType,
+                          "Cluster",
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(0),
+              child: Container(
+                child: visibilityForSanch.contains(_dayitvaType.text)
+                    ? Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.004),
+                        child: dropDownMenuForSanchDayitva(
+                          context,
+                          _defaultDayitva_SanchType,
+                          _defaultDayitva_PrabhagType,
+                          _defaultDayitva_SambhagType,
+                          _defaultDayitva_BhagType,
+                          _defaultDayitva_AnchalType,
+                          _defaultDayitva_ClusterType,
+                          "Sanch",
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(0),
+              child: Container(
+                child: visibilityForUpSanch.contains(_dayitvaType.text)
+                    ? Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.004),
+                        child: dropDownMenuForUpSanchDayitva(
+                          context,
+                          _defaultDayitva_SubSanchType,
+                          _defaultDayitva_PrabhagType,
+                          _defaultDayitva_SambhagType,
+                          _defaultDayitva_BhagType,
+                          _defaultDayitva_AnchalType,
+                          _defaultDayitva_ClusterType,
+                          _defaultDayitva_SanchType,
+                          "Up-Sanch",
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(0),
+              child: Container(
+                child: visibilityForVillage.contains(_dayitvaType.text)
+                    ? Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.004),
+                        child: dropDownMenuForVillageDayitva(
+                          context,
+                          _defaultDayitva_VillageType,
+                          _defaultDayitva_PrabhagType,
+                          _defaultDayitva_SambhagType,
+                          _defaultDayitva_BhagType,
+                          _defaultDayitva_AnchalType,
+                          _defaultDayitva_ClusterType,
+                          _defaultDayitva_SanchType,
+                          _defaultDayitva_SubSanchType,
+                          "Village",
+                        ),
+                      )
+                    : SizedBox(
+                        height: 0,
+                      ),
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.03),
+            Container(
+              child: Text(
+                "------------------------------------------\nEnter Personal Information\nव्यक्तिगत जानकारी दर्ज करें\n",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             // Mobile Number
             TextFieldContainer(
               context,
@@ -413,6 +910,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               genderSelectionList,
               _gender,
               "Gender/लिंग *",
+              false,
+              () => {},
             ),
             SizedBox(height: screenHeight * 0.005),
             // Education Qualification:
@@ -427,69 +926,99 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Current Address
             TextFieldContainer(
               context,
-              "Home Address/शिक्षक के घर का पता *",
+              "Home Address/घर का पता *",
               100,
-              _localAddress,
+              _homeAddress,
               TextInputType.name,
             ),
             SizedBox(height: screenHeight * 0.005),
             // Permanent Address
-            TextFieldContainer(
-              context,
-              "School Address/स्कूल का पता *",
-              100,
-              _permanentAddress,
-              TextInputType.name,
+            Padding(
+              padding: const EdgeInsets.all(0),
+              child: _designationType.text == "Acharya -- आचार्य"
+                  ? TextFieldContainer(
+                      context,
+                      "School Address/स्कूल का पता *",
+                      100,
+                      _schoolAddress,
+                      TextInputType.name,
+                    )
+                  : SizedBox(height: 0),
             ),
-            SizedBox(height: screenHeight * 0.005),
-            customDropDownMenu(
-              context,
-              states_SAMBHAG_SelectionList,
-              _state_SAMBHAG_Name,
-              "--Select State/राज्य चुनें--",
-              "",
-              "your State: ",
-              "id",
-              "stateName",
-              "State/सम्भाग *",
-            ),
-            SizedBox(height: screenHeight * 0.005),
-            // District Name:
-            TextFieldContainer(
-              context,
-              "District/भाग *",
-              50,
-              _district_BHAG_Name,
-              TextInputType.name,
-            ),
-            SizedBox(height: screenHeight * 0.005),
-            // Block Level Name:
-            TextFieldContainer(
-              context,
-              "Block/आँचल *",
-              50,
-              _block_ANCHAL_Name,
-              TextInputType.name,
-            ),
-            SizedBox(height: screenHeight * 0.005),
-            // Group Village Name:
-            TextFieldContainer(
-              context,
-              "Village Group/साँच *",
-              50,
-              _groupVillage_SANCH_Name,
-              TextInputType.name,
-            ),
-            SizedBox(height: screenHeight * 0.005),
-            // Village Name:
-            TextFieldContainer(
-              context,
-              "Village/गांव *",
-              50,
-              _village_Village_Name,
-              TextInputType.name,
-            ),
-            SizedBox(height: screenHeight * 0.005),
+            // SizedBox(
+            //   height: screenHeight * 0.035,
+            // ),
+            // Container(
+            //   child: Text(
+            //     'Select Address Categories\nपता श्रेणियां चुनें',
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(fontWeight: FontWeight.bold),
+            //   ),
+            // ),
+            // SizedBox(height: screenHeight * 0.005),
+            // dropDownMenuForStates(context, defaultStateValue, "State"),
+            // SizedBox(height: screenHeight * 0.005),
+            // dropDownMenuForRegions(
+            //     context, defaultStateValue, defaultRegionValue, "Region"),
+            // SizedBox(height: screenHeight * 0.005),
+            // dropDownMenuForDistricts(context, defaultStateValue,
+            //     defaultRegionValue, defaultDistrictValue, "District"),
+            // SizedBox(height: screenHeight * 0.005),
+            // dropDownMenuForAnchal(
+            //   context,
+            //   defaultStateValue,
+            //   defaultRegionValue,
+            //   defaultDistrictValue,
+            //   defaultAnchalValue,
+            //   "Anchal",
+            // ),
+            // SizedBox(height: screenHeight * 0.005),
+            // dropDownMenuForSankul(
+            //   context,
+            //   defaultStateValue,
+            //   defaultRegionValue,
+            //   defaultDistrictValue,
+            //   defaultAnchalValue,
+            //   defaultSankulValue,
+            //   "Sankul",
+            // ),
+            // SizedBox(height: screenHeight * 0.005),
+            // dropDownMenuForCluster(
+            //   context,
+            //   defaultStateValue,
+            //   defaultRegionValue,
+            //   defaultDistrictValue,
+            //   defaultAnchalValue,
+            //   defaultSankulValue,
+            //   defaultClusterValue,
+            //   "Cluster",
+            // ),
+            // SizedBox(height: screenHeight * 0.005),
+            // dropDownMenuForSubCluster(
+            //   context,
+            //   defaultStateValue,
+            //   defaultRegionValue,
+            //   defaultDistrictValue,
+            //   defaultAnchalValue,
+            //   defaultSankulValue,
+            //   defaultClusterValue,
+            //   defaultSubClusterValue,
+            //   "Sub-Cluster",
+            // ),
+            // SizedBox(height: screenHeight * 0.005),
+            // dropDownMenuForVillage(
+            //   context,
+            //   defaultStateValue,
+            //   defaultRegionValue,
+            //   defaultDistrictValue,
+            //   defaultAnchalValue,
+            //   defaultSankulValue,
+            //   defaultClusterValue,
+            //   defaultSubClusterValue,
+            //   defaultVillageValue,
+            //   "Village",
+            // ),
+            SizedBox(height: screenHeight * 0.025),
             // Postal Code:
             TextFieldContainer(
               context,
@@ -574,12 +1103,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
     List<String> dropDownList,
     TextEditingController _textCtr,
     String hintText,
+    bool callFunction,
+    functionCall(),
   ) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
     var topInsets = MediaQuery.of(context).viewInsets.top;
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
     var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    if (callFunction) {
+      functionCall();
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -588,7 +1123,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
       padding: EdgeInsets.symmetric(
-        vertical: screenHeight * 0.009,
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          isExpanded: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          onTap: () {},
+          items: dropDownList.map(buildMenuItem).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+          }),
+        ),
+      ),
+    );
+  }
+
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+        value: item,
+        child: Text(
+          item,
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      );
+
+  ////////////////// Drop-Down Widgets for Dayitva Hierarchy ///////////////
+
+  Widget dropDownMenuForPrabhagDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getPrabhagDavitvaList(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
         horizontal: screenWidth * 0.03,
       ),
       child: DropdownButtonHideUnderline(
@@ -609,7 +1207,426 @@ class _SignUpScreenState extends State<SignUpScreen> {
             color: Colors.black,
           ),
           isExpanded: true,
-          items: dropDownList.map(buildMenuItem).toList(),
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_SambhagType.text = "";
+            _defaultDayitva_BhagType.text = "";
+            _defaultDayitva_AnchalType.text = "";
+            _defaultDayitva_ClusterType.text = "";
+            _defaultDayitva_SanchType.text = "";
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForSambhagDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getSambhagDavitvaList(context, prabhagName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_BhagType.text = "";
+            _defaultDayitva_AnchalType.text = "";
+            _defaultDayitva_ClusterType.text = "";
+            _defaultDayitva_SanchType.text = "";
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForBhagDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList =
+        getBhagDavitvaList(context, prabhagName, bhagName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_AnchalType.text = "";
+            _defaultDayitva_ClusterType.text = "";
+            _defaultDayitva_SanchType.text = "";
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForAnchalDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList =
+        getAnchalDavitvaList(context, prabhagName, bhagName, anchalName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_ClusterType.text = "";
+            _defaultDayitva_SanchType.text = "";
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForClusterDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getClusterDavitvaList(
+        context, prabhagName, bhagName, anchalName, clusterName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_SanchType.text = "";
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForSanchDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+    TextEditingController sanchName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getSanchDavitvaList(
+        context, prabhagName, bhagName, anchalName, clusterName, sanchName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForUpSanchDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+    TextEditingController sanchName,
+    TextEditingController upSanchName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getUpSanchDavitvaList(context, prabhagName,
+        bhagName, anchalName, clusterName, sanchName, upSanchName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForVillageDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+    TextEditingController sanchName,
+    TextEditingController upSanchName,
+    TextEditingController villageName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getVillageDavitvaList(context, prabhagName,
+        bhagName, anchalName, clusterName, sanchName, upSanchName, villageName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
           onChanged: (value) => setState(() {
             _textCtr.text = value!;
           }),
@@ -618,7 +1635,504 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+  ////////////////// Drop-Down Widgets for different User location ///////////////
+
+  Widget dropDownMenuForStates(
+    BuildContext context,
+    TextEditingController _textCtr,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getStateList(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            defaultRegionValue.text = "";
+            defaultDistrictValue.text = "";
+            defaultAnchalValue.text = "";
+            defaultSankulValue.text = "";
+            defaultClusterValue.text = "";
+            defaultSubClusterValue.text = "";
+            defaultVillageValue.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForRegions(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController _textCtr,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getRegionList(context, stateName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            defaultDistrictValue.text = "";
+            defaultAnchalValue.text = "";
+            defaultSankulValue.text = "";
+            defaultClusterValue.text = "";
+            defaultSubClusterValue.text = "";
+            defaultVillageValue.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForDistricts(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController _textCtr,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getDistrictList(context, stateName, regionName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            defaultAnchalValue.text = "";
+            defaultSankulValue.text = "";
+            defaultClusterValue.text = "";
+            defaultSubClusterValue.text = "";
+            defaultVillageValue.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForAnchal(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController districtName,
+    TextEditingController _textCtr,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList =
+        getAnchalList(context, stateName, regionName, districtName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            defaultSankulValue.text = "";
+            defaultClusterValue.text = "";
+            defaultSubClusterValue.text = "";
+            defaultVillageValue.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForSankul(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController districtName,
+    TextEditingController anchalName,
+    TextEditingController _textCtr,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getSankulList(
+      context,
+      stateName,
+      regionName,
+      districtName,
+      anchalName,
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            defaultClusterValue.text = "";
+            defaultSubClusterValue.text = "";
+            defaultVillageValue.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForCluster(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController districtName,
+    TextEditingController anchalName,
+    TextEditingController sankullName,
+    TextEditingController _textCtr,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getClusterList(
+      context,
+      stateName,
+      regionName,
+      districtName,
+      anchalName,
+      sankullName,
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            defaultSubClusterValue.text = "";
+            defaultVillageValue.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForSubCluster(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController districtName,
+    TextEditingController anchalName,
+    TextEditingController sankullName,
+    TextEditingController clusterlName,
+    TextEditingController _textCtr,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getSubClusterList(
+      context,
+      stateName,
+      regionName,
+      districtName,
+      anchalName,
+      sankullName,
+      clusterlName,
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            defaultVillageValue.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForVillage(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController districtName,
+    TextEditingController anchalName,
+    TextEditingController sankullName,
+    TextEditingController clusterlName,
+    TextEditingController subClusterlName,
+    TextEditingController _textCtr,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getVillageList(
+      context,
+      stateName,
+      regionName,
+      districtName,
+      anchalName,
+      sankullName,
+      clusterlName,
+      subClusterlName,
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+          }),
+        ),
+      ),
+    );
+  }
+
+  DropdownMenuItem<String> buildMenuItemModified(String item) =>
+      DropdownMenuItem(
         value: item,
         child: Text(
           item,
@@ -665,10 +2179,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             dropDownList,
             (onChangedVal) {
               inputValue = onChangedVal;
-              setState(() {
-                int idx = int.parse(onChangedVal);
-                _textCtr.text = dropDownList[idx - 1][optLabel];
-              });
+              setState(
+                () {
+                  int idx = int.parse(onChangedVal);
+                  _textCtr.text = dropDownList[idx - 1][optLabel];
+                },
+              );
             },
             (onValidateVal) {
               if (onValidateVal == null) {
@@ -734,8 +2250,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             color: Colors.blue.shade400,
             child: Text('Submit Otp'),
             onPressed: () async {
-              print(_otpValue.text);
-              print(_userOtpValue.text);
+              setState(() {
+                _submitOtpClicked = true;
+              });
               PhoneAuthCredential phoneAuthCredential =
                   PhoneAuthProvider.credential(
                 verificationId: this._verificationId,
@@ -760,6 +2277,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       verificationCompleted: (phoneAuthCredential) async {
         setState(() {
           _isAuthenticationAccepted = true;
+          _submitOtpClicked = false;
           print('auth successful');
         });
         // signInWithPhoneAuthCred(context, phoneAuthCredential);
@@ -772,6 +2290,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _isAuthenticationAccepted = false;
           _showLoading = false;
           _isSubmitClicked = false;
+          _submitOtpClicked = false;
         });
         print('verification failed');
         print(verificationFailed);
@@ -794,6 +2313,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _isAuthenticationAccepted = false;
           _showLoading = false;
           _isSubmitClicked = false;
+          _submitOtpClicked = false;
 
           this._verificationId = verificationId;
         });
@@ -806,6 +2326,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _isAuthenticationAccepted = false;
           _showLoading = false;
           _isSubmitClicked = false;
+          _submitOtpClicked = false;
         });
 
         if (!_userVerified) {
@@ -841,27 +2362,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ?.showSnackBar(SnackBar(content: Text("Creating your Account...")));
         setState(() {
           _userVerified = true;
+          _submitOtpClicked = false;
         });
 
         Provider.of<UserDetails>(context, listen: false)
             .upLoadNewUserPersonalInformation(
           context,
           authCredential,
+          _designationType,
+          _designationRoleType,
+          _dayitvaType,
+          _defaultDayitva_PrabhagType,
+          _defaultDayitva_SambhagType,
+          _defaultDayitva_BhagType,
+          _defaultDayitva_AnchalType,
+          _defaultDayitva_ClusterType,
+          _defaultDayitva_SanchType,
+          _defaultDayitva_SubSanchType,
+          _defaultDayitva_VillageType,
+          _userPhoneNumber,
           _firstName,
           _lastName,
           _age,
           _dateOfBirth,
           _gender,
           _eduQualification,
-          _localAddress,
-          _permanentAddress,
-          _state_SAMBHAG_Name,
-          _district_BHAG_Name,
-          _block_ANCHAL_Name,
-          _groupVillage_SANCH_Name,
-          _village_Village_Name,
+          _homeAddress,
+          _schoolAddress,
           _postalCode,
-          _userPhoneNumber,
           _isProfilePicTaken,
           _profilePicture,
         );
@@ -881,13 +2409,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _checkForError(context, titleText, contextText);
 
         print(errorVal.message);
-
-        // _scaffoldKey.currentState?.showSnackBar(
-        //   SnackBar(
-        //     behavior: SnackBarBehavior.floating,
-        //     content: Text("Firebase Error!"),
-        //   ),
-        // );
       }
     }
   }
@@ -1101,7 +2622,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       if (imageFile == null) {
                         return;
                       }
-
                       Navigator.of(context).pop(false);
                       setState(() {
                         _profilePicture = File(imageFile.path);
@@ -1116,5 +2636,424 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ],
       ),
     );
+  }
+
+  ////////////////// List function for different Dayitva positions ///////////////
+
+  List<String> getPrabhagDavitvaList(BuildContext context) {
+    List<String> prabhagList = ["PURV PRABHAG P2"];
+
+    return prabhagList;
+  }
+
+  List<String> getSambhagDavitvaList(
+    BuildContext context,
+    TextEditingController prabhagName,
+  ) {
+    Set<String> sambhagSet = {};
+
+    this.hierarchyDayitvaList.forEach((obj) {
+      if ((obj as dynamic)['PRABHAG'] == '${prabhagName.text}') {
+        sambhagSet.add(obj['SAMBHAG']);
+      }
+    });
+
+    return sambhagSet.toList();
+  }
+
+  List<String> getBhagDavitvaList(
+    BuildContext context,
+    TextEditingController prabhagName,
+    TextEditingController sambhagName,
+  ) {
+    Set<String> bhagSet = {};
+
+    this.hierarchyDayitvaList.forEach((obj) {
+      if ((obj as dynamic)['PRABHAG'] == '${prabhagName.text}' &&
+          (obj as dynamic)['SAMBHAG'] == '${sambhagName.text}') {
+        bhagSet.add(obj['BHAG']);
+      }
+    });
+
+    return bhagSet.toList();
+  }
+
+  List<String> getAnchalDavitvaList(
+    BuildContext context,
+    TextEditingController prabhagName,
+    TextEditingController sambhagName,
+    TextEditingController bhagName,
+  ) {
+    Set<String> anchalSet = {};
+
+    this.hierarchyDayitvaList.forEach((obj) {
+      if ((obj as dynamic)['PRABHAG'] == '${prabhagName.text}' &&
+          (obj as dynamic)['SAMBHAG'] == '${sambhagName.text}' &&
+          (obj as dynamic)['BHAG'] == '${bhagName.text}') {
+        anchalSet.add(obj['ANCHAL']);
+      }
+    });
+
+    return anchalSet.toList();
+  }
+
+  List<String> getClusterDavitvaList(
+    BuildContext context,
+    TextEditingController prabhagName,
+    TextEditingController sambhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+  ) {
+    Set<String> clusterSet = {};
+
+    this.hierarchyDayitvaList.forEach((obj) {
+      if ((obj as dynamic)['PRABHAG'] == '${prabhagName.text}' &&
+          (obj as dynamic)['SAMBHAG'] == '${sambhagName.text}' &&
+          (obj as dynamic)['BHAG'] == '${bhagName.text}' &&
+          (obj as dynamic)['ANCHAL'] == '${anchalName.text}') {
+        clusterSet.add(obj['CLUSTER']);
+      }
+    });
+
+    return clusterSet.toList();
+  }
+
+  List<String> getSanchDavitvaList(
+    BuildContext context,
+    TextEditingController prabhagName,
+    TextEditingController sambhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+  ) {
+    Set<String> sanchSet = {};
+
+    this.hierarchyDayitvaList.forEach((obj) {
+      if ((obj as dynamic)['PRABHAG'] == '${prabhagName.text}' &&
+          (obj as dynamic)['SAMBHAG'] == '${sambhagName.text}' &&
+          (obj as dynamic)['BHAG'] == '${bhagName.text}' &&
+          (obj as dynamic)['ANCHAL'] == '${anchalName.text}' &&
+          (obj as dynamic)['CLUSTER'] == '${clusterName.text}') {
+        sanchSet.add(obj['SANCH']);
+      }
+    });
+
+    return sanchSet.toList();
+  }
+
+  List<String> getUpSanchDavitvaList(
+    BuildContext context,
+    TextEditingController prabhagName,
+    TextEditingController sambhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+    TextEditingController sanchName,
+  ) {
+    Set<String> upSanchSet = {};
+
+    this.hierarchyDayitvaList.forEach((obj) {
+      if ((obj as dynamic)['PRABHAG'] == '${prabhagName.text}' &&
+          (obj as dynamic)['SAMBHAG'] == '${sambhagName.text}' &&
+          (obj as dynamic)['BHAG'] == '${bhagName.text}' &&
+          (obj as dynamic)['ANCHAL'] == '${anchalName.text}' &&
+          (obj as dynamic)['CLUSTER'] == '${clusterName.text}' &&
+          (obj as dynamic)['SANCH'] == '${sanchName.text}') {
+        upSanchSet.add(obj['UPSANCH']);
+      }
+    });
+
+    return upSanchSet.toList();
+  }
+
+  List<String> getVillageDavitvaList(
+    BuildContext context,
+    TextEditingController prabhagName,
+    TextEditingController sambhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+    TextEditingController sanchName,
+    TextEditingController upSanchName,
+  ) {
+    Set<String> villageSet = {};
+
+    this.hierarchyDayitvaList.forEach((obj) {
+      if ((obj as dynamic)['PRABHAG'] == '${prabhagName.text}' &&
+          (obj as dynamic)['SAMBHAG'] == '${sambhagName.text}' &&
+          (obj as dynamic)['BHAG'] == '${bhagName.text}' &&
+          (obj as dynamic)['ANCHAL'] == '${anchalName.text}' &&
+          (obj as dynamic)['CLUSTER'] == '${clusterName.text}' &&
+          (obj as dynamic)['SANCH'] == '${sanchName.text}' &&
+          (obj as dynamic)['UPSANCH'] == '${upSanchName.text}') {
+        villageSet.add(obj['VILLAGE']);
+      }
+    });
+
+    return villageSet.toList();
+  }
+
+  ////////////////// List function for different User Locations ///////////////
+
+  List<String> getStateList(BuildContext context) {
+    List<String> stateList = ["Chhattisgarh"];
+
+    return stateList;
+  }
+
+  List<String> getRegionList(
+      BuildContext context, TextEditingController stateName) {
+    Set<String> regionSet = {};
+
+    // var checkForResponse = await Future.forEach(
+    //   this.ekalList,
+    //   (obj) {
+    //     if ((obj as dynamic)['STATE'] == '${stateName.text}') {
+    //       regionSet.add(obj['REGION']);
+    //     }
+    //   },
+    // ).then((value) {
+    //   return regionSet.toList();
+    // });
+    this.ekalList.forEach((obj) {
+      if ((obj as dynamic)['STATE'] == '${stateName.text}') {
+        regionSet.add(obj['REGION']);
+      }
+    });
+
+    return regionSet.toList();
+
+    // return checkForResponse;
+  }
+
+  List<String> getDistrictList(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+  ) {
+    Set<String> districtSet = {};
+
+    // var checkForResponse = await Future.forEach(
+    //   this.ekalList,
+    //   (obj) {
+    //     if ((obj as dynamic)['STATE'] == stateName.text &&
+    //         (obj as dynamic)['REGION'] == regionName.text) {
+    //       districtSet.add(obj['DISTRICT']);
+    //     }
+    //   },
+    // ).then((value) {
+    //   return districtSet.toList();
+    // });
+
+    // return checkForResponse;
+
+    this.ekalList.forEach((obj) {
+      if ((obj as dynamic)['STATE'] == stateName.text &&
+          (obj as dynamic)['REGION'] == regionName.text) {
+        districtSet.add(obj['DISTRICT']);
+      }
+    });
+
+    return districtSet.toList();
+  }
+
+  List<String> getAnchalList(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController districtName,
+  ) {
+    Set<String> anchalSet = {};
+
+    // var checkForResponse = await Future.forEach(
+    //   this.ekalList,
+    //   (obj) {
+    //     if ((obj as dynamic)['STATE'] == stateName.text &&
+    //         (obj as dynamic)['REGION'] == regionName.text &&
+    //         (obj as dynamic)['DISTRICT'] == districtName.text) {
+    //       anchalSet.add(obj['ANCHAL']);
+    //     }
+    //   },
+    // ).then((value) {
+    //   return anchalSet.toList();
+    // });
+
+    // return checkForResponse;
+
+    this.ekalList.forEach((obj) {
+      if ((obj as dynamic)['STATE'] == stateName.text &&
+          (obj as dynamic)['REGION'] == regionName.text &&
+          (obj as dynamic)['DISTRICT'] == districtName.text) {
+        anchalSet.add(obj['ANCHAL']);
+      }
+    });
+
+    return anchalSet.toList();
+  }
+
+  List<String> getSankulList(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController districtName,
+    TextEditingController anchalName,
+  ) {
+    Set<String> sankulSet = {};
+
+    // var checkForResponse = await Future.forEach(
+    //   this.ekalList,
+    //   (obj) {
+    //     if ((obj as dynamic)['STATE'] == stateName.text &&
+    //         (obj as dynamic)['REGION'] == regionName.text &&
+    //         (obj as dynamic)['DISTRICT'] == districtName.text &&
+    //         (obj as dynamic)['ANCHAL'] == anchalName.text) {
+    //       sankulSet.add(obj['SANKUL']);
+    //     }
+    //   },
+    // ).then((value) {
+    //   return sankulSet.toList();
+    // });
+
+    // return checkForResponse;
+
+    this.ekalList.forEach((obj) {
+      if ((obj as dynamic)['STATE'] == stateName.text &&
+          (obj as dynamic)['REGION'] == regionName.text &&
+          (obj as dynamic)['DISTRICT'] == districtName.text &&
+          (obj as dynamic)['ANCHAL'] == anchalName.text) {
+        sankulSet.add(obj['SANKUL']);
+      }
+    });
+
+    return sankulSet.toList();
+  }
+
+  List<String> getClusterList(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController districtName,
+    TextEditingController anchalName,
+    TextEditingController sankulName,
+  ) {
+    Set<String> clusterSet = {};
+
+    // var checkForResponse = await Future.forEach(
+    //   this.ekalList,
+    //   (obj) {
+    //     if ((obj as dynamic)['STATE'] == stateName.text &&
+    //         (obj as dynamic)['REGION'] == regionName.text &&
+    //         (obj as dynamic)['DISTRICT'] == districtName.text &&
+    //         (obj as dynamic)['ANCHAL'] == anchalName.text &&
+    //         (obj as dynamic)['SANKUL'] == sankulName.text) {
+    //       clusterSet.add(obj['CLUSTER']);
+    //     }
+    //   },
+    // ).then((value) {
+    //   return clusterSet.toList();
+    // });
+
+    // return checkForResponse;
+
+    this.ekalList.forEach((obj) {
+      if ((obj as dynamic)['STATE'] == stateName.text &&
+          (obj as dynamic)['REGION'] == regionName.text &&
+          (obj as dynamic)['DISTRICT'] == districtName.text &&
+          (obj as dynamic)['ANCHAL'] == anchalName.text &&
+          (obj as dynamic)['SANKUL'] == sankulName.text) {
+        clusterSet.add(obj['CLUSTER']);
+      }
+    });
+
+    return clusterSet.toList();
+  }
+
+  List<String> getSubClusterList(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController districtName,
+    TextEditingController anchalName,
+    TextEditingController sankulName,
+    TextEditingController clusterName,
+  ) {
+    Set<String> subClusterSet = {};
+
+    // var checkForResponse = await Future.forEach(
+    //   this.ekalList,
+    //   (obj) {
+    //     if ((obj as dynamic)['STATE'] == stateName.text &&
+    //         (obj as dynamic)['REGION'] == regionName.text &&
+    //         (obj as dynamic)['DISTRICT'] == districtName.text &&
+    //         (obj as dynamic)['ANCHAL'] == anchalName.text &&
+    //         (obj as dynamic)['SANKUL'] == sankulName.text &&
+    //         (obj as dynamic)['CLUSTER'] == clusterName.text) {
+    //       subClusterSet.add(obj['SUB-CLUSTER']);
+    //     }
+    //   },
+    // ).then((value) {
+    //   return subClusterSet.toList();
+    // });
+
+    // return checkForResponse;
+
+    this.ekalList.forEach((obj) {
+      if ((obj as dynamic)['STATE'] == stateName.text &&
+          (obj as dynamic)['REGION'] == regionName.text &&
+          (obj as dynamic)['DISTRICT'] == districtName.text &&
+          (obj as dynamic)['ANCHAL'] == anchalName.text &&
+          (obj as dynamic)['SANKUL'] == sankulName.text &&
+          (obj as dynamic)['CLUSTER'] == clusterName.text) {
+        subClusterSet.add(obj['SUB-CLUSTER']);
+      }
+    });
+
+    return subClusterSet.toList();
+  }
+
+  List<String> getVillageList(
+    BuildContext context,
+    TextEditingController stateName,
+    TextEditingController regionName,
+    TextEditingController districtName,
+    TextEditingController anchalName,
+    TextEditingController sankulName,
+    TextEditingController clusterName,
+    TextEditingController subClusterName,
+  ) {
+    Set<String> villageSet = {};
+
+    // var checkForResponse = await Future.forEach(
+    //   this.ekalList,
+    //   (obj) {
+    //     if ((obj as dynamic)['STATE'] == stateName.text &&
+    //         (obj as dynamic)['REGION'] == regionName.text &&
+    //         (obj as dynamic)['DISTRICT'] == districtName.text &&
+    //         (obj as dynamic)['ANCHAL'] == anchalName.text &&
+    //         (obj as dynamic)['SANKUL'] == sankulName.text &&
+    //         (obj as dynamic)['CLUSTER'] == clusterName.text &&
+    //         (obj as dynamic)['SUB-CLUSTER'] == subClusterName.text) {
+    //       villageSet.add(obj['VILLAGE']);
+    //     }
+    //   },
+    // ).then((value) {
+    //   return villageSet.toList();
+    // });
+
+    // return checkForResponse;
+
+    this.ekalList.forEach((obj) {
+      if ((obj as dynamic)['STATE'] == stateName.text &&
+          (obj as dynamic)['REGION'] == regionName.text &&
+          (obj as dynamic)['DISTRICT'] == districtName.text &&
+          (obj as dynamic)['ANCHAL'] == anchalName.text &&
+          (obj as dynamic)['SANKUL'] == sankulName.text &&
+          (obj as dynamic)['CLUSTER'] == clusterName.text &&
+          (obj as dynamic)['SUB-CLUSTER'] == subClusterName.text) {
+        villageSet.add(obj['VILLAGE']);
+      }
+    });
+
+    return villageSet.toList();
   }
 }

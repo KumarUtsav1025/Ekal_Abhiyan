@@ -27,6 +27,7 @@ import './screens/home_screen.dart';
 import './screens/new_class_screen.dart';
 import './screens/create_class_screen.dart';
 import './screens/previous_class_screen.dart';
+import './screens/capture_location_screen.dart';
 import './screens/my_profile_screen.dart';
 import './screens/tabs_screen.dart';
 import './screens/login_screen.dart';
@@ -36,6 +37,8 @@ import './screens/detail_class_screen.dart';
 import './providers/class_details.dart';
 import './providers/user_details.dart';
 import './providers/auth_details.dart';
+import './providers/hardData_details.dart';
+import './providers/location_details.dart';
 
 import './widgets/live_location.dart';
 
@@ -64,6 +67,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider.value(
           value: AuthDetails(),
+        ),
+        ChangeNotifierProvider.value(
+          value: HardDataDetails(),
+        ),
+        ChangeNotifierProvider.value(
+          value: LocationDetails(),
         ),
       ],
       child: MaterialApp(
@@ -107,6 +116,7 @@ class MyApp extends StatelessWidget {
           NewClassScreen.routeName: (ctx) => NewClassScreen(),
           CreateNewClass.routeName: (ctx) => CreateNewClass(),
           PreviousClass.routeName: (ctx) => PreviousClass(),
+          CaptureLocationScreen.routeName: (ctx) => CaptureLocationScreen(),
           MyProfile.routeName: (ctx) => MyProfile(),
         },
       ),

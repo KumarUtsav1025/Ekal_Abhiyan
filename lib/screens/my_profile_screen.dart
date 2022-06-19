@@ -31,21 +31,38 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
+  TextEditingController _designationType = TextEditingController();
+  TextEditingController _designationRoleType = TextEditingController();
+  TextEditingController _dayitvaType = TextEditingController();
+
+  TextEditingController _PrabagLocationType = TextEditingController();
+  TextEditingController _SambhagLocationType = TextEditingController();
+  TextEditingController _BhagLocationType = TextEditingController();
+  TextEditingController _AnchalLocationType = TextEditingController();
+  TextEditingController _ClusterLocationType = TextEditingController();
+  TextEditingController _SanchLocationType = TextEditingController();
+  TextEditingController _UpSanchLocationType = TextEditingController();
+  TextEditingController _VillageLocationType = TextEditingController();
+
   TextEditingController _firstName = TextEditingController();
   TextEditingController _lastName = TextEditingController();
   TextEditingController _age = TextEditingController();
   TextEditingController _gender = TextEditingController();
   TextEditingController _dateOfBirth = TextEditingController();
-  TextEditingController _localAddress = TextEditingController();
-  TextEditingController _permanentAddress = TextEditingController();
-  TextEditingController _phoneNumber = TextEditingController();
-  TextEditingController _stateName = TextEditingController();
-  TextEditingController _districtName = TextEditingController();
-  TextEditingController _blockName = TextEditingController();
-  TextEditingController _villageGroupName = TextEditingController();
-  TextEditingController _villageName = TextEditingController();
-  TextEditingController _postalCode = TextEditingController();
   TextEditingController _eduQualification = TextEditingController();
+  TextEditingController _homeAddress = TextEditingController();
+  TextEditingController _schoolAddress = TextEditingController();
+  TextEditingController _mobileNumber = TextEditingController();
+  TextEditingController _postalCode = TextEditingController();
+
+  // TextEditingController _stateName = TextEditingController();
+  // TextEditingController _regionName = TextEditingController();
+  // TextEditingController _districtName = TextEditingController();
+  // TextEditingController _anchalName = TextEditingController();
+  // TextEditingController _sankulName = TextEditingController();
+  // TextEditingController _clusterName = TextEditingController();
+  // TextEditingController _subClusterName = TextEditingController();
+  // TextEditingController _villageName = TextEditingController();
 
   // @override
   // void initState() {
@@ -65,38 +82,123 @@ class _MyProfileState extends State<MyProfile> {
     var userInfoDetails = Provider.of<UserDetails>(context);
     Map<String, String> userMapping =
         userInfoDetails.getUserPersonalInformation();
+    String subDesignationType = "";
+    bool _isAcharyaInfo = false;
+
+    if (userMapping["designation_Type"] == "Acharya -- आचार्य") {
+      _isAcharyaInfo = true;
+    }
+
+    if (userMapping["designation_RoleType"] == "Karyakarta -- कार्यकर्ता") {
+      subDesignationType = "Karyakarta Type  \nकार्यकर्ता प्रकार";
+    } else if (userMapping["designation_RoleType"] == "Samiti -- समिति") {
+      subDesignationType = "Samiti Type  \nसमिति प्रकार";
+    } else {
+      subDesignationType = "Acharya Type  \nआचार्य प्रकार";
+    }
+
+    bool _isPrabhagVisible = false;
+    bool _isSambhagVisible = false;
+    bool _isBhagVisible = false;
+    bool _isAnchalVisible = false;
+    bool _isClusterVisible = false;
+    bool _isSanchVisible = false;
+    bool _isUpSanchVisible = false;
+    bool _isVillageVissible = false;
+
+    if (userMapping["village_LevelType"].toString().length != 0) {
+      _isPrabhagVisible = true;
+      _isSambhagVisible = true;
+      _isBhagVisible = true;
+      _isAnchalVisible = true;
+      _isClusterVisible = true;
+      _isSanchVisible = true;
+      _isUpSanchVisible = true;
+      _isVillageVissible = true;
+    } else if (userMapping["upSanch_LevelType"].toString().length != 0) {
+      _isPrabhagVisible = true;
+      _isSambhagVisible = true;
+      _isBhagVisible = true;
+      _isAnchalVisible = true;
+      _isClusterVisible = true;
+      _isSanchVisible = true;
+      _isUpSanchVisible = true;
+    } else if (userMapping["sanch_LevelType"].toString().length != 0) {
+      _isPrabhagVisible = true;
+      _isSambhagVisible = true;
+      _isBhagVisible = true;
+      _isAnchalVisible = true;
+      _isClusterVisible = true;
+      _isSanchVisible = true;
+    } else if (userMapping["cluster_LevelType"].toString().length != 0) {
+      _isPrabhagVisible = true;
+      _isSambhagVisible = true;
+      _isBhagVisible = true;
+      _isAnchalVisible = true;
+      _isClusterVisible = true;
+    } else if (userMapping["anchal_LevelType"].toString().length != 0) {
+      _isPrabhagVisible = true;
+      _isSambhagVisible = true;
+      _isBhagVisible = true;
+      _isAnchalVisible = true;
+    } else if (userMapping["bhag_LevelType"].toString().length != 0) {
+      _isPrabhagVisible = true;
+      _isSambhagVisible = true;
+      _isBhagVisible = true;
+    } else if (userMapping["sambhag_LevelType"].toString().length != 0) {
+      _isPrabhagVisible = true;
+      _isSambhagVisible = true;
+    } else if (userMapping["prabhag_LevelType"].toString().length != 0) {
+      _isPrabhagVisible = true;
+    }
+
+    bool _isDesignatoinTypeSet = false;
+    bool _isDesignationRoleTypeSet = false;
+    bool _isDayitvaTypeSet = false;
+
+    bool _isPrabagLocationTypeSet = false;
+    bool _isSambhagLocationTypeSet = false;
+    bool _isBhagLocationTypeSet = false;
+    bool _isAnchalLocationTypeSet = false;
+    bool _isClusterLocationTypeSet = false;
+    bool _isSanchLocationTypeSet = false;
+    bool _isUpSanchLocationTypeSet = false;
+    bool _isVillageLocationTypeSet = false;
 
     bool _isFirstNameSet = false;
     bool _isLastNameSet = false;
     bool _isAgeSet = false;
     bool _isGenderSet = false;
     bool _isDateTimeSet = false;
-    bool _isLocalAddressSet = false;
-    bool _isPermanentAddressSet = false;
-    bool _isPhoneNumberSet = false;
-    bool _isStateNameSet = false;
-    bool _isDistrictNameSet = false;
-    bool _isBlockNameSet = false;
-    bool _isVillageGroupNameSet = false;
-    bool _isVillageNameSet = false;
+    bool _isHomeAddressSet = false;
+    bool _isSchoolAddressSet = false;
+    bool _isMobileNumberSet = false;
     bool _isPostalCodeSet = false;
     bool _isEducationQualificationSet = false;
+
+    _designationType.text = "Getting Designation...";
+    _designationRoleType.text = "Getting Designation Role Type...";
+    _dayitvaType.text = "Getting Dayitva Type...";
 
     _firstName.text = "Getting First Name...";
     _lastName.text = "Getting Last Name...";
     _age.text = "Getting Age...";
     _gender.text = "Getting Gender...";
     _dateOfBirth.text = "Getting Date Of Birth...";
-    _localAddress.text = "Getting Local Address...";
-    _permanentAddress.text = "Getting Permanent Address...";
-    _phoneNumber.text = "Getting Phone Number...";
-    _stateName.text = "Getting State...";
-    _districtName.text = "Getting District...";
-    _blockName.text = "Getting Block...";
-    _villageGroupName.text = "Getting Village...";
-    _villageName.text = "Getting Village...";
+    _homeAddress.text = "Getting Home Address...";
+    _schoolAddress.text = "Getting Permanent Address...";
+    _mobileNumber.text = "Getting Mobile Number...";
     _postalCode.text = "Getting Postal Code...";
-    _eduQualification.text = "Getting Edu Qualification...";
+
+    // _stateName.text = "Getting State...";
+    // _regionName.text = "Getting Region...";
+    // _districtName.text = "Getting District...";
+    // _anchalName.text = "Getting Anchal...";
+    // _sankulName.text = "Getting Sankul...";
+    // _clusterName.text = "Getting Cluster...";
+    // _subClusterName.text = "Getting Sub-Cluster...";
+    // _villageName.text = "Getting Village...";
+    // _eduQualification.text = "Getting Edu Qualification...";
 
     return StreamBuilder(
       stream: FirebaseFirestore.instance
@@ -127,7 +229,7 @@ class _MyProfileState extends State<MyProfile> {
                   imageContainer(
                       context, userMapping["profilePic_Url"] as String),
                   SizedBox(
-                    height: useableHeight * 0.0025,
+                    height: useableHeight * 0.004,
                   ),
                   TextFildContainer(
                     context,
@@ -145,14 +247,14 @@ class _MyProfileState extends State<MyProfile> {
                   ),
                   TextFildContainer(
                     context,
-                    "Age/आयु",
+                    "Age/आयु  ",
                     _age,
                     'age',
                     _isAgeSet,
                   ),
                   TextFildContainer(
                     context,
-                    "Gender/लिंग",
+                    "Gender/लिंग  ",
                     _gender,
                     'gender',
                     _isGenderSet,
@@ -174,58 +276,30 @@ class _MyProfileState extends State<MyProfile> {
                   TextFildContainer(
                     context,
                     "Mobile No  \nमोबाइल नंबर",
-                    _phoneNumber,
-                    'phone_Number',
-                    _isPhoneNumberSet,
+                    _mobileNumber,
+                    'mobile_Number',
+                    _isMobileNumberSet,
                   ),
                   TextFildContainer(
                     context,
                     "Home Address \nघर का पता",
-                    _localAddress,
-                    'current_Address',
-                    _isLocalAddressSet,
+                    _homeAddress,
+                    'home_Address',
+                    _isHomeAddressSet,
                   ),
-                  TextFildContainer(
-                    context,
-                    "School Address \nस्कूल का पता",
-                    _permanentAddress,
-                    'permanent_Address',
-                    _isPermanentAddressSet,
-                  ),
-                  TextFildContainer(
-                    context,
-                    "State  \nसम्भाग",
-                    _stateName,
-                    'state',
-                    _isStateNameSet,
-                  ),
-                  TextFildContainer(
-                    context,
-                    "District  \nभाग",
-                    _districtName,
-                    'district',
-                    _isDistrictNameSet,
-                  ),
-                  TextFildContainer(
-                    context,
-                    "Block  \nआँचल",
-                    _blockName,
-                    'block_Level',
-                    _isBlockNameSet,
-                  ),
-                  TextFildContainer(
-                    context,
-                    "Village Group  \nसाँच",
-                    _villageGroupName,
-                    'village_Group',
-                    _isVillageGroupNameSet,
-                  ),
-                  TextFildContainer(
-                    context,
-                    "Village  \nगांव",
-                    _villageName,
-                    'village',
-                    _isVillageNameSet,
+                  Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: _isAcharyaInfo
+                        ? TextFildContainer(
+                            context,
+                            "School Address \nस्कूल का पता",
+                            _schoolAddress,
+                            'school_Address',
+                            _isSchoolAddressSet,
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ),
                   ),
                   TextFildContainer(
                     context,
@@ -233,6 +307,160 @@ class _MyProfileState extends State<MyProfile> {
                     _postalCode,
                     'postal_Code',
                     _isPostalCodeSet,
+                  ),
+                  SizedBox(
+                    height: useableHeight * 0.05,
+                  ),
+                  Container(
+                    decoration: new BoxDecoration(
+                        color: Color.fromARGB(255, 240, 184, 184)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.05,
+                      vertical: screenHeight * 0.0125,
+                    ),
+                    child: Text(
+                      "Address Information Details\nपता जानकारी विवरण",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Designation Type  \nपदनाम प्रकार",
+                    _designationType,
+                    'designation_Type',
+                    _isDesignatoinTypeSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    subDesignationType,
+                    _designationRoleType,
+                    'designation_RoleType',
+                    _isDesignationRoleTypeSet,
+                  ),
+                  TextFildContainer(
+                    context,
+                    "Davitya Level  \nदिनत्व स्तर",
+                    _dayitvaType,
+                    'dayitva_Type',
+                    _isDayitvaTypeSet,
+                  ),
+                  SizedBox(
+                    height: useableHeight * 0.025,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: _isPrabhagVisible
+                        ? TextFildContainer(
+                            context,
+                            "Prabhag  \nप्रभाग",
+                            _PrabagLocationType,
+                            'prabhag_LevelType',
+                            _isPrabagLocationTypeSet,
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: _isSambhagVisible
+                        ? TextFildContainer(
+                            context,
+                            "Sambhag  \nसभाग",
+                            _SambhagLocationType,
+                            'sambhag_LevelType',
+                            _isSambhagLocationTypeSet,
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: _isBhagVisible
+                        ? TextFildContainer(
+                            context,
+                            "Bhag  \nभाग",
+                            _BhagLocationType,
+                            'bhag_LevelType',
+                            _isBhagLocationTypeSet,
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: _isAnchalVisible
+                        ? TextFildContainer(
+                            context,
+                            "Anchal  \nआंचल",
+                            _AnchalLocationType,
+                            'anchal_LevelType',
+                            _isAnchalLocationTypeSet,
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: _isClusterVisible
+                        ? TextFildContainer(
+                            context,
+                            "Cluster  \nसमूह",
+                            _ClusterLocationType,
+                            'cluster_LevelType',
+                            _isClusterLocationTypeSet,
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: _isSanchVisible
+                        ? TextFildContainer(
+                            context,
+                            "Sanch  \nसांच",
+                            _SanchLocationType,
+                            'sanch_LevelType',
+                            _isSanchLocationTypeSet,
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: _isUpSanchVisible
+                        ? TextFildContainer(
+                            context,
+                            "Up-Sanch  \nउप-सांच",
+                            _UpSanchLocationType,
+                            'upSanch_LevelType',
+                            _isUpSanchLocationTypeSet,
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: _isVillageVissible
+                        ? TextFildContainer(
+                            context,
+                            "Village  \nगाँव",
+                            _VillageLocationType,
+                            'village_LevelType',
+                            _isVillageLocationTypeSet,
+                          )
+                        : SizedBox(
+                            height: 0,
+                          ),
                   ),
                   SizedBox(
                     height: useableHeight * 0.05,
