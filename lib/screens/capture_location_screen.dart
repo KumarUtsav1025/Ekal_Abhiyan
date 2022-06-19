@@ -58,7 +58,58 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
   bool _isClassCreated = false;
   bool _isSubmitClicked = false;
 
+  final visibilityForPrabhag = [
+    "Prabhaag -- प्रभाग",
+    "Sambhaag -- संभाग",
+    "Bhaag -- भाग",
+    "Anchal -- अंचल",
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForSambhag = [
+    "Sambhaag -- संभाग",
+    "Bhaag -- भाग",
+    "Anchal -- अंचल",
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForBhag = [
+    "Bhaag -- भाग",
+    "Anchal -- अंचल",
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForAnchal = [
+    "Anchal -- अंचल",
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForCluster = [
+    "Cluster -- क्लस्टर",
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForSanch = [
+    "Sanch -- संच",
+    "Sub-Sanch -- उपसंच",
+    "Village -- गाव"
+  ];
+  final visibilityForUpSanch = ["Sub-Sanch -- उपसंच", "Village -- गाव"];
+  final visibilityForVillage = ["Village -- गाव"];
+
+  TextEditingController _sthalType = TextEditingController();
+  TextEditingController _astherType = TextEditingController();
   TextEditingController userUniqueIdValue = TextEditingController();
+  TextEditingController locationDescriptionValue = TextEditingController();
 
   TextEditingController _defaultDayitva_PrabhagType = TextEditingController();
   TextEditingController _defaultDayitva_SambhagType = TextEditingController();
@@ -92,7 +143,8 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
     super.initState();
     _requestPermission();
 
-    userUniqueIdValue.text = Provider.of<UserDetails>(context, listen: false).getLoggedInUserUniqueId();
+    userUniqueIdValue.text = Provider.of<UserDetails>(context, listen: false)
+        .getLoggedInUserUniqueId();
   }
 
   @override
@@ -108,7 +160,22 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
 
   List<dynamic> hierarchyDayitvaList = [];
 
-  final dayitvaTypeList = [
+  final sthalTypeList = [
+    "आचार्य घर",
+    "ग्राम समिति",
+    "अभिभावक",
+    "सामुदायिक भवन",
+    "सांस्कृतिक मंच",
+    "चबूतरा",
+    "प्रांगण",
+    "योग केंद्र",
+    "संस्कार केंद्र",
+    "पोषण वाटिका",
+    "जैविक पिट",
+    "विद्यालय",
+  ];
+
+  final astherTypeList = [
     "Prabhaag -- प्रभाग",
     "Sambhaag -- संभाग",
     "Bhaag -- भाग",
@@ -176,10 +243,55 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
     BuildContext context,
     GlobalKey<ScaffoldState> sKey,
   ) async {
-    if (true) {
-
-    }
-    else {
+    if (_sthalType.text.length == 0) {
+      String titleText = "Invalid Sthal/स्थल Type!";
+      String contextText = "Please select your 'Sthal/स्थल'...";
+      _checkForError(context, titleText, contextText);
+    } else if (_astherType.text.length == 0) {
+      String titleText = "Invalid Sthar/स्तर Type!";
+      String contextText = "Please select your 'Sthar/स्तर'...";
+      _checkForError(context, titleText, contextText);
+    } else if (_astherType.text == "Prabhaag -- प्रभाग" &&
+        _defaultDayitva_PrabhagType.text == "") {
+      String titleText = "Invalid Prabhag!";
+      String contextText = "Please select till Prabhag...";
+      _checkForError(context, titleText, contextText);
+    } else if (_astherType.text == "Sambhaag -- संभाग" &&
+        _defaultDayitva_SambhagType.text == "") {
+      String titleText = "Invalid Sambhag!";
+      String contextText = "Please select till Sambhag...";
+      _checkForError(context, titleText, contextText);
+    } else if (_astherType.text == "Bhaag -- भाग" &&
+        _defaultDayitva_BhagType.text == "") {
+      String titleText = "Invalid Bhag!";
+      String contextText = "Please select till Bhag...";
+      _checkForError(context, titleText, contextText);
+    } else if (_astherType.text == "Anchal -- अंचल" &&
+        _defaultDayitva_AnchalType.text == "") {
+      String titleText = "Invalid Anchal!";
+      String contextText = "Please select till Anchal...";
+      _checkForError(context, titleText, contextText);
+    } else if (_astherType.text == "Cluster -- क्लस्टर" &&
+        _defaultDayitva_ClusterType.text == "") {
+      String titleText = "Invalid Cluster!";
+      String contextText = "Please select till Cluster...";
+      _checkForError(context, titleText, contextText);
+    } else if (_astherType.text == "Sanch -- संच" &&
+        _defaultDayitva_SanchType.text == "") {
+      String titleText = "Invalid Sanch!";
+      String contextText = "Please select till Sanch...";
+      _checkForError(context, titleText, contextText);
+    } else if (_astherType.text == "Sub-Sanch -- उपसंच" &&
+        _defaultDayitva_SubSanchType.text == "") {
+      String titleText = "Invalid UpSanch!";
+      String contextText = "Please select till UpSanch...";
+      _checkForError(context, titleText, contextText);
+    } else if (_astherType.text == "Village -- गाव" &&
+        _defaultDayitva_VillageType.text == "") {
+      String titleText = "Invalid Village!";
+      String contextText = "Please select till Village...";
+      _checkForError(context, titleText, contextText);
+    } else {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -192,28 +304,26 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
         _isSubmitLoadingSpinner = true;
       });
 
-      // Provider.of<LocationDetails>(context, listen: false)
-      //     .addLocationDetails(
-      //       context,
-      //       visitorName.text,
-      //       visitorMobileNumber.text,
-      //       visitorDayitva.text,
-      //       visitorAddressTypeValue.text,
-      //       defaultStateValue.text,
-      //       defaultRegionValue.text,
-      //       defaultDistrictValue.text,
-      //       defaultAnchalValue.text,
-      //       defaultSankulValue.text,
-      //       defaultClusterValue.text,
-      //       defaultSubClusterValue.text,
-      //       defaultVillageValue.text,
-      //       userUniqueIdValue.text,
-      //       _storedImage,
-      //       DateTime.now().toString(),
-      //       latitudeValue.toString(),
-      //       longitudeValue.toString(),
-      //       addressValue.toString(),
-      //     ).then((value) => Navigator.of(context).pushReplacementNamed(TabsScreen.routeName));
+      Provider.of<LocationDetails>(context, listen: false).addLocationDetails(
+        context,
+        userUniqueIdValue,
+        _storedImage,
+        DateTime.now().toString(),
+        latitudeValue.toString(),
+        longitudeValue.toString(),
+        addressValue.toString(),
+        locationDescriptionValue,
+        _sthalType,
+        _astherType,
+        _defaultDayitva_PrabhagType,
+        _defaultDayitva_SambhagType,
+        _defaultDayitva_BhagType,
+        _defaultDayitva_AnchalType,
+        _defaultDayitva_ClusterType,
+        _defaultDayitva_SanchType,
+        _defaultDayitva_SubSanchType,
+        _defaultDayitva_VillageType,
+      );
     }
   }
 
@@ -229,7 +339,7 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
 
     ekalList = Provider.of<HardDataDetails>(context, listen: false)
         .getEkalLocationCategoryList();
-    
+
     hierarchyDayitvaList = Provider.of<HardDataDetails>(context, listen: false)
         .getHierarchyDayitvaLocationList();
 
@@ -270,7 +380,9 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
                             height: 0,
                           )
                         : Container(
-                            height: screenHeight * 3.1,
+                            height: _astherType.text.length == 0
+                                ? screenHeight * 1.85
+                                : screenHeight * 2.65,
                             width: screenWidth * 0.9,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -382,39 +494,281 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: screenHeight * 0.03,
+                                  height: screenHeight * 0.01,
                                 ),
-                                // Container(
-                                //   height: useableHeight * 0.075,
-                                //   padding: EdgeInsets.symmetric(
-                                //     vertical: useableHeight * 0.001,
-                                //     horizontal: screenWidth * 0.01,
-                                //   ),
-                                //   margin: EdgeInsets.symmetric(
-                                //     vertical: useableHeight * 0.001,
-                                //     horizontal: screenWidth * 0.0075,
-                                //   ),
-                                //   width: double.infinity,
-                                //   child: ElevatedButton(
-                                //     child: !_isSubmitLoadingSpinner
-                                //         ? Text(
-                                //             'Submit the Location\nस्थान जमा करें',
-                                //             textAlign: TextAlign.center,
-                                //             style: TextStyle(
-                                //               fontWeight: FontWeight.bold,
-                                //             ),
-                                //           )
-                                //         : CircularProgressIndicator(
-                                //             color: Colors.white,
-                                //           ),
-                                //     onPressed: () {
-                                //       _submitCapturedLocationInformation(
-                                //         context,
-                                //         scaffoldKey,
-                                //       );
-                                //     },
-                                //   ),
-                                // ),
+                                TextFieldContainer(
+                                  context,
+                                  "Location Description/स्थान विवरण ",
+                                  50,
+                                  locationDescriptionValue,
+                                  TextInputType.streetAddress,
+                                ),
+                                SizedBox(
+                                  height: screenHeight * 0.025,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.grey.shade100,
+                                  ),
+                                  margin: EdgeInsets.only(
+                                    top: screenHeight * 0.015,
+                                    left: screenWidth * 0.02,
+                                    right: screenWidth * 0.02,
+                                  ),
+                                  child: dropDownMenu(
+                                    context,
+                                    sthalTypeList,
+                                    _sthalType,
+                                    "Sthal /स्थल *",
+                                    false,
+                                    () => {},
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: screenHeight * 0.01,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.grey.shade100,
+                                  ),
+                                  margin: EdgeInsets.only(
+                                    top: screenHeight * 0.015,
+                                    left: screenWidth * 0.02,
+                                    right: screenWidth * 0.02,
+                                  ),
+                                  child: dropDownMenu(
+                                    context,
+                                    astherTypeList,
+                                    _astherType,
+                                    "Sthar /स्तर *",
+                                    false,
+                                    () => {},
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: screenHeight * 0.05,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(0),
+                                  child: Container(
+                                    child: visibilityForPrabhag
+                                            .contains(_astherType.text)
+                                        ? Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: screenHeight * 0.004),
+                                            child:
+                                                dropDownMenuForPrabhagDayitva(
+                                              context,
+                                              _defaultDayitva_PrabhagType,
+                                              "Prabhag",
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 0,
+                                          ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(0),
+                                  child: Container(
+                                    child: visibilityForSambhag
+                                            .contains(_astherType.text)
+                                        ? Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: screenHeight * 0.004),
+                                            child:
+                                                dropDownMenuForSambhagDayitva(
+                                              context,
+                                              _defaultDayitva_SambhagType,
+                                              _defaultDayitva_PrabhagType,
+                                              "Sambhag",
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 0,
+                                          ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(0),
+                                  child: Container(
+                                    child: visibilityForBhag
+                                            .contains(_astherType.text)
+                                        ? Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: screenHeight * 0.004),
+                                            child: dropDownMenuForBhagDayitva(
+                                              context,
+                                              _defaultDayitva_BhagType,
+                                              _defaultDayitva_PrabhagType,
+                                              _defaultDayitva_SambhagType,
+                                              "Bhag",
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 0,
+                                          ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(0),
+                                  child: Container(
+                                    child: visibilityForAnchal
+                                            .contains(_astherType.text)
+                                        ? Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: screenHeight * 0.004),
+                                            child: dropDownMenuForAnchalDayitva(
+                                              context,
+                                              _defaultDayitva_AnchalType,
+                                              _defaultDayitva_PrabhagType,
+                                              _defaultDayitva_SambhagType,
+                                              _defaultDayitva_BhagType,
+                                              "Anchal",
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 0,
+                                          ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(0),
+                                  child: Container(
+                                    child: visibilityForCluster
+                                            .contains(_astherType.text)
+                                        ? Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: screenHeight * 0.004),
+                                            child:
+                                                dropDownMenuForClusterDayitva(
+                                              context,
+                                              _defaultDayitva_ClusterType,
+                                              _defaultDayitva_PrabhagType,
+                                              _defaultDayitva_SambhagType,
+                                              _defaultDayitva_BhagType,
+                                              _defaultDayitva_AnchalType,
+                                              "Cluster",
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 0,
+                                          ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(0),
+                                  child: Container(
+                                    child: visibilityForSanch
+                                            .contains(_astherType.text)
+                                        ? Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: screenHeight * 0.004),
+                                            child: dropDownMenuForSanchDayitva(
+                                              context,
+                                              _defaultDayitva_SanchType,
+                                              _defaultDayitva_PrabhagType,
+                                              _defaultDayitva_SambhagType,
+                                              _defaultDayitva_BhagType,
+                                              _defaultDayitva_AnchalType,
+                                              _defaultDayitva_ClusterType,
+                                              "Sanch",
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 0,
+                                          ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(0),
+                                  child: Container(
+                                    child: visibilityForUpSanch
+                                            .contains(_astherType.text)
+                                        ? Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: screenHeight * 0.004),
+                                            child:
+                                                dropDownMenuForUpSanchDayitva(
+                                              context,
+                                              _defaultDayitva_SubSanchType,
+                                              _defaultDayitva_PrabhagType,
+                                              _defaultDayitva_SambhagType,
+                                              _defaultDayitva_BhagType,
+                                              _defaultDayitva_AnchalType,
+                                              _defaultDayitva_ClusterType,
+                                              _defaultDayitva_SanchType,
+                                              "Up-Sanch",
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 0,
+                                          ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(0),
+                                  child: Container(
+                                    child: visibilityForVillage
+                                            .contains(_astherType.text)
+                                        ? Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: screenHeight * 0.004),
+                                            child:
+                                                dropDownMenuForVillageDayitva(
+                                              context,
+                                              _defaultDayitva_VillageType,
+                                              _defaultDayitva_PrabhagType,
+                                              _defaultDayitva_SambhagType,
+                                              _defaultDayitva_BhagType,
+                                              _defaultDayitva_AnchalType,
+                                              _defaultDayitva_ClusterType,
+                                              _defaultDayitva_SanchType,
+                                              _defaultDayitva_SubSanchType,
+                                              "Village",
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            height: 0,
+                                          ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: screenHeight * 0.05,
+                                ),
+                                Container(
+                                  height: useableHeight * 0.075,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: useableHeight * 0.001,
+                                    horizontal: screenWidth * 0.01,
+                                  ),
+                                  margin: EdgeInsets.symmetric(
+                                    vertical: useableHeight * 0.001,
+                                    horizontal: screenWidth * 0.0075,
+                                  ),
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    child: !_isSubmitLoadingSpinner
+                                        ? Text(
+                                            'Submit the Location\nस्थान जमा करें',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        : CircularProgressIndicator(
+                                            color: Colors.white,
+                                          ),
+                                    onPressed: () {
+                                      _submitCapturedLocationInformation(
+                                        context,
+                                        scaffoldKey,
+                                      );
+                                    },
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -652,6 +1006,554 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
     );
   }
 
+  ////////////////// Drop-Down Widgets for Dayitva Hierarchy ///////////////
+
+  Widget dropDownMenuForPrabhagDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getPrabhagDavitvaList(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_SambhagType.text = "";
+            _defaultDayitva_BhagType.text = "";
+            _defaultDayitva_AnchalType.text = "";
+            _defaultDayitva_ClusterType.text = "";
+            _defaultDayitva_SanchType.text = "";
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForSambhagDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getSambhagDavitvaList(context, prabhagName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_BhagType.text = "";
+            _defaultDayitva_AnchalType.text = "";
+            _defaultDayitva_ClusterType.text = "";
+            _defaultDayitva_SanchType.text = "";
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForBhagDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList =
+        getBhagDavitvaList(context, prabhagName, bhagName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_AnchalType.text = "";
+            _defaultDayitva_ClusterType.text = "";
+            _defaultDayitva_SanchType.text = "";
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForAnchalDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList =
+        getAnchalDavitvaList(context, prabhagName, bhagName, anchalName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_ClusterType.text = "";
+            _defaultDayitva_SanchType.text = "";
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForClusterDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getClusterDavitvaList(
+        context, prabhagName, bhagName, anchalName, clusterName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_SanchType.text = "";
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForSanchDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+    TextEditingController sanchName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getSanchDavitvaList(
+        context, prabhagName, bhagName, anchalName, clusterName, sanchName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_SubSanchType.text = "";
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForUpSanchDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+    TextEditingController sanchName,
+    TextEditingController upSanchName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getUpSanchDavitvaList(context, prabhagName,
+        bhagName, anchalName, clusterName, sanchName, upSanchName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+
+            _defaultDayitva_VillageType.text = "";
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget dropDownMenuForVillageDayitva(
+    BuildContext context,
+    TextEditingController _textCtr,
+    TextEditingController prabhagName,
+    TextEditingController bhagName,
+    TextEditingController anchalName,
+    TextEditingController clusterName,
+    TextEditingController sanchName,
+    TextEditingController upSanchName,
+    TextEditingController villageName,
+    String hintText,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    List<String> dropDownList = getVillageDavitvaList(context, prabhagName,
+        bhagName, anchalName, clusterName, sanchName, upSanchName, villageName);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          isExpanded: true,
+          items: dropDownList.map(buildMenuItemModified).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+          }),
+        ),
+      ),
+    );
+  }
+
+  DropdownMenuItem<String> buildMenuItemModified(String item) =>
+      DropdownMenuItem(
+        value: item,
+        child: Text(
+          item,
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      );
+
+  Widget dropDownMenu(
+    BuildContext context,
+    List<String> dropDownList,
+    TextEditingController _textCtr,
+    String hintText,
+    bool callFunction,
+    functionCall(),
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    if (callFunction) {
+      functionCall();
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.02,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          hint: Align(
+            alignment: Alignment.centerLeft,
+            child: _textCtr.text.length == 0
+                ? Text("${hintText}")
+                : Text(
+                    "${_textCtr.text}",
+                    style: TextStyle(color: Colors.black),
+                  ),
+          ),
+          isDense: true,
+          isExpanded: true,
+          iconSize: 35,
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
+          onTap: () {},
+          items: dropDownList.map(buildMenuItem).toList(),
+          onChanged: (value) => setState(() {
+            _textCtr.text = value!;
+          }),
+        ),
+      ),
+    );
+  }
+
+  DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
+        value: item,
+        child: Text(
+          item,
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      );
+
   ////////////////// List function for different Dayitva positions ///////////////
 
   List<String> getPrabhagDavitvaList(BuildContext context) {
@@ -806,5 +1708,4 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
 
     return villageSet.toList();
   }
-
 }

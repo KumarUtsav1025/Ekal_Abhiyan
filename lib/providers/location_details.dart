@@ -36,24 +36,23 @@ class LocationDetails with ChangeNotifier {
 
   Future<void> addLocationDetails(
     BuildContext context,
-    String visitorName,
-    String visitorMobileNumber,
-    String visitorDayitva,
-    String visitorAddressType,
-    String visitorState,
-    String visitorRegion,
-    String visitorDistrict,
-    String visitorAnchal,
-    String visitorSankul,
-    String visitorCluster,
-    String visitorSubCluster,
-    String visitorVillage,
-    String detailsProviderUniqueId,
+    TextEditingController detailsProviderUniqueId,
     File fetchedImg,
     String fetchedDateTime,
     String fetchedLatitude,
     String fetchedLongitude,
     String fetchedAddress,
+    TextEditingController fetchedLocationDescription,
+    TextEditingController sthalType,
+    TextEditingController astherType,
+    TextEditingController prabhagType,
+    TextEditingController sambhagType,
+    TextEditingController bhagType,
+    TextEditingController anchalType,
+    TextEditingController clusterType,
+    TextEditingController sanchType,
+    TextEditingController upSanchType,
+    TextEditingController villageType,
   ) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     CollectionReference usersRef = db.collection("userPersonalInformation");
@@ -87,29 +86,29 @@ class LocationDetails with ChangeNotifier {
         urlLink,
         body: json.encode(
           {
-            'name': visitorName.toString(),
-            'mobileNumber': visitorMobileNumber.toString(),
-            'dayitva': visitorDayitva.toString(),
-            'addressType': visitorAddressType.toString(),
-            'state': visitorState.toString(),
-            'region': visitorRegion.toString(),
-            'district': visitorDistrict.toString(),
-            'anchal': visitorAnchal.toString(),
-            'sankul': visitorSankul.toString(),
-            'cluster': visitorCluster.toString(),
-            'subCluster': visitorSubCluster.toString(),
-            'village': visitorVillage.toString(),
-            'detailsProviderUniqueId': detailsProviderUniqueId.toString(),
+            'detailsProviderUniqueId': detailsProviderUniqueId.text.toString(),
             'currDateTime': fetchedDateTime.toString(),
             'currLatitude': fetchedLatitude.toString(),
             'currLongitude': fetchedLongitude.toString(),
             'currAddress': fetchedAddress.toString(),
+            'locationDescription': fetchedLocationDescription.text.toString(),
+            'sthal': sthalType.text.toString(),
+            'asther': astherType.text.toString(),
+
+            'prabhag': prabhagType.text.toString(),
+            'sambhag': sambhagType.text.toString(),
+            'bhag': bhagType.text.toString(),
+            'anchal': anchalType.text.toString(),
+            'cluster': clusterType.text.toString(),
+            'sanch': sanchType.text.toString(),
+            'upSanch': upSanchType.text.toString(),
+            'village': villageType.text.toString(),
             'imageLink': locationImageUrl.toString(),
           },
         ),
       );
 
-      // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+      Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
       notifyListeners();
     } catch (errorVal) {
       print(errorVal);

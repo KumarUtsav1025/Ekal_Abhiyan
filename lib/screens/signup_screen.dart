@@ -246,6 +246,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final visibilityForUpSanch = ["Sub-Sanch -- उपसंच", "Village -- गाव"];
   final visibilityForVillage = ["Village -- गाव"];
 
+
   Future<void> _checkInputFields(BuildContext context) async {
     if (_designationType.text.trim().length == 0) {
       String titleText = "Invalid Designation Type!";
@@ -259,7 +260,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Invalid Dayitva Level!";
       String contextText = "Please select your Dayitva Level...";
       _checkForError(context, titleText, contextText);
-    } else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+    } 
+    else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
             _designationType.text == "Samiti -- समिति") &&
         _dayitvaType.text == "Prabhaag -- प्रभाग" &&
         _defaultDayitva_PrabhagType.text == "") {
@@ -315,7 +317,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Invalid Village!";
       String contextText = "Please select till Village...";
       _checkForError(context, titleText, contextText);
-    } else if (_designationType.text == "Acharya -- आचार्य" &&
+    } 
+    else if (_designationType.text == "Acharya -- आचार्य" &&
         _defaultDayitva_PrabhagType.text.length == 0) {
       String titleText = "Invalid Prabhag!";
       String contextText = "Please select your Prabhag...";

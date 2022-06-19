@@ -95,9 +95,6 @@ class _LoginScreenState extends State<LoginScreen>
       // _checkIfUserExists(context);
       // _enterUserOtp(context, titleText, contextText);
 
-
-
-
       if ((await Provider.of<AuthDetails>(context, listen: false)
               .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
           true) {
