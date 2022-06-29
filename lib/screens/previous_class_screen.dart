@@ -104,7 +104,7 @@ class _PreviousClassState extends State<PreviousClass> {
                           horizontal: screenWidth * 0.1,
                         ),
                         child: Text(
-                          'No Classes has been Taken Yet!\n-----------------\nअभी तक कोई क्लास नहीं ली गई है।',
+                          'No Attendence has been Registered.!\n-----------------\nकोई उपस्थिति दर्ज नहीं की गई है।',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,

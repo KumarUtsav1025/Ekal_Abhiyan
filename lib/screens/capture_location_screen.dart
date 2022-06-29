@@ -26,6 +26,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'dart:ui' as ui;
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/auth_details.dart';
 import '../providers/class_details.dart';
@@ -173,6 +174,7 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
     "पोषण वाटिका",
     "जैविक पिट",
     "विद्यालय",
+    "योग दिवस 2022",
   ];
 
   final astherTypeList = [
@@ -195,6 +197,32 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
     "Panch",
     "Vaidya",
     "Pandit"
+  ];
+
+  final stharPrahagList = [
+    "प्रभाग कार्यालय",
+    "समिति निवास",
+  ];
+  final stharSambhagList = ["सम्भाग कार्यालय", "समिति का निवास"];
+  final stharBhagList = ["भाग कार्यालय", "समिति का निवास"];
+  final stharAnchalList = ["अंचल कार्यालय", "समिति का निवास"];
+  final stharClusterList = ["कार्यालय", "समिति का निवास"];
+  final stharSanchList = ["आचार्य मासिक बैठक स्थल", "समिति का निवास"];
+  final stharUpSanchList = ["आचार्य मासिक बैठक स्थल", "समिति का निवास"];
+  final stharVillageList = [
+    "आचार्य घर",
+    "ग्राम समिति",
+    "अभिभावक",
+    "सामुदायिक भवन",
+    "सांस्कृतिक मंच",
+    "चबूतरा",
+    "प्रांगण",
+    "योग केंद्र",
+    "संस्कार केंद्र",
+    "पोषण वाटिका",
+    "जैविक पिट",
+    "विद्यालय",
+    "योग दिवस 2022",
   ];
 
   Future<void> _checkForError(
@@ -243,15 +271,17 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
     BuildContext context,
     GlobalKey<ScaffoldState> sKey,
   ) async {
-    if (_sthalType.text.length == 0) {
-      String titleText = "Invalid Sthal/स्थल Type!";
-      String contextText = "Please select your 'Sthal/स्थल'...";
-      _checkForError(context, titleText, contextText);
-    } else if (_astherType.text.length == 0) {
+    if (_astherType.text.length == 0) {
       String titleText = "Invalid Sthar/स्तर Type!";
       String contextText = "Please select your 'Sthar/स्तर'...";
       _checkForError(context, titleText, contextText);
-    } else if (_astherType.text == "Prabhaag -- प्रभाग" &&
+    } 
+    else if (_sthalType.text.length == 0) {
+      String titleText = "Invalid Sthal/स्थल Type!";
+      String contextText = "Please select your 'Sthal/स्थल'...";
+      _checkForError(context, titleText, contextText);
+    } 
+    else if (_astherType.text == "Prabhaag -- प्रभाग" &&
         _defaultDayitva_PrabhagType.text == "") {
       String titleText = "Invalid Prabhag!";
       String contextText = "Please select till Prabhag...";
@@ -327,6 +357,31 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
     }
   }
 
+  // _astherType.text == "Prabhaag -- प्रभाग" ? stharPrahagList : _astherType.text == "Sambhaag -- संभाग" ? stharSambhagList : _astherType.text == "Bhaag -- भाग" ? stharBhagList : _astherType.text == "Anchal -- अंचल" ? stharAnchalList : _astherType.text == "Cluster -- क्लस्टर" ? stharClusterList ? _astherType.text == "Sanch -- संच" ? _astherType.text == "Sub-Sanch -- उपसंच" ? stharUpSanchList : stharVillageList
+
+  List<String> returnSthalListType(BuildContext context) {
+    if (_astherType.text == "Prabhaag -- प्रभाग") {
+      return stharPrahagList;
+    } else if (_astherType.text == "Sambhaag -- संभाग") {
+      return stharSambhagList;
+    } else if (_astherType.text == "Bhaag -- भाग") {
+      return stharBhagList;
+    } else if (_astherType.text == "Anchal -- अंचल") {
+      return stharAnchalList;
+    } else if (_astherType.text == "Cluster -- क्लस्टर") {
+      return stharClusterList;
+    } else if (_astherType.text == "Sanch -- संच") {
+      return stharSanchList;
+    } else if (_astherType.text == "Sub-Sanch -- उपसंच") {
+      return stharUpSanchList;
+    } else if (_astherType.text == "Village -- गाव") {
+      return stharVillageList;
+    } else {
+      List<String> lt = ["Select Sthar!"];
+      return lt;
+    }
+  }
+
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
@@ -337,11 +392,36 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
     var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
     var useableHeight = screenHeight - topInsets - bottomInsets;
 
-    ekalList = Provider.of<HardDataDetails>(context, listen: false)
-        .getEkalLocationCategoryList();
-
     hierarchyDayitvaList = Provider.of<HardDataDetails>(context, listen: false)
         .getHierarchyDayitvaLocationList();
+
+    setState(() {
+      if (_astherType.text == "Prabhaag -- प्रभाग" &&
+          !stharPrahagList.contains(_sthalType.text)) {
+        _sthalType.text = "";
+      } else if (_astherType.text == "Sambhaag -- संभाग" &&
+          !stharSambhagList.contains(_sthalType.text)) {
+        _sthalType.text = "";
+      } else if (_astherType.text == "Bhaag -- भाग" &&
+          !stharBhagList.contains(_sthalType.text)) {
+        _sthalType.text = "";
+      } else if (_astherType.text == "Anchal -- अंचल" &&
+          !stharAnchalList.contains(_sthalType.text)) {
+        _sthalType.text = "";
+      } else if (_astherType.text == "Cluster -- क्लस्टर" &&
+          !stharClusterList.contains(_sthalType.text)) {
+        _sthalType.text = "";
+      } else if (_astherType.text == "Sanch -- संच" &&
+          !stharSanchList.contains(_sthalType.text)) {
+        _sthalType.text = "";
+      } else if (_astherType.text == "Sub-Sanch -- उपसंच" &&
+          !stharUpSanchList.contains(_sthalType.text)) {
+        _sthalType.text = "";
+      } else if (_astherType.text == "Village -- गाव" &&
+          !stharVillageList.contains(_sthalType.text)) {
+        _sthalType.text = "";
+      }
+    });
 
     return Scaffold(
       body: GestureDetector(
@@ -504,28 +584,6 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
                                   TextInputType.streetAddress,
                                 ),
                                 SizedBox(
-                                  height: screenHeight * 0.025,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.grey.shade100,
-                                  ),
-                                  margin: EdgeInsets.only(
-                                    top: screenHeight * 0.015,
-                                    left: screenWidth * 0.02,
-                                    right: screenWidth * 0.02,
-                                  ),
-                                  child: dropDownMenu(
-                                    context,
-                                    sthalTypeList,
-                                    _sthalType,
-                                    "Sthal /स्थल *",
-                                    false,
-                                    () => {},
-                                  ),
-                                ),
-                                SizedBox(
                                   height: screenHeight * 0.01,
                                 ),
                                 Container(
@@ -546,6 +604,29 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
                                     false,
                                     () => {},
                                   ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.grey.shade100,
+                                  ),
+                                  margin: EdgeInsets.only(
+                                    top: screenHeight * 0.015,
+                                    left: screenWidth * 0.02,
+                                    right: screenWidth * 0.02,
+                                  ),
+                                  child: _astherType.text.length == 0
+                                      ? SizedBox(
+                                          height: 0,
+                                        )
+                                      : dropDownMenu(
+                                          context,
+                                          returnSthalListType(context),
+                                          _sthalType,
+                                          "Sthal /स्थल *",
+                                          false,
+                                          () => {},
+                                        ),
                                 ),
                                 SizedBox(
                                   height: screenHeight * 0.05,

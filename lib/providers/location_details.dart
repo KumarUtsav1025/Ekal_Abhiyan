@@ -62,7 +62,7 @@ class LocationDetails with ChangeNotifier {
 
     final urlLink = Uri.https(
       'flutterdatabase-76af4-default-rtdb.firebaseio.com',
-      '/FetchedLocationDetails.json',
+      '/FetchedLocationDetails/${detailsProviderUniqueId.text.toString()}.json',
     );
 
     String imageName =

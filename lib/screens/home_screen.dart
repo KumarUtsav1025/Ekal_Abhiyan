@@ -18,6 +18,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:charts_flutter/flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/class_details.dart';
 import '../providers/user_details.dart';
@@ -115,6 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: screenHeight*0.01,
+              ),
               Container(
                 child: Card(
                   elevation: 15,
@@ -124,20 +128,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       vertical: useableHeight * 0.01,
                     ),
                     child: Text(
-                      "This Ekal Vidyalaya app is designed to take attendance of students present in the vidyalaya. \nयह एकल विद्यालय एप विद्यालय में प्रतिदिन आने वालों बच्चों की उपस्थिति दर्ज करने हेतु है|",
+                      "This Ekal attendence App is designed to record attendence of Students, Teachers and Karyakarta's  Pravas . \nएकल उपस्थिति एप्प विद्यालय लगने, विद्यार्थियों की उपस्थिति एवं कार्यकर्ताओं के प्रवास, सम्पर्क एवं वर्गों में उपस्थिति को दर्ज करने के लिये है।",
                       textAlign: TextAlign.center,
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.00125),
               Container(
                 child: Card(
                   elevation: 15,
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenWidth * 0.025,
-                      vertical: useableHeight * 0.01,
+                      vertical: useableHeight * 0.005,
                     ),
                     child: Text(
                       "आज तक ली गई आपकी कक्षाओं की संख्या = ${cntClasses}",

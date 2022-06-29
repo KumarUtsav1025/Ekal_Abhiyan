@@ -20,6 +20,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'dart:ui' as ui;
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../screens/tabs_screen.dart';
 
@@ -217,7 +218,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                         alignment: Alignment.center,
                         width: double.infinity,
                         child: Text(
-                          "Take the Picture of the Classroom\n-------------------------------------------\nकक्षा की तस्वीर लें पर क्लिक करें",
+                          "Register your Attendance\n-------------------------------------------\nअपनी उपस्थिति दर्ज कराएं",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,

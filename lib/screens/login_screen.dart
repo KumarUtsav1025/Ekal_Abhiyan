@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -23,6 +24,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:event_listener/event_listener.dart';
+import 'package:url_launcher/url_launcher.dart';
 // import 'com.google.firebase.database.ValueEventListener';
 
 import './tabs_screen.dart';
@@ -41,6 +43,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   final ekalVidyalayaImage = 'assets/images/Ekal-Vidyalaya.jpg';
+  final aurigaCareImage = 'assets/images/ac_logo.png';
   late AnimationController _animeController;
   late Animation<Size> _heightAnimation;
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -117,7 +120,8 @@ class _LoginScreenState extends State<LoginScreen>
         print("New User!");
 
         String titleText = "New User";
-        String contextText = "Please Create your Account!\nकृपया अपना खाता बनाएं।";
+        String contextText =
+            "Please Create your Account!\nकृपया अपना खाता बनाएं।";
         _checkForError(context, titleText, contextText);
       }
     }
@@ -326,13 +330,6 @@ class _LoginScreenState extends State<LoginScreen>
         _checkForError(context, titleText, contextText);
 
         print(errorVal.message);
-
-        // _scaffoldKey.currentState?.showSnackBar(
-        //   SnackBar(
-        //     behavior: SnackBarBehavior.floating,
-        //     content: Text("Firebase Error!"),
-        //   ),
-        // );
       }
     }
   }
@@ -377,21 +374,18 @@ class _LoginScreenState extends State<LoginScreen>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                height: screenHeight * 0.075,
+                height: screenHeight * 0.045,
               ),
               Container(
-                child: CircleAvatar(
-                  backgroundColor: Colors.black,
-                  radius: screenHeight * 0.11,
-                  child: CircleAvatar(
-                    radius: screenHeight * 0.1,
-                    backgroundImage:
-                        AssetImage('assets/images/Ekal-Vidyalaya.jpg'),
-                  ),
+                // decoration: BoxDecoration(color: Colors.blue),
+                child: Image.asset(
+                  ekalVidyalayaImage,
+                  width: screenWidth * 0.4,
+                  height: screenHeight * 0.2,
                 ),
               ),
               SizedBox(
-                height: screenHeight * 0.02,
+                height: screenHeight * 0.001,
               ),
               Container(
                 color: Colors.blue.shade200,
@@ -400,20 +394,20 @@ class _LoginScreenState extends State<LoginScreen>
                     vertical: screenHeight * 0.01,
                     horizontal: screenWidth * 0.025,
                   ),
-                  margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                  margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                   child: Text(
-                    'Aacharya App',
+                    'Ekal Attendence App',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: screenWidth * 0.05,
+                      fontSize: screenWidth * 0.035,
                       decorationStyle: TextDecorationStyle.wavy,
                     ),
                   ),
                 ),
               ),
               SizedBox(
-                height: screenHeight * 0.04,
+                height: screenHeight * 0.02,
               ),
               Container(
                 alignment: Alignment.center,
@@ -477,7 +471,7 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                     SizedBox(
-                      height: screenHeight * 0.015,
+                      height: screenHeight * 0.005,
                     ),
                     FlatButton(
                       onPressed: () {
@@ -492,6 +486,131 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                   ],
+                ),
+              ),
+              SizedBox(
+                height: screenHeight * 0.025,
+              ),
+              Container(
+                child: Text(
+                  "Developed Under:",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                // decoration: BoxDecoration(color: Colors.blue),
+                child: Image.asset(
+                  aurigaCareImage,
+                  width: screenWidth * 0.75,
+                  height: screenHeight * 0.075,
+                ),
+              ),
+              // SizedBox(
+              //   height: screenHeight * 0.12,
+              // ),
+              Container(
+                margin: EdgeInsets.only(
+                  // left: screenWidth * 0.45,
+                  // right: screenWidth * 0.01,
+                  top: screenHeight * 0.0025,
+                  bottom: screenHeight * 0.0025,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.025,
+                  vertical: screenHeight * 0.01,
+                ),
+                child: RichText(
+                  textAlign: TextAlign.right,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "",
+                        style: TextStyle(
+                          color: Colors.black,
+                          // fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      WidgetSpan(
+                        child: Icon(
+                          Icons.ads_click_rounded,
+                        ),
+                      ),
+                      TextSpan(
+                        // style: linkText,
+                        text: "  --Website Link--",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () async {
+                            var url = "https://ail.auriga.co.in";
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: screenHeight * 0.15,
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  left: screenWidth * 0.45,
+                  right: screenWidth * 0.01,
+                  top: screenHeight * 0.0025,
+                  bottom: screenHeight * 0.0025,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.025,
+                  vertical: screenHeight * 0.01,
+                ),
+                child: RichText(
+                  textAlign: TextAlign.right,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Developer: ",
+                        style: TextStyle(
+                          color: Colors.black,
+                          // fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      WidgetSpan(
+                        child: Icon(
+                          Icons.ads_click_rounded,
+                        ),
+                      ),
+                      TextSpan(
+                        // style: linkText,
+                        text: "Rahul Singh",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () async {
+                            var url =
+                                "https://www.linkedin.com/in/rahul-singh-3003811b1/";
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

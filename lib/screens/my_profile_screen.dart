@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -21,6 +22,7 @@ import 'package:pinput/pinput.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/user_details.dart';
 
@@ -464,6 +466,53 @@ class _MyProfileState extends State<MyProfile> {
                   ),
                   SizedBox(
                     height: useableHeight * 0.05,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.01,
+                      vertical: screenHeight * 0.0025,
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.025,
+                      vertical: screenHeight * 0.01,
+                    ),
+                    child: RichText(
+                      textAlign: TextAlign.right,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Developer: ",
+                            style: TextStyle(
+                              color: Colors.black,
+                              // fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          WidgetSpan(
+                            child: Icon(
+                              Icons.ads_click_rounded,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "Rahul Singh",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                var url =
+                                    "https://www.linkedin.com/in/rahul-singh-3003811b1/";
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),

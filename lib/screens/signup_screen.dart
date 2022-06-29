@@ -22,6 +22,7 @@ import 'package:pinput/pinput.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import './tabs_screen.dart';
 
@@ -501,9 +502,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-
-    ekalList = Provider.of<HardDataDetails>(context, listen: false)
-        .getEkalLocationCategoryList();
 
     hierarchyDayitvaList = Provider.of<HardDataDetails>(context, listen: false)
         .getHierarchyDayitvaLocationList();
