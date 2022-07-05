@@ -359,7 +359,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Invalid Village!";
       String contextText = "Please select your Village...";
       _checkForError(context, titleText, contextText);
-    } else if (_userPhoneNumber.text.length != 10) {
+    } 
+    else if (_userPhoneNumber.text.length != 10) {
       String titleText = "Invild Mobile Number";
       String contextText = "Please Enter a Valid 10 Digit Number!";
       _checkForError(context, titleText, contextText);
@@ -371,7 +372,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Invild Mobile Number";
       String contextText = "Mobile Number Cannot be Negative!";
       _checkForError(context, titleText, contextText);
-    } else if (_firstName.text.trim().length == 0) {
+    } 
+    else if (_firstName.text.trim().length == 0) {
       String titleText = "Invalid First Name!";
       String contextText = "Please enter your 'First Name'...";
       _checkForError(context, titleText, contextText);

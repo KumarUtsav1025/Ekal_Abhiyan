@@ -76,6 +76,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Shikshak',
         theme: ThemeData(
           primarySwatch: Colors.blue,

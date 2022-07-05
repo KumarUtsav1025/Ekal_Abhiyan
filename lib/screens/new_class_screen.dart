@@ -53,6 +53,9 @@ class _NewClassScreenState extends State<NewClassScreen> {
   bool _getAddressFunc = false;
   bool _isClassCreated = false;
 
+  bool _numberStudents = false;
+  TextEditingController numStudents = new TextEditingController();
+
   final loc.Location location = loc.Location();
   StreamSubscription<loc.LocationData>? _locationSubscription;
   var latitudeValue = 'Getting Latitude...'.obs;
@@ -147,40 +150,94 @@ class _NewClassScreenState extends State<NewClassScreen> {
       imageFile: _storedImage,
     );
 
-    try {
-      Provider.of<ClassDetails>(context, listen: false)
-          .addNewClass(classInfo, _storedImage)
-          .catchError((onError) {
-        print(onError);
-        _checkForError(
-          context,
-          'Error Occoured',
-          'Something Went Wrong...',
-          popVal: true,
-        );
-      }).then((_) {
-        // Scaffold.of(context).showSnackBar(
-        //     SnackBar(content: Text('Class Submitted Successfully!')));
-        setState(() {
-          _isFloatingButtonActive = true;
-          _isSpinnerLoading = false;
-          _isCurrentLocationAccessGiven = false;
-          _isCurrentLocationTaken = false;
-          _isCameraOpened = false;
-          _isClassPictureTaken = false;
-          _isSubmitLoadingSpinner = false;
-          _getAddressFunc = false;
-
-          _isSubmitLoadingSpinner = false;
-        });
-
-        // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil("/tab-screen", (route) => false);
+    if (int.tryParse(numStudents.text) == null) {
+      String titleText = "Invild Student Count";
+      String contextText = "Entered Number of Students!";
+      _checkForError(context, titleText, contextText);
+    } else if (int.parse(numStudents.text) < 0) {
+      String titleText = "Invild Student Count";
+      String contextText = "Entered Number of Students!";
+      _checkForError(context, titleText, contextText);
+    } else {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Submitting the Class!\nजमा करने की प्रक्रिया में|'),
+        ),
+      );
+      setState(() {
+        _isSubmitLoadingSpinner = true;
       });
-    } catch (errorVal) {
-      _checkForError(context, 'Error Detected', 'Something Went Wrong!');
+
+      try {
+        Provider.of<ClassDetails>(context, listen: false)
+            .addNewClass(classInfo, _storedImage, numStudents)
+            .catchError((onError) {
+          print(onError);
+          _checkForError(
+            context,
+            'Error Occoured',
+            'Something Went Wrong...',
+            popVal: true,
+          );
+        }).then((_) {
+          // Scaffold.of(context).showSnackBar(
+          //     SnackBar(content: Text('Class Submitted Successfully!')));
+          setState(() {
+            _isFloatingButtonActive = true;
+            _isSpinnerLoading = false;
+            _isCurrentLocationAccessGiven = false;
+            _isCurrentLocationTaken = false;
+            _isCameraOpened = false;
+            _isClassPictureTaken = false;
+            _isSubmitLoadingSpinner = false;
+            _getAddressFunc = false;
+
+            _isSubmitLoadingSpinner = false;
+          });
+
+          // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil("/tab-screen", (route) => false);
+        });
+      } catch (errorVal) {
+        _checkForError(context, 'Error Detected', 'Something Went Wrong!');
+      }
     }
+  }
+
+  Widget TextFieldContainer(
+    BuildContext context,
+    String textLabel,
+    int maxLgt,
+    TextEditingController _textCtr,
+    TextInputType keyBoardType,
+  ) {
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var topInsets = MediaQuery.of(context).viewInsets.top;
+    var bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    var useableHeight = screenHeight - topInsets - bottomInsets;
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade100,
+      ),
+      margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * 0.008,
+        horizontal: screenWidth * 0.03,
+      ),
+      child: TextField(
+        maxLength: maxLgt,
+        decoration: InputDecoration(
+            labelText: '${textLabel}: ',
+            hintStyle: TextStyle(fontWeight: FontWeight.bold)),
+        controller: _textCtr,
+        keyboardType: keyBoardType,
+        onSubmitted: (_) {},
+      ),
+    );
   }
 
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -230,7 +287,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                             height: 0,
                           )
                         : Container(
-                            height: screenHeight * 1.35,
+                            height: screenHeight * 1.5,
                             width: screenWidth * 0.9,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -265,6 +322,16 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   ),
                                 ),
                                 SizedBox(
+                                  height: useableHeight * 0.01,
+                                ),
+                                TextFieldContainer(
+                                  context,
+                                  "No of Students/विद्यार्थियों की संख्या",
+                                  3,
+                                  numStudents,
+                                  TextInputType.number,
+                                ),
+                                SizedBox(
                                   height: useableHeight * 0.02,
                                 ),
                                 Container(
@@ -291,16 +358,6 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                             color: Colors.white,
                                           ),
                                     onPressed: () {
-                                      Scaffold.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                              'Submitting the Class!\nजमा करने की प्रक्रिया में|'),
-                                        ),
-                                      );
-                                      setState(() {
-                                        _isSubmitLoadingSpinner = true;
-                                      });
-
                                       _submitTheClassInformation(
                                         context,
                                         scaffoldKey,

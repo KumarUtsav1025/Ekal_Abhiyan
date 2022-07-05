@@ -47,6 +47,7 @@ class ClassDetails with ChangeNotifier {
   Future<void> addNewClass(
     ClassInformation classInfo,
     File classroomImage,
+    TextEditingController cntStudents,
   ) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     CollectionReference usersRef = db.collection("userPersonalInformation");
@@ -96,6 +97,7 @@ class ClassDetails with ChangeNotifier {
             'currTime': classInfo.currTime.toString(),
             'currDate': classInfo.currDate.toString(),
             'numberOfHeads': classInfo.numOfStudents.toString(),
+            'enteredStudnets': cntStudents.text.toString(),
             'currLatitude': classInfo.currLatitude.toString(),
             'currLongitude': classInfo.currLongitude.toString(),
             'currAddress': classInfo.currAddress.toString(),
