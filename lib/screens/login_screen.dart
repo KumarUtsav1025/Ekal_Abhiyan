@@ -549,7 +549,9 @@ class _LoginScreenState extends State<LoginScreen>
                         recognizer: TapGestureRecognizer()
                           ..onTap = () async {
                             var url = "https://ail.auriga.co.in";
+                            // ignore: deprecated_member_use
                             if (await canLaunch(url)) {
+                              // ignore: deprecated_member_use
                               await launch(url);
                             } else {
                               throw 'Could not launch $url';
