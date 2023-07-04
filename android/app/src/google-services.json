@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "568844537213",
-    "firebase_url": "https://flutterdatabase-76af4-default-rtdb.firebaseio.com",
-    "project_id": "flutterdatabase-76af4",
-    "storage_bucket": "flutterdatabase-76af4.appspot.com"
+    "project_number": "1038095714065",
+    "project_id": "ekal-db",
+    "storage_bucket": "ekal-db.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:568844537213:android:62fe0e91015c4dd9139014",
+        "mobilesdk_app_id": "1:1038095714065:android:f18a4f8f2aefd590aaaeb0",
         "android_client_info": {
           "package_name": "com.example.instructor_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "568844537213-o236h7rf5upqr60ta0p29tdk9p4ups34.apps.googleusercontent.com",
+          "client_id": "1038095714065-10p227k78sd2r1t6duqr4ov7j91kcdvo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCsMbVbExfhZAi9gNV21bk96u4Iyrn8AQ4"
+          "current_key": "AIzaSyCb4ZMLz3TBqUIgjWZLxMBvqogmPp2AI_M"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "568844537213-o236h7rf5upqr60ta0p29tdk9p4ups34.apps.googleusercontent.com",
+              "client_id": "1038095714065-10p227k78sd2r1t6duqr4ov7j91kcdvo.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

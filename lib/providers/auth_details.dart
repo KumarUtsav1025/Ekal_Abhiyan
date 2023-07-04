@@ -49,12 +49,12 @@ class AuthDetails with ChangeNotifier {
     // var loggedInUserId = currLoggedInUser?.uid as String;
 
     final urlLink = Uri.https(
-      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      'ekal-db-default-rtdb.firebaseio.com',
       '/UsersPhoneNumber.json',
     );
 
     final urlParse = Uri.parse(
-      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/UsersPhoneNumber.json',
+      'https://ekal-db-default-rtdb.firebaseio.com/UsersPhoneNumber.json',
     );
 
     try {

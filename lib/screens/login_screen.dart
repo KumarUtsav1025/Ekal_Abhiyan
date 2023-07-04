@@ -93,11 +93,20 @@ class _LoginScreenState extends State<LoginScreen>
       String contextText = "Mobile Number Cannot be Negative!";
       _checkForError(context, titleText, contextText);
     } else {
+      // to bypass login
+      //  Navigator.of(context)
+      //       .pushNamedAndRemoveUntil("/test", (route) => false);
+      // bypass login ends
+
       // String titleText = "Authentication";
       // String contextText = "Enter the Otp:";
       // _checkIfUserExists(context);
       // _enterUserOtp(context, titleText, contextText);
 
+      // if ((await Provider.of<AuthDetails>(context, listen: false)
+      //         .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
+      //     true) {
+        
       if ((await Provider.of<AuthDetails>(context, listen: false)
               .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
           true) {

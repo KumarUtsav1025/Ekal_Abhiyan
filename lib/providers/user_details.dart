@@ -281,12 +281,12 @@ class UserDetails with ChangeNotifier {
     var loggedInUserId = currLoggedInUser?.uid as String;
 
     final urlLinkForPhoneNumbers = Uri.https(
-      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      'ekal-db-default-rtdb.firebaseio.com',
       '/UsersPhoneNumber.json',
     );
 
     final urlLinkForCompleteClassDetails = Uri.https(
-      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      'ekal-db-default-rtdb.firebaseio.com',
       '/CompleteClassDetails/${loggedInUserId}/${DateFormat.yMMMd('en_US').toString()}.json',
     );
 

@@ -33,6 +33,7 @@ import './screens/tabs_screen.dart';
 import './screens/login_screen.dart';
 import './screens/signup_screen.dart';
 import './screens/detail_class_screen.dart';
+import './screens/test.dart';
 
 import './providers/class_details.dart';
 import './providers/user_details.dart';
@@ -119,6 +120,7 @@ class MyApp extends StatelessWidget {
           PreviousClass.routeName: (ctx) => PreviousClass(),
           CaptureLocationScreen.routeName: (ctx) => CaptureLocationScreen(),
           MyProfile.routeName: (ctx) => MyProfile(),
+          Test.routeName: (ctx) => Test()
         },
       ),
     );
