@@ -22,6 +22,7 @@ import 'dart:ui' as ui;
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../constants/stringConst.dart';
 import '../screens/tabs_screen.dart';
 
 import '../widgets/live_location.dart';
@@ -151,17 +152,17 @@ class _NewClassScreenState extends State<NewClassScreen> {
     );
 
     if (int.tryParse(numStudents.text) == null) {
-      String titleText = "Invild Student Count";
-      String contextText = "Entered Number of Students!";
+      String titleText = S.invalidStudentCountErr;
+      String contextText = S.invalidStudentCountErrSub;
       _checkForError(context, titleText, contextText);
     } else if (int.parse(numStudents.text) < 0) {
-      String titleText = "Invild Student Count";
-      String contextText = "Entered Number of Students!";
+      String titleText = S.invalidStudentCountErr;
+      String contextText = S.invalidStudentCountErrSub;
       _checkForError(context, titleText, contextText);
     } else {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text('Submitting the Class!\nजमा करने की प्रक्रिया में|'),
+          content: Text(S.classSubmitText),
         ),
       );
       setState(() {
@@ -175,8 +176,8 @@ class _NewClassScreenState extends State<NewClassScreen> {
           print(onError);
           _checkForError(
             context,
-            'Error Occoured',
-            'Something Went Wrong...',
+            S.errorTitle,
+            S.errorSub,
             popVal: true,
           );
         }).then((_) {
@@ -200,7 +201,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
               .pushNamedAndRemoveUntil("/tab-screen", (route) => false);
         });
       } catch (errorVal) {
-        _checkForError(context, 'Error Detected', 'Something Went Wrong!');
+        _checkForError(context, S.errorTitle, S.errorSub);
       }
     }
   }
@@ -275,7 +276,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                         alignment: Alignment.center,
                         width: double.infinity,
                         child: Text(
-                          "Register your Attendance\n-------------------------------------------\nअपनी उपस्थिति दर्ज कराएं",
+                          S.newClassScreenBodyText,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -298,7 +299,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                 ),
                                 Container(
                                   child: Text(
-                                    'Picture of the Class\nकक्षा की तस्वीर',
+                                    S.newClassPicText,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -326,7 +327,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                 ),
                                 TextFieldContainer(
                                   context,
-                                  "No of Students/विद्यार्थियों की संख्या",
+                                  S.newClassStudentNumText,
                                   3,
                                   numStudents,
                                   TextInputType.number,
@@ -348,7 +349,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   child: ElevatedButton(
                                     child: !_isSubmitLoadingSpinner
                                         ? Text(
-                                            'Submit the Class\nकक्षा जमा करें',
+                                            S.newClassSubmitText,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
@@ -394,7 +395,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                 ),
                                 Container(
                                   child: Text(
-                                    "No of Students/विद्यार्थियों की संख्या: ${_numberOfStudents}",
+                                    "${S.newClassStudentNumText} ${_numberOfStudents}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -406,7 +407,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                 ),
                                 Container(
                                   child: Text(
-                                    "--------------------------------------------\nClass Address/कक्षा का पता: \n\n${addressValue.value}",
+                                    "--------------------------------------------\n${S.newClassAddressTitle} \n\n${addressValue.value}",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -444,7 +445,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
             : null,
         label: !_isSpinnerLoading
             ? Text(
-                "Click a Pic\nतस्वीर क्लिक करें",
+                S.newClassPicClickText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color:
@@ -513,8 +514,8 @@ class _NewClassScreenState extends State<NewClassScreen> {
     if (!serviceEnabled) {
       await Geolocator.openLocationSettings();
 
-      String titleText = 'Location Services are Disabled';
-      String contextText = 'Enable the Location Services.';
+      String titleText = S.locationErrText;
+      String contextText = S.locationErrSubText1;
       _checkLocatoinService(context, titleText, contextText);
     }
 
@@ -522,16 +523,16 @@ class _NewClassScreenState extends State<NewClassScreen> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
 
-      String titleText = 'Location Services are Disabled';
-      String contextText = 'Location Permissions Denied.';
+      String titleText = S.locationErrText;
+      String contextText = S.locationErrSubText2;
       if (permission == LocationPermission.denied) {
         _checkLocatoinService(context, titleText, contextText);
       }
     }
 
-    String titleText = 'Location Services are Disabled';
-    String contextText =
-        'Location Permissions Denied Permanently, \nRequest Permissions Halted.';
+    String titleText = S.locationErrText;
+    String contextText = S.locationErrSubText3;
+
     if (permission == LocationPermission.deniedForever) {
       _checkLocatoinService(context, titleText, contextText);
     }
@@ -588,8 +589,8 @@ class _NewClassScreenState extends State<NewClassScreen> {
     );
 
     if (imageFile == null) {
-      String titleText = "Camera Application Turned Off";
-      String contextText = "Please Re-Try Again!";
+      String titleText = S.cameraErrText;
+      String contextText = S.cameraSubText;
       _checkForError(context, titleText, contextText);
       setState(() {
         _isFloatingButtonActive = true;

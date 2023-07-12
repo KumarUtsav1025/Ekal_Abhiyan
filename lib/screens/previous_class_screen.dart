@@ -18,6 +18,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 
+import '../constants/stringConst.dart';
 import '../providers/class_details.dart';
 import '../providers/user_details.dart';
 
@@ -104,7 +105,7 @@ class _PreviousClassState extends State<PreviousClass> {
                           horizontal: screenWidth * 0.1,
                         ),
                         child: Text(
-                          'No Attendence has been Registered.!\n-----------------\nकोई उपस्थिति दर्ज नहीं की गई है।',
+                          S.prevClassBodyText,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,

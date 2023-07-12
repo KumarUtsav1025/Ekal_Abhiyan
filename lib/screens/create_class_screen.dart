@@ -16,6 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 
+import '../constants/stringConst.dart';
 import '../screens/tabs_screen.dart';
 
 import '../widgets/live_location.dart';
@@ -37,7 +38,7 @@ class CreateNewClass extends StatefulWidget {
 class _CreateNewClassState extends State<CreateNewClass> {
   final _numberOfStudents = TextEditingController();
   var _durationOfClass = 1;
-  String dateBtnString = 'Choose Date';
+  String dateBtnString = S.chooseDateClassCommandText;
   late DateTime _selectedDate;
 
   bool isDateSet = false;
@@ -69,17 +70,16 @@ class _CreateNewClassState extends State<CreateNewClass> {
 
     // Condition checking
     if (!isNumStudentsFilled && !isDateSet) {
-      String titleText = "Invalid Input.";
-      String contextText =
-          "Enter Valid \nNumber of Students \nand \nChoose a Valid Date.";
+      String titleText = S.inputErrText;
+      String contextText = S.inputErrSubText1;
       _checkForError(context, titleText, contextText);
     } else if (!isNumStudentsFilled) {
-      String titleText = "Invalid Input";
-      String contextText = "Enter Valid \nNumber of Students.";
+      String titleText = S.inputErrText;
+      String contextText = "${S.inputErrSubText1} \n${S.inputErrSubText2}";
       _checkForError(context, titleText, contextText);
     } else if (!isDateSet) {
-      String titleText = "Invalid Input";
-      String contextText = "Choose a Valid \Date of the Class.";
+      String titleText = S.inputErrText;
+      String contextText = S.inputErrSubText3;
       _checkForError(context, titleText, contextText);
     } else {
       setState(() {
@@ -94,17 +94,16 @@ class _CreateNewClassState extends State<CreateNewClass> {
         isCard3Visible = true;
       });
     } else if (!isCurrentLocSet && !isLiveLocationOn) {
-      String titleText = "Current & Live Location Not Set";
-      String contextText =
-          "Please Turn On 'Add Current Location' and 'Live Location'.";
+      String titleText = S.currLivLocationErr;
+      String contextText = S.currLivLocationSubErr;
       _checkForError(context, titleText, contextText);
     } else if (!isCurrentLocSet) {
-      String titleText = "Current Location Not Set";
-      String contextText = "Please Turn On 'Add Current Location'.";
+      String titleText = S.currLocationErr;
+      String contextText = S.currLocationSubErr;
       _checkForError(context, titleText, contextText);
     } else {
-      String titleText = "Live Location is Off";
-      String contextText = "Please Turn On your 'Live Location'.";
+      String titleText = S.livLocationErr;
+      String contextText = S.livLocationSubErr;
       _checkForError(context, titleText, contextText);
     }
   }
@@ -115,28 +114,28 @@ class _CreateNewClassState extends State<CreateNewClass> {
         isCard4Visible = true;
       });
     } else {
-      String titleText = "Picture Not Clicked.";
-      String contextText = "Please click live Image of the Class.";
+      String titleText = S.pictureErr;
+      String contextText = S.pictureSubErr;
       _checkForError(context, titleText, contextText);
     }
   }
 
   Future<void> _checkCard4Input(BuildContext context) async {
     if (!isCard5Visible) {
-      String titleText = "Class is On Going!";
-      String contextText = "Please wait for the Class to End...";
+      String titleText = S.onGoingClassErr;
+      String contextText = S.onGoingClassSubErr;
       _checkForError(context, titleText, contextText);
     }
   }
 
   Future<void> _checkCard5Input(BuildContext context) async {
     if (isPic2Clicked) {
-      String titleText = "Check the Input Fields!";
-      String contextText = "Are your sure the inputs are correct?";
+      String titleText = S.inputErrText;
+      String contextText = S.inputErrSubText1;
       _checkForConfirmation(context, titleText, contextText);
     } else {
-      String titleText = "Picture Not Clicked";
-      String contextText = "Please click live Image of the Class.";
+      String titleText = S.pictureErr;
+      String contextText = S.pictureSubErr;
       _checkForError(context, titleText, contextText);
     }
   }
@@ -207,7 +206,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
         setState(() {
           isDateSet = true;
           _selectedDate = DateTime.now();
-          dateBtnString = "Change Date";
+          dateBtnString = S.changeDateClassCommand;
         });
       }
     });
@@ -252,7 +251,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
       id: DateTime.now().toString(),
       // image: _pickedImage1,
       location: placeLoc1,
-      title: 'User Info',
+      title: S.userInfoText,
     );
 
     String address2 =
@@ -266,7 +265,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
       id: '${placeValue1.id} + ${DateTime.now()}',
       // image: _pickedImage2,
       location: placeLoc2,
-      title: 'User Info',
+      title: S.userInfoText,
     );
 
     List<Position> finalLocList = userLocationLatLong;
@@ -341,7 +340,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                             Expanded(
                               child: Text(
                                 isDateSet == false
-                                    ? 'Select Date -> '
+                                    ? S.selectDateClassCommandText
                                     : 'Date: ${DateFormat('dd/MM/yyyy').format(_selectedDate)}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -375,7 +374,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                         ),
                         child: TextField(
                           decoration: InputDecoration(
-                              labelText: 'Number of Students: '),
+                              labelText: S.createClassStudentNumText),
                           controller: _numberOfStudents,
                           keyboardType: TextInputType.number,
                           onSubmitted: (_) {},
@@ -404,7 +403,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                 !isCard2Visible
                     ? Column(
                         children: <Widget>[
-                          Text('Fill the above Fields..'),
+                          Text(S.createClassFillDetailsText),
                           SizedBox(
                             height: screenHeight * 0.02,
                           ),
@@ -425,7 +424,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                             padding:
                                 EdgeInsets.only(bottom: screenHeight * 0.005),
                             child: Text(
-                              'BEGINNING OF THE CLASS:',
+                              S.classBeginText,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
@@ -457,7 +456,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                           !isCard3Visible
                               ? Column(
                                   children: <Widget>[
-                                    Text('Start your Live Location...'),
+                                    Text(S.classLocationBeginText),
                                     SizedBox(
                                       height: screenHeight * 0.015,
                                     ),
@@ -472,7 +471,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                               : Column(
                                   children: [
                                     Text(
-                                      'Starting Class Picture',
+                                      S.classPictureBeginText,
                                       textAlign: TextAlign.left,
                                     ),
 
@@ -499,7 +498,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                         ? Column(
                                             children: <Widget>[
                                               Text(
-                                                  'Click The Picture of Classroom...'),
+                                                  S.classPictureClickText),
                                               SizedBox(
                                                 height: screenHeight * 0.01,
                                               ),
@@ -519,7 +518,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                               SizedBox(
                                                 height: screenHeight * 0.03,
                                               ),
-                                              Text('Duration of the Class:'),
+                                              Text(S.classDurationText),
                                               SizedBox(
                                                 height: screenHeight * 0.02,
                                               ),
@@ -543,7 +542,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                                           bottom: screenHeight *
                                                               0.05),
                                                       child: Text(
-                                                        'Set Duration & Start the Class!',
+                                                        S.classSetDurationText,
                                                         style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -553,7 +552,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                                   : Column(
                                                       children: <Widget>[
                                                         Text(
-                                                          'Class Has Been Completed',
+                                                          S.classCompleteText,
                                                           style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
@@ -564,7 +563,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                                               0.05,
                                                         ),
                                                         Text(
-                                                          'Ending Class Picture',
+                                                          S.classEndPictureText,
                                                           textAlign:
                                                               TextAlign.left,
                                                         ),
@@ -589,7 +588,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                                                 children: <
                                                                     Widget>[
                                                                   Text(
-                                                                      'Click The Picture of Classroom...'),
+                                                                      S.classPictureClickText),
                                                                   SizedBox(
                                                                     height:
                                                                         screenHeight *
