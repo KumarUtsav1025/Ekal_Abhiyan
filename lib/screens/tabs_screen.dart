@@ -24,6 +24,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
+import '../constants/stringConst.dart';
 import './home_screen.dart';
 import './new_class_screen.dart';
 import './previous_class_screen.dart';
@@ -52,11 +53,11 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   void initState() {
     _pages = [
-      {'page': HomeScreen(), 'title': 'विद्यालय ऐप'},
-      {'page': NewClassScreen(), 'title': 'आज की कक्षा'},
-      {'page': PreviousClass(), 'title': 'पूर्व उपस्थिति की जानकारी'},
-      {'page': CaptureLocationScreen(), 'title': 'स्थान की पुष्टि करें'},
-      {'page': MyProfile(), 'title': 'बाह्य रूपरेखा'},
+      {'page': HomeScreen(), 'title': S.homeTitle},
+      {'page': NewClassScreen(), 'title': S.newClassTitle},
+      {'page': PreviousClass(), 'title': S.previousClassTitle},
+      {'page': CaptureLocationScreen(), 'title': S.captureLocationTitle},
+      {'page': MyProfile(), 'title': S.profileTitle},
     ];
   }
 
