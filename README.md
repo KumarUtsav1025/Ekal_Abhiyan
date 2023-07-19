@@ -1,16 +1,25 @@
-# instructor_app
+# Ekal-Abhiyan Instructor App
 
-A new Flutter project.
+## For the developers
+Flutter version required: 2.10.5
 
-## Getting Started
+### Step 1: Get all the dependencies
+```bash
+flutter pub get
+```
 
-This project is a starting point for a Flutter application.
+### Step 2: Authorization
+To do this, first of all, you have to generate an SHA-1 and an SHA-256 fingerprint, then request the Firebase Admin to add your fingerprint to the Firebase app.
+To generate the fingerprints, first move to the root directory of the project, then:
+```bash
+cd android
+./gradlew signingReport
+```
+This will generate the above-mentioned fingerprints.
 
-A few resources to get you started if this is your first Flutter project:
+### Step 3: Debug the app now.
+```bash
+flutter run --no-sound-null-safety
+```
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Happy Debugging!!!🙂
