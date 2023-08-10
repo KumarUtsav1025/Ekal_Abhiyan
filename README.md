@@ -8,7 +8,14 @@ Flutter version required: 2.10.5
 flutter pub get
 ```
 
-### Step 2: Authorization
+### Step 2: Steps to follow before authorization
+Run the command:
+```bash
+flutter run --no-sound-null-safety
+```
+This will generate the necessary files to generate the fingerprints
+
+### Step 3: Authorization
 To do this, first of all, you have to generate an SHA-1 and an SHA-256 fingerprint, then request the Firebase Admin to add your fingerprint to the Firebase app.
 To generate the fingerprints, first move to the root directory of the project, then:
 ```bash
@@ -17,7 +24,7 @@ cd android
 ```
 This will generate the above-mentioned fingerprints.
 
-### Step 3: Debug the app now.
+### Step 4: Debug the app now.
 ```bash
 flutter run --no-sound-null-safety
 ```
