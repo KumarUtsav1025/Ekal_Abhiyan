@@ -61,7 +61,7 @@ class LocationDetails with ChangeNotifier {
     var loggedInUserId = currLoggedInUser?.uid as String;
 
     final urlLink = Uri.https(
-      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      'ekal-db-default-rtdb.firebaseio.com',
       '/FetchedLocationDetails/${detailsProviderUniqueId.text.toString()}.json',
     );
 
@@ -123,12 +123,12 @@ class LocationDetails with ChangeNotifier {
     var loggedInUserId = currLoggedInUser?.uid as String;
 
     final urlLink = Uri.https(
-      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      'ekal-db-default-rtdb.firebaseio.com',
       '/FetchedLocationDetails.json',
     );
 
     final urlParse = Uri.parse(
-      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/FetchedLocationDetails.json',
+      'https://ekal-db-default-rtdb.firebaseio.com/FetchedLocationDetails.json',
     );
 
     try {

@@ -48,11 +48,22 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<Size> _heightAnimation;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
+  // Define a boolean flag to indicate if the widget is still mounted
+  bool _isMounted = false;
+
   @override
   void initState() {
     super.initState();
+    _isMounted = true;
     Provider.of<AuthDetails>(context, listen: false)
         .getExistingUserPhoneNumbers();
+  }
+
+  @override
+  void dispose() {
+    // Set the flag to false when the widget is being disposed
+    _isMounted = false;
+    super.dispose();
   }
 
   bool _isOtpSent = false;
@@ -94,22 +105,20 @@ class _LoginScreenState extends State<LoginScreen>
       _checkForError(context, titleText, contextText);
     } else {
       // to bypass login
-      //  Navigator.of(context)
-      //       .pushNamedAndRemoveUntil("/test", (route) => false);
+      // Navigator.of(context).pushNamedAndRemoveUntil("/test", (route) => false);
       // bypass login ends
 
-      // String titleText = "Authentication";
-      // String contextText = "Enter the Otp:";
-      // _checkIfUserExists(context);
-      // _enterUserOtp(context, titleText, contextText);
+      String titleText = "Authentication";
+      String contextText = "Enter the Otp:";
+      _checkIfUserExists(context);
+      _enterUserOtp(context, titleText, contextText);
 
-      // if ((await Provider.of<AuthDetails>(context, listen: false)
-      //         .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
-      //     true) {
-        
       if ((await Provider.of<AuthDetails>(context, listen: false)
               .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
           true) {
+        // if ((await Provider.of<AuthDetails>(context, listen: false)
+        //         .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
+        //     true) {
         print('User Already Exists!');
 
         setState(() {
@@ -275,17 +284,25 @@ class _LoginScreenState extends State<LoginScreen>
 
       // After the Otp Timeout period
       codeAutoRetrievalTimeout: (verificationID) async {
-        setState(() {
-          _isOtpSent = false;
-          _isAuthenticationAccepted = false;
-          _showLoading = false;
-          _signInClicked = false;
-        });
+        if (_isMounted) {
+          // Check if the widget is still mounted
+          try {
+            setState(() {
+              _isOtpSent = false;
+              _isAuthenticationAccepted = false;
+              _showLoading = false;
+              _signInClicked = false;
+            });
+          } catch (error) {
+            print("OTP TIMEOUT ERROR");
+            print(error);
+          }
 
-        if (!_userVerified) {
-          String titleText = "Authenticatoin Timeout!";
-          String contextText = "Please Re-Try Again";
-          _checkForError(context, titleText, contextText);
+          if (!_userVerified) {
+            String titleText = "Authenticatoin Timeout!";
+            String contextText = "Please Re-Try Again";
+            _checkForError(context, titleText, contextText);
+          }
         }
       },
     );

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1038095714065",
+    "firebase_url": "https://ekal-db-default-rtdb.firebaseio.com",
     "project_id": "ekal-db",
     "storage_bucket": "ekal-db.appspot.com"
   },
@@ -13,6 +14,30 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1038095714065-omacr6h4t4uaucvip2u7jtqdvb8bb8dj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.instructor_app",
+            "certificate_hash": "a51f9e1d1051ad9215bdf6b21ba33c686439aae3"
+          }
+        },
+        {
+          "client_id": "1038095714065-rmac0pn5bs73rj23jp0nlh2q66fhbtlu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.instructor_app",
+            "certificate_hash": "b5631b314c9714a8195d1723753695b91c6cf073"
+          }
+        },
+        {
+          "client_id": "1038095714065-rmt1jej9ov6tti4qckk6cdj7r38kcpn4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.instructor_app",
+            "certificate_hash": "58f9d3d038b02326bb7836bc149d8709e480e304"
+          }
+        },
         {
           "client_id": "1038095714065-10p227k78sd2r1t6duqr4ov7j91kcdvo.apps.googleusercontent.com",
           "client_type": 3
@@ -29,6 +54,13 @@
             {
               "client_id": "1038095714065-10p227k78sd2r1t6duqr4ov7j91kcdvo.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1038095714065-ggj3c8hmtb92vt0aktie8c7u85j6dvs7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.instructorApp"
+              }
             }
           ]
         }
