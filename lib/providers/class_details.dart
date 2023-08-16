@@ -56,17 +56,17 @@ class ClassDetails with ChangeNotifier {
     var loggedInUserId = currLoggedInUser?.uid as String;
 
     final urlLink = Uri.https(
-      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      'ekal-db-default-rtdb.firebaseio.com',
       '/ExistingUser/${loggedInUserId}/userClassInformation.json',
     );
 
     final urlLinkForCompleteClassDetails = Uri.https(
-      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      'ekal-db-default-rtdb.firebaseio.com',
       '/CompleteClassDetails/${loggedInUserId}/${DateFormat.jm().format(DateTime.now()).toString()}.json',
     );
 
     final urlParse = Uri.parse(
-      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/ExistingUser/${loggedInUserId}/userClassInformation.json',
+      'https://ekal-db-default-rtdb.firebaseio.com/ExistingUser/${loggedInUserId}/userClassInformation.json',
     );
 
     String imageName =
@@ -174,12 +174,12 @@ class ClassDetails with ChangeNotifier {
     var loggedInUserId = currLoggedInUser?.uid as String;
 
     final urlLink = Uri.https(
-      'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+      'ekal-db-default-rtdb.firebaseio.com',
       '/ExistingUser/${loggedInUserId}/userClassInformation.json',
     );
 
     final urlParse = Uri.parse(
-      'https://flutterdatabase-76af4-default-rtdb.firebaseio.com/ExistingUser/${loggedInUserId}/userClassInformation.json',
+      'https://ekal-db-default-rtdb.firebaseio.com/ExistingUser/${loggedInUserId}/userClassInformation.json',
     );
 
     try {

@@ -50,7 +50,7 @@ dependencies:
   pinput: ^2.2.7
   firebase_messaging: ^11.2.14
   firebase_analytics: ^9.1.6
-  firebase_ml_vision: ^0.9.10
+#  firebase_ml_vision: ^0.9.10
   snippet_coder_utils: ^1.0.12
   localstorage: ^4.0.0+1
   firebase_database: ^9.0.15
