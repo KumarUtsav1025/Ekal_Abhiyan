@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/providers/user_details.dart';
+import 'package:ekal_jaagran/providers/user_details.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -20,13 +20,14 @@ import 'dart:ui' as ui;
 
 import '../constants/stringConst.dart';
 
-
 import '../models/class_info.dart';
 
 import '../providers/class_details.dart';
 
 class NewClassScreen extends StatefulWidget {
   static const routeName = '/new-class-screen';
+
+  const NewClassScreen({super.key});
 
   @override
   State<NewClassScreen> createState() => _NewClassScreenState();
@@ -102,11 +103,11 @@ class _NewClassScreenState extends State<NewClassScreen> {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('${titleText}'),
-        content: Text('${contextText}'),
+        title: Text(titleText),
+        content: Text(contextText),
         actions: <Widget>[
-          RaisedButton(
-            child: Text('OK'),
+          ElevatedButton(
+            child: const Text('OK'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
             },
@@ -127,8 +128,8 @@ class _NewClassScreenState extends State<NewClassScreen> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
-            child: Text('OK'),
+          ElevatedButton(
+            child: const Text('OK'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
             },
@@ -142,7 +143,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
     BuildContext context,
     GlobalKey<ScaffoldState> sKey,
   ) async {
-    ClassInformation classInfo = new ClassInformation(
+    ClassInformation classInfo = ClassInformation(
       unqId: DateTime.now().toString() + _picTiming.toString(),
       currDateTime: _picTiming.toString(),
       currTime: DateFormat.jm().format(_picTiming).toString(),
@@ -164,11 +165,12 @@ class _NewClassScreenState extends State<NewClassScreen> {
       String contextText = S.invalidStudentCountErrSub;
       _checkForError(context, titleText, contextText);
     } else {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(S.classSubmitText),
         ),
       );
+
       try {
         setState(() {
           _isSubmitLoadingSpinner = true;
@@ -287,7 +289,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                         ),
                         alignment: Alignment.center,
                         width: double.infinity,
-                        child: Text(
+                        child: const Text(
                           S.newClassScreenBodyText,
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -296,10 +298,10 @@ class _NewClassScreenState extends State<NewClassScreen> {
                         ),
                       )
                     : (!_isCurrentLocationTaken || !_isClassPictureTaken)
-                        ? SizedBox(
+                        ? const SizedBox(
                             height: 0,
                           )
-                        : Container(
+                        : SizedBox(
                             height: screenHeight * 1.5,
                             width: screenWidth * 0.9,
                             child: Column(
@@ -309,13 +311,11 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                 SizedBox(
                                   height: useableHeight * 0.015,
                                 ),
-                                Container(
-                                  child: Text(
-                                    S.newClassPicText,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                const Text(
+                                  S.newClassPicText,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Card(
@@ -360,14 +360,14 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     child: !_isSubmitLoadingSpinner
-                                        ? Text(
+                                        ? const Text(
                                             S.newClassSubmitText,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           )
-                                        : CircularProgressIndicator(
+                                        : const CircularProgressIndicator(
                                             color: Colors.white,
                                           ),
                                     onPressed: () {
@@ -385,7 +385,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   child: Text(
                                     "Date/दिनांक: ${DateFormat.yMMMd('en_US').format(_picTiming)}.",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -397,7 +397,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   child: Text(
                                     "Time/समय: ${DateFormat.jm().format(_picTiming)}.",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -407,9 +407,9 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                 ),
                                 Container(
                                   child: Text(
-                                    "${S.newClassStudentNumText} ${_numberOfStudents}",
+                                    "${S.newClassStudentNumText} $_numberOfStudents",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -421,7 +421,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   child: Text(
                                     "--------------------------------------------\n${S.newClassAddressTitle} \n\n${addressValue.value}",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -467,7 +467,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                     color:
                         _isFloatingButtonActive ? Colors.white : Colors.black),
               )
-            : CircularProgressIndicator(
+            : const CircularProgressIndicator(
                 color: Color.fromARGB(255, 225, 176, 176),
               ),
         icon: Icon(
@@ -488,7 +488,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
 
       await FirebaseFirestore.instance
           .collection('location')
-          .doc('${userUniqueId}')
+          .doc(userUniqueId)
           .set(
         {
           'latitude': _locationResult.latitude,
@@ -613,7 +613,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
     _picTiming = DateTime.now();
     print(_picTiming);
     final picker = ImagePicker();
-    final imageFile = await picker.getImage(
+    final imageFile = await picker.pickImage(
       source: ImageSource.camera,
       maxHeight: 480,
       maxWidth: 640,

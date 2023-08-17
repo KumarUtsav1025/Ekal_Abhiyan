@@ -25,12 +25,11 @@ class _ImageInputState extends State<ImageInput> {
 
   Future<void> _takePicture() async {
     final picker = ImagePicker();
-    final imageFile = await picker.getImage(
-      source: ImageSource.camera,
-      maxHeight: 480,
-      maxWidth: 640,
-      imageQuality: 80
-    );
+    final imageFile = await picker.pickImage(
+        source: ImageSource.camera,
+        maxHeight: 480,
+        maxWidth: 640,
+        imageQuality: 80);
 
     if (imageFile == null) {
       return;
@@ -99,15 +98,17 @@ class _ImageInputState extends State<ImageInput> {
             ),
             Container(
               height: (screenHeight * 0.40) * 0.15,
-              child: FlatButton.icon(
-                color: Colors.grey.shade300,
+              child: TextButton.icon(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.grey.shade300,
+                  primary: Colors.blue.shade800,
+                ),
                 icon: Icon(Icons.camera),
                 label: Text(
-                  '${imgPicBtnStr}',
+                  '$imgPicBtnStr',
                   textAlign: TextAlign.center,
                 ),
-                textColor: Colors.blue.shade800,
-                onPressed: !widget.isDiableWidget ? _takePicture : null,
+                onPressed: widget.isDiableWidget ? null : _takePicture,
               ),
             ),
           ],

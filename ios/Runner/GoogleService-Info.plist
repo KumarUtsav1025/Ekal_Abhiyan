@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1038095714065-ggj3c8hmtb92vt0aktie8c7u85j6dvs7.apps.googleusercontent.com</string>
+	<string>1038095714065-l85ifvl6d1u67v4nb6p5vm78etf9jerl.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1038095714065-ggj3c8hmtb92vt0aktie8c7u85j6dvs7</string>
+	<string>com.googleusercontent.apps.1038095714065-l85ifvl6d1u67v4nb6p5vm78etf9jerl</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1038095714065-st2vcrdd24fmipko7dthmhulc1s914hp.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyADdLtQ1K0l88pe9CxdCATvIrBzvfiUdVA</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.instructorApp</string>
+	<string>com.example.ekalJaagran</string>
 	<key>PROJECT_ID</key>
 	<string>ekal-db</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1038095714065:ios:aa82f79c319404b9aaaeb0</string>
+	<string>1:1038095714065:ios:5373167fbc648668aaaeb0</string>
+	<key>DATABASE_URL</key>
+	<string>https://ekal-db-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

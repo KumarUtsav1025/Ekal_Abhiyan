@@ -136,14 +136,14 @@ class _CreateNewClassState extends State<CreateNewClass> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
-            child: Text('No'),
+          ElevatedButton(
+            child: const Text('No'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
             },
           ),
-          RaisedButton(
-            child: Text('yes'),
+          ElevatedButton(
+            child: const Text('yes'),
             onPressed: () {
               setState(() {
                 isCard6Visible = true;
@@ -165,7 +165,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('OK'),
             onPressed: () {
               if (popVal == false) {
@@ -330,25 +330,28 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                 isDateSet == false
                                     ? S.selectDateClassCommandText
                                     : 'Date: ${DateFormat('dd/MM/yyyy').format(_selectedDate)}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                            FlatButton(
-                              color: Colors.grey.shade400,
-                              textColor: Colors.black,
-                              child: Text(
-                                '${dateBtnString}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor:
+                                    Colors.black, // Sets the text color
+                                backgroundColor: Colors.grey.shade400,
                               ),
                               onPressed: !isCard4Visible
                                   ? () {
                                       _presentDatePicker(context);
                                     }
                                   : null,
+                              child: Text(
+                                dateBtnString,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -395,7 +398,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                           SizedBox(
                             height: screenHeight * 0.02,
                           ),
-                          RaisedButton(
+                          ElevatedButton(
                             child: Text('Next'),
                             onPressed: () {
                               _checkCard1Input(context);
@@ -448,7 +451,7 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                     SizedBox(
                                       height: screenHeight * 0.015,
                                     ),
-                                    RaisedButton(
+                                    ElevatedButton(
                                       child: Text('Next'),
                                       onPressed: () {
                                         _checkCard2Input(context);
@@ -485,12 +488,11 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                     !isCard4Visible
                                         ? Column(
                                             children: <Widget>[
-                                              Text(
-                                                  S.classPictureClickText),
+                                              Text(S.classPictureClickText),
                                               SizedBox(
                                                 height: screenHeight * 0.01,
                                               ),
-                                              RaisedButton(
+                                              ElevatedButton(
                                                 child: Text('Next'),
                                                 onPressed: () {
                                                   _checkCard3Input(context);
@@ -573,16 +575,15 @@ class _CreateNewClassState extends State<CreateNewClass> {
 
                                                         !isCard6Visible
                                                             ? Column(
-                                                                children: <
-                                                                    Widget>[
-                                                                  Text(
-                                                                      S.classPictureClickText),
+                                                                children: <Widget>[
+                                                                  Text(S
+                                                                      .classPictureClickText),
                                                                   SizedBox(
                                                                     height:
                                                                         screenHeight *
                                                                             0.01,
                                                                   ),
-                                                                  RaisedButton(
+                                                                  ElevatedButton(
                                                                     child: Text(
                                                                         'Next'),
                                                                     onPressed:
@@ -616,30 +617,30 @@ class _CreateNewClassState extends State<CreateNewClass> {
                                                                             screenHeight *
                                                                                 0.01),
                                                                     child:
-                                                                        RaisedButton(
-                                                                      elevation:
-                                                                          10,
-                                                                      color: Colors
-                                                                          .amber,
-                                                                      child: _isSubmitLoading
-                                                                          ? CircularProgressIndicator()
-                                                                          : Text(
-                                                                              'Submit',
-                                                                              style: TextStyle(
-                                                                                fontWeight: FontWeight.bold,
-                                                                                fontSize: screenHeight * 0.025,
-                                                                              ),
+                                                                        Material(
+                                                                          elevation: 10,
+                                                                          child: ElevatedButton(
+                                                                            style: ElevatedButton.styleFrom(
+                                                                              backgroundColor: Colors.amber,
                                                                             ),
-                                                                      onPressed:
-                                                                          () {
-                                                                        _sumbitNewCreatedClass(
-                                                                            context);
-                                                                        // Future.delayed(Duration(seconds: 10), () {
-                                                                        //   Navigator.of(context)
-                                                                        //   .pushReplacementNamed(TabsScreen.routeName);
-                                                                        // });
-                                                                      },
-                                                                    ),
+                                                                            onPressed: () {
+                                                                              _sumbitNewCreatedClass(context);
+                                                                              // Future.delayed(Duration(seconds: 10), () {
+                                                                              //   Navigator.of(context)
+                                                                              //   .pushReplacementNamed(TabsScreen.routeName);
+                                                                              // });
+                                                                            },
+                                                                            child: _isSubmitLoading
+                                                                                ? CircularProgressIndicator()
+                                                                                : Text(
+                                                                                    'Submit',
+                                                                                    style: TextStyle(
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                      fontSize: screenHeight * 0.025,
+                                                                                    ),
+                                                                                  ),
+                                                                          ),
+                                                                        ),
                                                                   ),
                                                                 ],
                                                               ),

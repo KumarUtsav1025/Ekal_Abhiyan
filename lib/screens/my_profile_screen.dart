@@ -458,7 +458,7 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     child: RichText(
                       textAlign: TextAlign.right,
-                      text: TextSpan(
+                      text: const TextSpan(
                         children: [
                           TextSpan(
                             text: "Developer: ",
@@ -466,29 +466,6 @@ class _MyProfileState extends State<MyProfile> {
                               color: Colors.black,
                               // fontWeight: FontWeight.bold,
                             ),
-                          ),
-                          WidgetSpan(
-                            child: Icon(
-                              Icons.ads_click_rounded,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "Rahul Singh",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () async {
-                                var url =
-                                    "https://www.linkedin.com/in/rahul-singh-3003811b1/";
-                                if (await canLaunch(url)) {
-                                  await launch(url);
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              },
                           ),
                         ],
                       ),
