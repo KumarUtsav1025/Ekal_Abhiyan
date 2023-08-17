@@ -1,20 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart' as loc;
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart' as sysPath;
-import 'package:image_picker/image_picker.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:get/get.dart';
 
 import '../constants/stringConst.dart';
 import '../screens/tabs_screen.dart';
@@ -23,9 +13,7 @@ import '../widgets/live_location.dart';
 import '../widgets/image_input.dart';
 import '../widgets/stop_watch.dart';
 
-import '../models/class_info.dart';
 import '../models/place.dart';
-import '../models/http_exeception.dart';
 
 import '../providers/class_details.dart';
 
