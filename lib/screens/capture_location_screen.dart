@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/providers/user_details.dart';
+import 'package:ekal_jaagran/providers/user_details.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -215,7 +215,7 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('OK'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
@@ -237,7 +237,7 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('OK'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
@@ -256,13 +256,11 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
       String titleText = "Invalid Sthar/स्तर Type!";
       String contextText = "Please select your 'Sthar/स्तर'...";
       _checkForError(context, titleText, contextText);
-    } 
-    else if (_sthalType.text.length == 0) {
+    } else if (_sthalType.text.length == 0) {
       String titleText = "Invalid Sthal/स्थल Type!";
       String contextText = "Please select your 'Sthal/स्थल'...";
       _checkForError(context, titleText, contextText);
-    } 
-    else if (_astherType.text == "Prabhaag -- प्रभाग" &&
+    } else if (_astherType.text == "Prabhaag -- प्रभाग" &&
         _defaultDayitva_PrabhagType.text == "") {
       String titleText = "Invalid Prabhag!";
       String contextText = "Please select till Prabhag...";
@@ -303,14 +301,15 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
       String contextText = "Please select till Village...";
       _checkForError(context, titleText, contextText);
     } else {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
             'Submitting the Location!\nस्थान जमा करने की प्रक्रिया में।',
             textAlign: TextAlign.center,
           ),
         ),
       );
+
       setState(() {
         _isSubmitLoadingSpinner = true;
       });
@@ -996,7 +995,7 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
     _picTiming = DateTime.now();
     print(_picTiming);
     final picker = ImagePicker();
-    final imageFile = await picker.getImage(
+    final imageFile = await picker.pickImage(
       source: ImageSource.camera,
       maxHeight: 480,
       maxWidth: 640,

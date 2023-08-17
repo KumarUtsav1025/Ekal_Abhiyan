@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/providers/user_details.dart';
+import 'package:ekal_jaagran/providers/user_details.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -16,19 +16,24 @@ import './screens/signup_screen.dart';
 import './screens/test.dart';
 
 import './providers/class_details.dart';
-import './providers/user_details.dart';
 import './providers/auth_details.dart';
 import './providers/hardData_details.dart';
 import './providers/location_details.dart';
 
-// void main() => runApp(MyApp());
+// void main() {
+//   runApp(const GeeksForGeeks());
+// }
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+// class GeeksForGeeks extends StatelessWidget {
+//   const GeeksForGeeks({Key? key}) : super(key: key);
 
-  runApp(MyApp());
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       home: Center(child: Text('Hello World')),
+//     );
+//   }
+// }
 
 class MyApp extends StatelessWidget {
   late UserCredential userCred;
@@ -59,17 +64,19 @@ class MyApp extends StatelessWidget {
         title: 'Shikshak',
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          accentColor: Colors.amber,
-          canvasColor: Color.fromRGBO(255, 254, 229, 0.9),
+          colorScheme: const ColorScheme.light().copyWith(
+            secondary: Colors.amber,
+          ),
+          canvasColor: const Color.fromRGBO(255, 254, 229, 0.9),
           fontFamily: 'Raleway',
           textTheme: ThemeData.light().textTheme.copyWith(
-                bodyText1: TextStyle(
+                bodyLarge: const TextStyle(
                   color: Color.fromRGBO(20, 51, 51, 1),
                 ),
-                bodyText2: TextStyle(
+                bodyMedium: const TextStyle(
                   color: Color.fromRGBO(20, 51, 51, 1),
                 ),
-                headline6: TextStyle(
+                titleLarge: const TextStyle(
                   fontSize: 18,
                   fontFamily: 'RobotoCondensed',
                   fontWeight: FontWeight.bold,
@@ -88,7 +95,18 @@ class MyApp extends StatelessWidget {
             }
           },
         ),
+        // initialRoute: '/',
         routes: {
+          // '/': (ctx) => StreamBuilder<User?>(
+          //       stream: _auth.authStateChanges(),
+          //       builder: (ctx, userSnapShot) {
+          //         if (userSnapShot.hasData) {
+          //           return TabsScreen();
+          //         } else {
+          //           return LoginScreen();
+          //         }
+          //       },
+          //     ),
           LoginScreen.routeName: (ctx) => LoginScreen(),
           SignUpScreen.routeName: (ctx) => SignUpScreen(),
           TabsScreen.routeName: (ctx) => TabsScreen(),
@@ -98,9 +116,16 @@ class MyApp extends StatelessWidget {
           PreviousClass.routeName: (ctx) => PreviousClass(),
           CaptureLocationScreen.routeName: (ctx) => CaptureLocationScreen(),
           MyProfile.routeName: (ctx) => MyProfile(),
-          Test.routeName: (ctx) => Test()
+          Test.routeName: (ctx) => Test(),
         },
       ),
     );
   }
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  runApp(MyApp());
 }

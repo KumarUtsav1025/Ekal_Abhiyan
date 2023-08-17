@@ -63,7 +63,7 @@ class _LiveLocationState extends State<LiveLocation> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('OK'),
             onPressed: () {
               Navigator.of(ctx).pop(false);

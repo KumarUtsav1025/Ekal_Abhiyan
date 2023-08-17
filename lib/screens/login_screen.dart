@@ -103,10 +103,10 @@ class _LoginScreenState extends State<LoginScreen>
           _signInClicked = true;
         });
 
-        _scaffoldKey.currentState?.showSnackBar(
-          SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
             behavior: SnackBarBehavior.floating,
-            content: Text("Verifiying your Phone Number..."),
+            content: Text("Verifying your Phone Number..."),
           ),
         );
 
@@ -124,12 +124,13 @@ class _LoginScreenState extends State<LoginScreen>
 
   // Future<void> _otpVerification(BuildContext context)
   Future<void> openOtpWidget() async {
-    _scaffoldKey.currentState?.showSnackBar(
-      SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
         behavior: SnackBarBehavior.floating,
         content: Text("Otp Sent!"),
       ),
     );
+
     String titleText = "Mobile Authentication";
     String contextText = "Enter the Otp:";
     _enterUserOtp(context, titleText, contextText);
@@ -174,20 +175,21 @@ class _LoginScreenState extends State<LoginScreen>
               ],
             ),
           ),
-          RaisedButton(
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(screenWidth * 0.5),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(screenWidth * 0.5),
+              ),
+              backgroundColor: Colors.blue.shade400,
             ),
-            color: Colors.blue.shade400,
-            child: Text('Submit Otp'),
             onPressed: () async {
               PhoneAuthCredential phoneAuthCredential =
                   PhoneAuthProvider.credential(
                 verificationId: this._verificationId,
                 smsCode: _userOtpValue.text,
               );
-              _scaffoldKey.currentState?.showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   behavior: SnackBarBehavior.floating,
                   content: Text("Verifying the Entered Otp..."),
@@ -196,6 +198,7 @@ class _LoginScreenState extends State<LoginScreen>
               signInWithPhoneAuthCred(context, phoneAuthCredential);
               Navigator.of(ctx).pop(false);
             },
+            child: Text('Submit Otp'),
           ),
         ],
       ),
@@ -233,14 +236,14 @@ class _LoginScreenState extends State<LoginScreen>
         print('verification failed');
         print(verificationFailed);
 
-        String titleText = "Authenticatoin Failed!";
-        String contextText = "Unable to generate the OTP.";
+        const String titleText = "Authenticatoin Failed!";
+        const String contextText = "Unable to generate the OTP.";
         _checkForError(context, titleText, contextText);
 
-        _scaffoldKey.currentState?.showSnackBar(
-          SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
             behavior: SnackBarBehavior.floating,
-            content: Text("${contextText}"),
+            content: Text(contextText),
           ),
         );
       },
@@ -346,7 +349,7 @@ class _LoginScreenState extends State<LoginScreen>
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('OK'),
             onPressed: () {
               if (popVal == false) {
@@ -449,12 +452,19 @@ class _LoginScreenState extends State<LoginScreen>
                     ButtonTheme(
                       minWidth: screenWidth * 0.5,
                       height: screenHeight * 0.07,
-                      child: RaisedButton(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(screenWidth * 0.5),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(screenWidth * 0.5),
+                          ),
                         ),
+                        onPressed: _signInClicked
+                            ? null
+                            : () async {
+                                _userSignIn(context, _userPhoneNumber);
+                              },
                         child: !_signInClicked
                             ? Text(
                                 'Sign-In',
@@ -465,18 +475,15 @@ class _LoginScreenState extends State<LoginScreen>
                                   color: Colors.white,
                                 ),
                               )
-                            : CircularProgressIndicator(
+                            : const CircularProgressIndicator(
                                 color: Colors.white,
                               ),
-                        onPressed: () async {
-                          _userSignIn(context, _userPhoneNumber);
-                        },
                       ),
                     ),
                     SizedBox(
                       height: screenHeight * 0.005,
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () {
                         Navigator.of(context).pushNamed(SignUpScreen.routeName);
                       },
@@ -494,22 +501,17 @@ class _LoginScreenState extends State<LoginScreen>
               SizedBox(
                 height: screenHeight * 0.025,
               ),
-              Container(
-                child: Text(
-                  "Developed Under:",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+              const Text(
+                "Developed Under:",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Container(
-                // decoration: BoxDecoration(color: Colors.blue),
-                child: Image.asset(
-                  aurigaCareImage,
-                  width: screenWidth * 0.75,
-                  height: screenHeight * 0.075,
-                ),
+              Image.asset(
+                aurigaCareImage,
+                width: screenWidth * 0.75,
+                height: screenHeight * 0.075,
               ),
               // SizedBox(
               //   height: screenHeight * 0.12,
@@ -529,14 +531,14 @@ class _LoginScreenState extends State<LoginScreen>
                   textAlign: TextAlign.right,
                   text: TextSpan(
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text: "",
                         style: TextStyle(
                           color: Colors.black,
                           // fontWeight: FontWeight.bold,
                         ),
                       ),
-                      WidgetSpan(
+                      const WidgetSpan(
                         child: Icon(
                           Icons.ads_click_rounded,
                         ),
@@ -544,7 +546,7 @@ class _LoginScreenState extends State<LoginScreen>
                       TextSpan(
                         // style: linkText,
                         text: "  --Website Link--",
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline,
@@ -581,7 +583,7 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
                 child: RichText(
                   textAlign: TextAlign.right,
-                  text: TextSpan(
+                  text: const TextSpan(
                     children: [
                       TextSpan(
                         text: "Developer: ",
@@ -589,31 +591,7 @@ class _LoginScreenState extends State<LoginScreen>
                           color: Colors.black,
                           // fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      WidgetSpan(
-                        child: Icon(
-                          Icons.ads_click_rounded,
-                        ),
-                      ),
-                      TextSpan(
-                        // style: linkText,
-                        text: "Rahul Singh",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () async {
-                            var url =
-                                "https://www.linkedin.com/in/rahul-singh-3003811b1/";
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          },
-                      ),
+                      )
                     ],
                   ),
                 ),

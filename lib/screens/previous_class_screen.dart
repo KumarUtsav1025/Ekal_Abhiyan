@@ -2,7 +2,7 @@ import 'dart:async';
 // import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/models/class_info.dart';
+import 'package:ekal_jaagran/models/class_info.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/stringConst.dart';

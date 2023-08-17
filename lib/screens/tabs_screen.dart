@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/providers/class_details.dart';
+import 'package:ekal_jaagran/providers/class_details.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -149,13 +149,13 @@ class _TabsScreenState extends State<TabsScreen> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('No'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
             },
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text('Yes'),
             onPressed: () {
               Provider.of<ClassDetails>(context, listen: false)
@@ -180,7 +180,7 @@ class _TabsScreenState extends State<TabsScreen> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('OK'),
             onPressed: () {
               if (popVal == false) {

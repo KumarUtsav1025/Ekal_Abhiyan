@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       horizontal: screenWidth * 0.025,
                       vertical: useableHeight * 0.01,
                     ),
-                    child: Text(S.introHead,
+                    child: const Text(S.introHead,
                         textAlign: TextAlign.center),
                   ),
                 ),
@@ -111,25 +111,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       horizontal: screenWidth * 0.025,
                       vertical: useableHeight * 0.01,
                     ),
-                    child: Text(S.introSubHead,
+                    child: const Text(S.introSubHead,
                       textAlign: TextAlign.center,
                     ),
                   ),
                 ),
               ),
               SizedBox(height: screenHeight * 0.00125),
-              Container(
-                child: Card(
-                  elevation: 15,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.025,
-                      vertical: useableHeight * 0.005,
-                    ),
-                    child: Text(
-                      "${S.countHead} ${cntClasses}",
-                      textAlign: TextAlign.center,
-                    ),
+              Card(
+                elevation: 15,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.025,
+                    vertical: useableHeight * 0.005,
+                  ),
+                  child: Text(
+                    "${S.countHead} ${cntClasses}",
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
