@@ -1,41 +1,22 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_complete_guide/providers/user_details.dart';
-import 'package:flutter_complete_guide/screens/tabs_screen.dart';
+import 'package:ekal_jaagran/providers/user_details.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart' as loc;
-import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as sysPaths;
 import 'package:image_picker/image_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
-import 'package:sqflite/sqflite.dart' as sql;
-import 'package:pinput/pinput.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'dart:ui' as ui;
-// import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:snippet_coder_utils/FormHelper.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import '../providers/auth_details.dart';
-import '../providers/class_details.dart';
 import '../providers/user_details.dart';
 import '../providers/hardData_details.dart';
 import '../providers/location_details.dart';
-
-import '../screens/tabs_screen.dart';
-import '../models/visitor_info.dart';
 
 class CaptureLocationScreen extends StatefulWidget {
   static const routeName = '/capture-location-screen';
@@ -234,7 +215,7 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('OK'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
@@ -256,7 +237,7 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('OK'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
@@ -275,13 +256,11 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
       String titleText = "Invalid Sthar/स्तर Type!";
       String contextText = "Please select your 'Sthar/स्तर'...";
       _checkForError(context, titleText, contextText);
-    } 
-    else if (_sthalType.text.length == 0) {
+    } else if (_sthalType.text.length == 0) {
       String titleText = "Invalid Sthal/स्थल Type!";
       String contextText = "Please select your 'Sthal/स्थल'...";
       _checkForError(context, titleText, contextText);
-    } 
-    else if (_astherType.text == "Prabhaag -- प्रभाग" &&
+    } else if (_astherType.text == "Prabhaag -- प्रभाग" &&
         _defaultDayitva_PrabhagType.text == "") {
       String titleText = "Invalid Prabhag!";
       String contextText = "Please select till Prabhag...";
@@ -322,14 +301,15 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
       String contextText = "Please select till Village...";
       _checkForError(context, titleText, contextText);
     } else {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
             'Submitting the Location!\nस्थान जमा करने की प्रक्रिया में।',
             textAlign: TextAlign.center,
           ),
         ),
       );
+
       setState(() {
         _isSubmitLoadingSpinner = true;
       });
@@ -1015,7 +995,7 @@ class _CaptureLocationScreenState extends State<CaptureLocationScreen> {
     _picTiming = DateTime.now();
     print(_picTiming);
     final picker = ImagePicker();
-    final imageFile = await picker.getImage(
+    final imageFile = await picker.pickImage(
       source: ImageSource.camera,
       maxHeight: 480,
       maxWidth: 640,

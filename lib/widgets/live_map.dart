@@ -1,15 +1,8 @@
 import 'dart:async';
-import 'dart:math';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:location/location.dart' as loc;
-import 'package:http/http.dart' as http;
 
 class MyMap extends StatefulWidget {
   final String user_id;

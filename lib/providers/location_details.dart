@@ -1,31 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/screens/tabs_screen.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
-import 'package:location/location.dart' as loc;
+import 'package:ekal_jaagran/screens/tabs_screen.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart' as sysPath;
-import 'package:image_picker/image_picker.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:get/get.dart';
-import 'package:sqflite/sqflite.dart' as sql;
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:localstorage/localstorage.dart';
 
 import '../screens/tabs_screen.dart';
 import '../models/visitor_info.dart';
-import '../providers/user_details.dart';
 
 class LocationDetails with ChangeNotifier {
   List<VisitorInformation> _items = [];

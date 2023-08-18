@@ -1,19 +1,6 @@
 import 'dart:async';
-import 'dart:math';
-import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
-import 'package:location/location.dart' as loc;
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart' as sysPath;
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter_picker/flutter_picker.dart';
 
 class StopWatch extends StatefulWidget {
   final Function(bool, int) classDurationTime;
@@ -39,7 +26,7 @@ class _StopWatchState extends State<StopWatch> {
           title: Text('InValid Duration!'),
           content: Text('Please enter a Valid Duration of Class...'),
           actions: <Widget>[
-            RaisedButton(
+            ElevatedButton(
               child: Text('Ok'),
               onPressed: () {
                 Navigator.of(ctx).pop(false);
@@ -60,7 +47,7 @@ class _StopWatchState extends State<StopWatch> {
         title: Text('Select Class Duration'),
         content: buildTimePicker(context),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('Ok'),
             onPressed: () {
               // Navigator.of(ctx).pop(false);
@@ -89,13 +76,13 @@ class _StopWatchState extends State<StopWatch> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('NO'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
             },
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text('Yes'),
             onPressed: () {
               stopTimerFunc();
@@ -191,7 +178,7 @@ class _StopWatchState extends State<StopWatch> {
         ),
         child: Column(
           children: <Widget>[
-            RaisedButton(
+            ElevatedButton(
               child: Text('Select Duration'),
               onPressed: !isSDbtnActive
                   ? () {
@@ -258,68 +245,56 @@ class _StopWatchState extends State<StopWatch> {
         ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
+                onPressed: () {
+                  if (isRunning) {
+                    stopTimer(resets: false);
+
+                    setState(() {
+                      // Do something here with double.infinity or any other operation
+                      // that you intended to perform
+                      // Example: int minCnt = 5; // Replace with your logic
+                      // widget.classDurationTime(true, minCnt);
+                    });
+                  }
+                },
                 child: Text(
                   'STOP',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                color: Colors.black,
-                textColor: Colors.white,
-                onPressed: () {
-                  if (isRunning) {
-                    stopTimer(resets: false);
-
-                    setState(() {
-                      int minCnt = double.infinity as int;
-                      Future.delayed(Duration(minutes: minCnt), () {
-                        setState(() {
-                          widget.classDurationTime(true, minCnt);
-                        });
-                      });
-                    });
-                  }
-                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.black,
+                  onPrimary: Colors.white,
+                ),
               ),
               SizedBox(
                 width: screenWidth * 0.01,
               ),
-              RaisedButton(
+              ElevatedButton(
+                onPressed: () {
+                  _checkForResetTimer(
+                    context,
+                    'Request For Reset!',
+                    'Are you sure you want to Reset Timer?',
+                    stopTimer,
+                  );
+                },
                 child: Text(
                   'RESET',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                color: Colors.black,
-                textColor: Colors.white,
-                onPressed: () {
-                  _checkForResetTimer(ctx, 'Request For Reset!',
-                      'Are your sure you want to Reset Timer?', stopTimer);
-                  // stopTimer();
-
-                  // setState(() {
-                  //   int minCnt = double.infinity as int;
-                  //   Future.delayed(Duration(minutes: minCnt), () {
-                  //     setState(() {
-                  //       widget.classDurationTime(true, minCnt);
-                  //     });
-                  //   });
-                  // });
-                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.black,
+                  onPrimary: Colors.white,
+                ),
               ),
             ],
           )
-        : RaisedButton(
-            child: Text(
-              'Start Timer',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            color: Colors.black,
-            textColor: Colors.white,
+        : ElevatedButton(
             onPressed: () {
               startTimer();
 
@@ -334,6 +309,16 @@ class _StopWatchState extends State<StopWatch> {
                 });
               });
             },
+            child: Text(
+              'Start Timer',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.black,
+              onPrimary: Colors.white,
+            ),
           );
   }
 

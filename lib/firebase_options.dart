@@ -25,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -52,25 +49,41 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1038095714065',
     projectId: 'ekal-db',
     authDomain: 'ekal-db.firebaseapp.com',
+    databaseURL: 'https://ekal-db-default-rtdb.firebaseio.com',
     storageBucket: 'ekal-db.appspot.com',
     measurementId: 'G-WZGJ59Y0Z8',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCb4ZMLz3TBqUIgjWZLxMBvqogmPp2AI_M',
-    appId: '1:1038095714065:android:f18a4f8f2aefd590aaaeb0',
+    appId: '1:1038095714065:android:5b9cd67eefc792fdaaaeb0',
     messagingSenderId: '1038095714065',
     projectId: 'ekal-db',
+    databaseURL: 'https://ekal-db-default-rtdb.firebaseio.com',
     storageBucket: 'ekal-db.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyADdLtQ1K0l88pe9CxdCATvIrBzvfiUdVA',
-    appId: '1:1038095714065:ios:aa82f79c319404b9aaaeb0',
+    appId: '1:1038095714065:ios:5373167fbc648668aaaeb0',
     messagingSenderId: '1038095714065',
     projectId: 'ekal-db',
+    databaseURL: 'https://ekal-db-default-rtdb.firebaseio.com',
     storageBucket: 'ekal-db.appspot.com',
-    iosClientId: '1038095714065-ggj3c8hmtb92vt0aktie8c7u85j6dvs7.apps.googleusercontent.com',
-    iosBundleId: 'com.example.instructorApp',
+    androidClientId: '1038095714065-st2vcrdd24fmipko7dthmhulc1s914hp.apps.googleusercontent.com',
+    iosClientId: '1038095714065-l85ifvl6d1u67v4nb6p5vm78etf9jerl.apps.googleusercontent.com',
+    iosBundleId: 'com.example.ekalJaagran',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyADdLtQ1K0l88pe9CxdCATvIrBzvfiUdVA',
+    appId: '1:1038095714065:ios:3dcc2b64f9718525aaaeb0',
+    messagingSenderId: '1038095714065',
+    projectId: 'ekal-db',
+    databaseURL: 'https://ekal-db-default-rtdb.firebaseio.com',
+    storageBucket: 'ekal-db.appspot.com',
+    androidClientId: '1038095714065-st2vcrdd24fmipko7dthmhulc1s914hp.apps.googleusercontent.com',
+    iosClientId: '1038095714065-q7kr6o6bt95706ocd223eq3jtj0253kj.apps.googleusercontent.com',
+    iosBundleId: 'com.example.ekalJaagran.RunnerTests',
   );
 }

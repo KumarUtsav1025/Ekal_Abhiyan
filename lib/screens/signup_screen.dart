@@ -1,32 +1,14 @@
 import 'dart:async';
-import 'dart:math';
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart' as loc;
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart' as sysPath;
 import 'package:image_picker/image_picker.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:get/get.dart';
-import 'package:snippet_coder_utils/FormHelper.dart';
-import 'package:sqflite/sqflite.dart' as sql;
-import 'package:pinput/pinput.dart';
+// import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import './tabs_screen.dart';
 
-import '../providers/class_details.dart';
 import '../providers/user_details.dart';
 import '../providers/auth_details.dart';
 import '../providers/hardData_details.dart';
@@ -247,7 +229,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final visibilityForUpSanch = ["Sub-Sanch -- उपसंच", "Village -- गाव"];
   final visibilityForVillage = ["Village -- गाव"];
 
-
   Future<void> _checkInputFields(BuildContext context) async {
     if (_designationType.text.trim().length == 0) {
       String titleText = "Invalid Designation Type!";
@@ -261,8 +242,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Invalid Dayitva Level!";
       String contextText = "Please select your Dayitva Level...";
       _checkForError(context, titleText, contextText);
-    } 
-    else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
+    } else if ((_designationType.text == "Karyakarta -- कार्यकर्ता" ||
             _designationType.text == "Samiti -- समिति") &&
         _dayitvaType.text == "Prabhaag -- प्रभाग" &&
         _defaultDayitva_PrabhagType.text == "") {
@@ -318,8 +298,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Invalid Village!";
       String contextText = "Please select till Village...";
       _checkForError(context, titleText, contextText);
-    } 
-    else if (_designationType.text == "Acharya -- आचार्य" &&
+    } else if (_designationType.text == "Acharya -- आचार्य" &&
         _defaultDayitva_PrabhagType.text.length == 0) {
       String titleText = "Invalid Prabhag!";
       String contextText = "Please select your Prabhag...";
@@ -359,8 +338,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Invalid Village!";
       String contextText = "Please select your Village...";
       _checkForError(context, titleText, contextText);
-    } 
-    else if (_userPhoneNumber.text.length != 10) {
+    } else if (_userPhoneNumber.text.length != 10) {
       String titleText = "Invild Mobile Number";
       String contextText = "Please Enter a Valid 10 Digit Number!";
       _checkForError(context, titleText, contextText);
@@ -372,8 +350,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       String titleText = "Invild Mobile Number";
       String contextText = "Mobile Number Cannot be Negative!";
       _checkForError(context, titleText, contextText);
-    } 
-    else if (_firstName.text.trim().length == 0) {
+    } else if (_firstName.text.trim().length == 0) {
       String titleText = "Invalid First Name!";
       String contextText = "Please enter your 'First Name'...";
       _checkForError(context, titleText, contextText);
@@ -422,11 +399,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _showLoading = true;
         });
 
-        _scaffoldKey.currentState?.showSnackBar(
-          SnackBar(
-            content: Text("Verifiying your Number..."),
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Verifying your Number..."),
           ),
         );
+
         _checkForAuthentication(context, _userPhoneNumber);
       } else {
         print('User Already Exists!');
@@ -440,11 +418,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> openOtpSubmittingWidget() async {
-    _scaffoldKey.currentState?.showSnackBar(
-      SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
         content: Text("Otp Sent to your Number..."),
       ),
     );
+
     String titleText = "Authentication";
     String contextText = "Enter the Otp:";
     _enterUserOtp(context, titleText, contextText);
@@ -459,7 +438,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('OK'),
             onPressed: () {
               if (popVal == false) {
@@ -883,25 +862,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       isDateSet == false
                           ? 'Date Of Birth  \nजन्म की तारीख *-> '
                           : 'D.O.B/जन्म की तारीख: ${DateFormat('dd/MM/yyyy').format(_dateOfBirth)}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  FlatButton(
-                    color: Colors.grey.shade400,
-                    textColor: Colors.black,
-                    child: Text(
-                      '${dateBtnString}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.grey.shade400,
+                      foregroundColor: Colors.black,
                     ),
                     onPressed: () {
                       setState(() {
                         _presentDatePicker(context);
                       });
                     },
+                    child: Text(
+                      dateBtnString,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -1043,19 +1024,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     right: screenWidth * 0.02,
                     bottom: screenHeight * 0.008,
                   ),
-                  child: RaisedButton(
-                    color: Colors.amber.shade500,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber.shade500,
+                    ),
+                    onPressed: _isSubmitClicked
+                        ? null
+                        : () {
+                            _checkInputFields(context);
+                          },
                     child: !_isSubmitClicked
-                        ? Text(
+                        ? const Text(
                             'Submit/जमा करे',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           )
                         : CircularProgressIndicator(),
-                    onPressed: () {
-                      _checkInputFields(context);
-                    },
                   ),
                 )
               ],
@@ -2172,35 +2157,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
         vertical: screenHeight * 0.008,
         horizontal: screenWidth * 0.03,
       ),
-      child: Column(
-        children: <Widget>[
-          FormHelper.dropDownWidgetWithLabel(
-            context,
-            labelName,
-            hintText,
-            inputValue,
-            dropDownList,
-            (onChangedVal) {
-              inputValue = onChangedVal;
-              setState(
-                () {
-                  int idx = int.parse(onChangedVal);
-                  _textCtr.text = dropDownList[idx - 1][optLabel];
-                },
-              );
-            },
-            (onValidateVal) {
-              if (onValidateVal == null) {
-                return "Select ${selectionInfo}";
-              }
-              return null;
-            },
-            borderColor: Colors.grey.shade100,
-            optionValue: "${optValue}",
-            optionLabel: "${optLabel}",
-          ),
-        ],
-      ),
+      // child: Column(
+      //   children: <Widget>[
+      //     FormHelper.dropDownWidgetWithLabel(
+      //       context,
+      //       labelName,
+      //       hintText,
+      //       inputValue,
+      //       dropDownList,
+      //       (onChangedVal) {
+      //         inputValue = onChangedVal;
+      //         setState(
+      //           () {
+      //             int idx = int.parse(onChangedVal);
+      //             _textCtr.text = dropDownList[idx - 1][optLabel];
+      //           },
+      //         );
+      //       },
+      //       (onValidateVal) {
+      //         if (onValidateVal == null) {
+      //           return "Select ${selectionInfo}";
+      //         }
+      //         return null;
+      //       },
+      //       borderColor: Colors.grey.shade100,
+      //       optionValue: "${optValue}",
+      //       optionLabel: "${optLabel}",
+      //     ),
+      //   ],
+      // ),
     );
   }
 
@@ -2245,24 +2230,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
           ),
-          RaisedButton(
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(screenWidth * 0.5),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(screenWidth * 0.5),
+              ),
+              backgroundColor: Colors.blue.shade400,
             ),
-            color: Colors.blue.shade400,
-            child: Text('Submit Otp'),
-            onPressed: () async {
-              setState(() {
-                _submitOtpClicked = true;
-              });
-              PhoneAuthCredential phoneAuthCredential =
-                  PhoneAuthProvider.credential(
-                verificationId: this._verificationId,
-                smsCode: _userOtpValue.text,
-              );
-              signInWithPhoneAuthCred(context, phoneAuthCredential);
-            },
+            onPressed: _submitOtpClicked
+                ? null
+                : () async {
+                    setState(() {
+                      _submitOtpClicked = true;
+                    });
+                    PhoneAuthCredential phoneAuthCredential =
+                        PhoneAuthProvider.credential(
+                      verificationId: this._verificationId,
+                      smsCode: _userOtpValue.text,
+                    );
+                    signInWithPhoneAuthCred(context, phoneAuthCredential);
+                  },
+            child: const Text('Submit Otp'),
           ),
         ],
       ),
@@ -2301,8 +2290,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         String contextText = "Unable to generate the OTP.";
         _checkForError(context, titleText, contextText);
 
-        _scaffoldKey.currentState
-            ?.showSnackBar(SnackBar(content: Text("${contextText}")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(contextText)),
+        );
       },
 
       // After the OTP has been sent to Mobile Number Successfully
@@ -2336,8 +2326,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           // String titleText = "Authenticatoin Timeout!";
           // String contextText = "Please Re-Try Again";
           // _checkForError(context, titleText, contextText);
-          _scaffoldKey.currentState?.showSnackBar(
-              SnackBar(content: Text("Otp Timeout. Please Re-Try Again!")));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Otp Timeout. Please Re-Try Again!")),
+          );
         }
       },
     );
@@ -2361,8 +2352,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (authCredential.user != null) {
         print('authentication completed!');
-        _scaffoldKey.currentState
-            ?.showSnackBar(SnackBar(content: Text("Creating your Account...")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Creating your Account...")),
+        );
         setState(() {
           _userVerified = true;
           _submitOtpClicked = false;
@@ -2533,7 +2525,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     left: screenWidth * 0.008,
                     bottom: screenHeight * 0.008,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.photo_size_select_actual_rounded,
                   ),
                 ),
@@ -2544,17 +2536,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     right: screenWidth * 0.02,
                     bottom: screenHeight * 0.008,
                   ),
-                  child: RaisedButton(
-                    color: Colors.purple.shade300,
-                    child: Text(
-                      '${str1}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple.shade300,
                     ),
                     onPressed: () async {
                       final picker = ImagePicker();
-                      final imageFile = await picker.getImage(
+                      final imageFile = await picker.pickImage(
                         source: ImageSource.gallery,
                         imageQuality: 80,
                         maxHeight: 650,
@@ -2571,6 +2559,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       });
                       Navigator.of(context).pop(false);
                     },
+                    child: Text(
+                      str1,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -2605,17 +2599,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     right: screenWidth * 0.02,
                     bottom: screenHeight * 0.008,
                   ),
-                  child: RaisedButton(
-                    color: Colors.purple.shade300,
-                    child: Text(
-                      '${str2}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple.shade300,
                     ),
                     onPressed: () async {
                       final picker = ImagePicker();
-                      final imageFile = await picker.getImage(
+                      final imageFile = await picker.pickImage(
                         source: ImageSource.camera,
                         imageQuality: 80,
                         maxHeight: 650,
@@ -2631,6 +2621,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         _isProfilePicTaken = true;
                       });
                     },
+                    child: Text(
+                      str2,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -2656,7 +2652,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Set<String> sambhagSet = {};
 
     this.hierarchyDayitvaList.forEach((obj) {
-      if ((obj as dynamic)['PRABHAG'] == '${prabhagName.text}') {
+      if ((obj as dynamic)['PRABHAG'] == prabhagName.text) {
         sambhagSet.add(obj['SAMBHAG']);
       }
     });

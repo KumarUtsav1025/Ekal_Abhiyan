@@ -1,18 +1,15 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
-import 'dart:math';
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/providers/user_details.dart';
+import 'package:ekal_jaagran/providers/user_details.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart' as loc;
-import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as sysPaths;
 import 'package:image_picker/image_picker.dart';
@@ -20,24 +17,17 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'dart:ui' as ui;
 // import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/stringConst.dart';
-import '../screens/tabs_screen.dart';
-
-import '../widgets/live_location.dart';
-import '../widgets/image_input.dart';
-import '../widgets/stop_watch.dart';
 
 import '../models/class_info.dart';
-import '../models/place.dart';
-import '../models/http_exeception.dart';
 
-import '../providers/class_details.dart';
 import '../providers/class_details.dart';
 
 class NewClassScreen extends StatefulWidget {
   static const routeName = '/new-class-screen';
+
+  const NewClassScreen({super.key});
 
   @override
   State<NewClassScreen> createState() => _NewClassScreenState();
@@ -113,11 +103,11 @@ class _NewClassScreenState extends State<NewClassScreen> {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('${titleText}'),
-        content: Text('${contextText}'),
+        title: Text(titleText),
+        content: Text(contextText),
         actions: <Widget>[
-          RaisedButton(
-            child: Text('OK'),
+          ElevatedButton(
+            child: const Text('OK'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
             },
@@ -138,8 +128,8 @@ class _NewClassScreenState extends State<NewClassScreen> {
         title: Text('${titleText}'),
         content: Text('${contextText}'),
         actions: <Widget>[
-          RaisedButton(
-            child: Text('OK'),
+          ElevatedButton(
+            child: const Text('OK'),
             onPressed: () {
               Navigator.of(ctx).pop(false);
             },
@@ -153,7 +143,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
     BuildContext context,
     GlobalKey<ScaffoldState> sKey,
   ) async {
-    ClassInformation classInfo = new ClassInformation(
+    ClassInformation classInfo = ClassInformation(
       unqId: DateTime.now().toString() + _picTiming.toString(),
       currDateTime: _picTiming.toString(),
       currTime: DateFormat.jm().format(_picTiming).toString(),
@@ -175,11 +165,12 @@ class _NewClassScreenState extends State<NewClassScreen> {
       String contextText = S.invalidStudentCountErrSub;
       _checkForError(context, titleText, contextText);
     } else {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(S.classSubmitText),
         ),
       );
+
       try {
         setState(() {
           _isSubmitLoadingSpinner = true;
@@ -298,7 +289,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                         ),
                         alignment: Alignment.center,
                         width: double.infinity,
-                        child: Text(
+                        child: const Text(
                           S.newClassScreenBodyText,
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -307,10 +298,10 @@ class _NewClassScreenState extends State<NewClassScreen> {
                         ),
                       )
                     : (!_isCurrentLocationTaken || !_isClassPictureTaken)
-                        ? SizedBox(
+                        ? const SizedBox(
                             height: 0,
                           )
-                        : Container(
+                        : SizedBox(
                             height: screenHeight * 1.5,
                             width: screenWidth * 0.9,
                             child: Column(
@@ -320,13 +311,11 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                 SizedBox(
                                   height: useableHeight * 0.015,
                                 ),
-                                Container(
-                                  child: Text(
-                                    S.newClassPicText,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                const Text(
+                                  S.newClassPicText,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Card(
@@ -371,14 +360,14 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     child: !_isSubmitLoadingSpinner
-                                        ? Text(
+                                        ? const Text(
                                             S.newClassSubmitText,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           )
-                                        : CircularProgressIndicator(
+                                        : const CircularProgressIndicator(
                                             color: Colors.white,
                                           ),
                                     onPressed: () {
@@ -396,7 +385,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   child: Text(
                                     "Date/दिनांक: ${DateFormat.yMMMd('en_US').format(_picTiming)}.",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -408,7 +397,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   child: Text(
                                     "Time/समय: ${DateFormat.jm().format(_picTiming)}.",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -418,9 +407,9 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                 ),
                                 Container(
                                   child: Text(
-                                    "${S.newClassStudentNumText} ${_numberOfStudents}",
+                                    "${S.newClassStudentNumText} $_numberOfStudents",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -432,7 +421,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                                   child: Text(
                                     "--------------------------------------------\n${S.newClassAddressTitle} \n\n${addressValue.value}",
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -478,7 +467,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
                     color:
                         _isFloatingButtonActive ? Colors.white : Colors.black),
               )
-            : CircularProgressIndicator(
+            : const CircularProgressIndicator(
                 color: Color.fromARGB(255, 225, 176, 176),
               ),
         icon: Icon(
@@ -499,7 +488,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
 
       await FirebaseFirestore.instance
           .collection('location')
-          .doc('${userUniqueId}')
+          .doc(userUniqueId)
           .set(
         {
           'latitude': _locationResult.latitude,
@@ -624,7 +613,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
     _picTiming = DateTime.now();
     print(_picTiming);
     final picker = ImagePicker();
-    final imageFile = await picker.getImage(
+    final imageFile = await picker.pickImage(
       source: ImageSource.camera,
       maxHeight: 480,
       maxWidth: 640,
@@ -667,36 +656,49 @@ class _NewClassScreenState extends State<NewClassScreen> {
   ////////////////////////// Number of Faces in the Image ///////////////////////////
 
   _getImage(BuildContext context) async {
-    print("get image called");
+    print("Get image called");
     // final imageFile = _storedImage;
-    // setState(() {
-    //   isLoading = true;
-    // });
+    // try {
+    //   setState(() {
+    //     isLoading = true;
+    //   });
+    // } catch (error) {
+    //   print("MEMERR10");
+    // }
 
     // final image = FirebaseVisionImage.fromFile(File(imageFile.path));
     // final faceDetector = FirebaseVision.instance.faceDetector();
     // List<Face> faces = await faceDetector.processImage(image);
 
     // if (mounted) {
-    //   setState(() {
-    //     _imageFile = File(imageFile.path);
-    //     _faces = faces;
-    //     _loadImage(File(imageFile.path));
-    //   });
+    //   try {
+    //     setState(() {
+    //       _imageFile = File(imageFile.path);
+    //       _faces = faces;
+    //       _loadImage(File(imageFile.path));
+    //     });
+    //   } catch (error) {
+    //     print("MEMERR11");
+    //   }
     // }
   }
 
   _loadImage(File file) async {
     final data = await file.readAsBytes();
-    await decodeImageFromList(data).then(
-      (value) => setState(
-        () {
-          _image = value;
-          isLoading = false;
-          _numberOfStudents = 0;
-        },
-      ),
-    );
+    try {
+      await decodeImageFromList(data).then(
+        (value) => setState(
+          () {
+            _image = value;
+            isLoading = false;
+            // _numberOfStudents = _faces.length;
+            _numberOfStudents = 0;
+          },
+        ),
+      );
+    } catch (error) {
+      print("MEMERR12");
+    }
   }
 }
 

@@ -1,16 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
-import 'dart:math';
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
-import 'package:location/location.dart' as loc;
-import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as sysPaths;
 import 'package:image_picker/image_picker.dart';
@@ -33,12 +25,11 @@ class _ImageInputState extends State<ImageInput> {
 
   Future<void> _takePicture() async {
     final picker = ImagePicker();
-    final imageFile = await picker.getImage(
-      source: ImageSource.camera,
-      maxHeight: 480,
-      maxWidth: 640,
-      imageQuality: 80
-    );
+    final imageFile = await picker.pickImage(
+        source: ImageSource.camera,
+        maxHeight: 480,
+        maxWidth: 640,
+        imageQuality: 80);
 
     if (imageFile == null) {
       return;
@@ -107,15 +98,17 @@ class _ImageInputState extends State<ImageInput> {
             ),
             Container(
               height: (screenHeight * 0.40) * 0.15,
-              child: FlatButton.icon(
-                color: Colors.grey.shade300,
+              child: TextButton.icon(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.grey.shade300,
+                  primary: Colors.blue.shade800,
+                ),
                 icon: Icon(Icons.camera),
                 label: Text(
-                  '${imgPicBtnStr}',
+                  '$imgPicBtnStr',
                   textAlign: TextAlign.center,
                 ),
-                textColor: Colors.blue.shade800,
-                onPressed: !widget.isDiableWidget ? _takePicture : null,
+                onPressed: widget.isDiableWidget ? null : _takePicture,
               ),
             ),
           ],
