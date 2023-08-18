@@ -695,7 +695,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
             _image = value;
             isLoading = false;
             _numberOfStudents = _faces.length;
-            _numberOfStudents = 0;
+            // _numberOfStudents = 0;
           },
         ),
       );
