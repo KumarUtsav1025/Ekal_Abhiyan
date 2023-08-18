@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ekal_jaagran/providers/user_details.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -60,7 +61,7 @@ class _NewClassScreenState extends State<NewClassScreen> {
   var _numberOfStudents = 0;
 
   late File _imageFile;
-  // List<Face> _faces = [];
+  List<Face> _faces = [];
   bool isLoading = false;
   late ui.Image _image;
   final picker = ImagePicker();
@@ -657,30 +658,32 @@ class _NewClassScreenState extends State<NewClassScreen> {
 
   _getImage(BuildContext context) async {
     print("Get image called");
-    // final imageFile = _storedImage;
-    // try {
-    //   setState(() {
-    //     isLoading = true;
-    //   });
-    // } catch (error) {
-    //   print("MEMERR10");
-    // }
+    final imageFile = _storedImage;
+    try {
+      setState(() {
+        isLoading = true;
+      });
+    } catch (error) {
+      print("MEMERR10");
+    }
 
-    // final image = FirebaseVisionImage.fromFile(File(imageFile.path));
-    // final faceDetector = FirebaseVision.instance.faceDetector();
-    // List<Face> faces = await faceDetector.processImage(image);
+    final image = InputImage.fromFilePath(imageFile.path);
+    final options = FaceDetectorOptions();
+    final faceDetector = FaceDetector(options: options);
+    final List<Face> faces = await faceDetector.processImage(image);
+    faceDetector.close();
 
-    // if (mounted) {
-    //   try {
-    //     setState(() {
-    //       _imageFile = File(imageFile.path);
-    //       _faces = faces;
-    //       _loadImage(File(imageFile.path));
-    //     });
-    //   } catch (error) {
-    //     print("MEMERR11");
-    //   }
-    // }
+    if (mounted) {
+      try {
+        setState(() {
+          _imageFile = File(imageFile.path);
+          _faces = faces;
+          _loadImage(File(imageFile.path));
+        });
+      } catch (error) {
+        print("MEMERR11");
+      }
+    }
   }
 
   _loadImage(File file) async {
@@ -691,8 +694,8 @@ class _NewClassScreenState extends State<NewClassScreen> {
           () {
             _image = value;
             isLoading = false;
-            // _numberOfStudents = _faces.length;
-            _numberOfStudents = 0;
+            _numberOfStudents = _faces.length;
+            // _numberOfStudents = 0;
           },
         ),
       );
@@ -702,32 +705,32 @@ class _NewClassScreenState extends State<NewClassScreen> {
   }
 }
 
-// class FacePainter extends CustomPainter {
-//   final ui.Image image;
-//   final List<Face> faces;
-//   final List<Rect> rects = [];
+class FacePainter extends CustomPainter {
+  final ui.Image image;
+  final List<Face> faces;
+  final List<Rect> rects = [];
 
-//   FacePainter(this.image, this.faces) {
-//     for (var i = 0; i < faces.length; i++) {
-//       rects.add(faces[i].boundingBox);
-//     }
-//   }
+  FacePainter(this.image, this.faces) {
+    for (var i = 0; i < faces.length; i++) {
+      rects.add(faces[i].boundingBox);
+    }
+  }
 
-//   @override
-//   void paint(ui.Canvas canvas, ui.Size size) {
-//     final Paint paint = Paint()
-//       ..style = PaintingStyle.stroke
-//       ..strokeWidth = 2.0
-//       ..color = Colors.yellow;
+  @override
+  void paint(ui.Canvas canvas, ui.Size size) {
+    final Paint paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..color = Colors.yellow;
 
-//     canvas.drawImage(image, Offset.zero, Paint());
-//     for (var i = 0; i < faces.length; i++) {
-//       canvas.drawRect(rects[i], paint);
-//     }
-//   }
+    canvas.drawImage(image, Offset.zero, Paint());
+    for (var i = 0; i < faces.length; i++) {
+      canvas.drawRect(rects[i], paint);
+    }
+  }
 
-//   @override
-//   bool shouldRepaint(FacePainter old) {
-//     return image != old.image || faces != old.faces;
-//   }
-// }
+  @override
+  bool shouldRepaint(FacePainter old) {
+    return image != old.image || faces != old.faces;
+  }
+}

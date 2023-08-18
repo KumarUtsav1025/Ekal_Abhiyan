@@ -19,7 +19,7 @@ class S{
   static const classSubmitText = 'Submitting the Class!\nजमा करने की प्रक्रिया में|';
   static const newClassScreenBodyText ="Register your Attendance\n-------------------------------------------\nअपनी उपस्थिति दर्ज कराएं";
   static const newClassPicText = 'Picture of the Class\nकक्षा की तस्वीर';
-  static const newClassStudentNumText = "Number of Students/विद्यार्थियों की संख्या";
+  static const newClassStudentNumText = "Number of Students/विद्यार्थियों की संख्या:";
   static const newClassSubmitText = 'Submit the Class\nकक्षा जमा करें';
   static const newClassAddressTitle = 'Class Address/कक्षा का पता:';
   static const newClassPicClickText = "Click a Pic\nतस्वीर क्लिक करें";
