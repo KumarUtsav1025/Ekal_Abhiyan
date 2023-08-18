@@ -84,6 +84,8 @@ class AuthDetails with ChangeNotifier {
     TextEditingController userPhoneNumber,
   ) async {
     String enteredNumber = userPhoneNumber.text.toString();
+    print(existingUserPhoneNumberList);
+    print(enteredNumber);
 
     if (this.existingUserPhoneNumberList.length == 0) {
       return false;
@@ -107,7 +109,7 @@ class AuthDetails with ChangeNotifier {
     }
 
     // final urlLink = Uri.https(
-    //   'flutterdatabase-76af4-default-rtdb.firebaseio.com',
+    //   'ekal-db-default-rtdb.firebaseio.com',
     //   '/UsersPhoneNumber.json',
     // );
 

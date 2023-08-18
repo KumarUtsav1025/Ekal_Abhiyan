@@ -48,11 +48,22 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<Size> _heightAnimation;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
+  // Define a boolean flag to indicate if the widget is still mounted
+  bool _isMounted = false;
+
   @override
   void initState() {
     super.initState();
+    _isMounted = true;
     Provider.of<AuthDetails>(context, listen: false)
         .getExistingUserPhoneNumbers();
+  }
+
+  @override
+  void dispose() {
+    // Set the flag to false when the widget is being disposed
+    _isMounted = false;
+    super.dispose();
   }
 
   bool _isOtpSent = false;
@@ -94,22 +105,20 @@ class _LoginScreenState extends State<LoginScreen>
       _checkForError(context, titleText, contextText);
     } else {
       // to bypass login
-      //  Navigator.of(context)
-      //       .pushNamedAndRemoveUntil("/test", (route) => false);
+      // Navigator.of(context).pushNamedAndRemoveUntil("/test", (route) => false);
       // bypass login ends
 
-      // String titleText = "Authentication";
-      // String contextText = "Enter the Otp:";
-      // _checkIfUserExists(context);
-      // _enterUserOtp(context, titleText, contextText);
+      String titleText = "Authentication";
+      String contextText = "Enter the Otp:";
+      _checkIfUserExists(context);
+      _enterUserOtp(context, titleText, contextText);
 
-      // if ((await Provider.of<AuthDetails>(context, listen: false)
-      //         .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
-      //     true) {
-        
       if ((await Provider.of<AuthDetails>(context, listen: false)
               .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
           true) {
+        // if ((await Provider.of<AuthDetails>(context, listen: false)
+        //         .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
+        //     true) {
         print('User Already Exists!');
 
         setState(() {
@@ -275,17 +284,25 @@ class _LoginScreenState extends State<LoginScreen>
 
       // After the Otp Timeout period
       codeAutoRetrievalTimeout: (verificationID) async {
-        setState(() {
-          _isOtpSent = false;
-          _isAuthenticationAccepted = false;
-          _showLoading = false;
-          _signInClicked = false;
-        });
+        if (_isMounted) {
+          // Check if the widget is still mounted
+          try {
+            setState(() {
+              _isOtpSent = false;
+              _isAuthenticationAccepted = false;
+              _showLoading = false;
+              _signInClicked = false;
+            });
+          } catch (error) {
+            print("OTP TIMEOUT ERROR");
+            print(error);
+          }
 
-        if (!_userVerified) {
-          String titleText = "Authenticatoin Timeout!";
-          String contextText = "Please Re-Try Again";
-          _checkForError(context, titleText, contextText);
+          if (!_userVerified) {
+            String titleText = "Authenticatoin Timeout!";
+            String contextText = "Please Re-Try Again";
+            _checkForError(context, titleText, contextText);
+          }
         }
       },
     );
@@ -500,23 +517,23 @@ class _LoginScreenState extends State<LoginScreen>
               SizedBox(
                 height: screenHeight * 0.025,
               ),
-              Container(
-                child: Text(
-                  "Developed Under:",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Container(
-                // decoration: BoxDecoration(color: Colors.blue),
-                child: Image.asset(
-                  aurigaCareImage,
-                  width: screenWidth * 0.75,
-                  height: screenHeight * 0.075,
-                ),
-              ),
+              // Container(
+              //   child: Text(
+              //     "Developed Under:",
+              //     textAlign: TextAlign.center,
+              //     style: TextStyle(
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              // ),
+              // Container(
+              //   // decoration: BoxDecoration(color: Colors.blue),
+              //   child: Image.asset(
+              //     aurigaCareImage,
+              //     width: screenWidth * 0.75,
+              //     height: screenHeight * 0.075,
+              //   ),
+              // ),
               // SizedBox(
               //   height: screenHeight * 0.12,
               // ),
@@ -585,44 +602,44 @@ class _LoginScreenState extends State<LoginScreen>
                   horizontal: screenWidth * 0.025,
                   vertical: screenHeight * 0.01,
                 ),
-                child: RichText(
-                  textAlign: TextAlign.right,
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Developer: ",
-                        style: TextStyle(
-                          color: Colors.black,
-                          // fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      WidgetSpan(
-                        child: Icon(
-                          Icons.ads_click_rounded,
-                        ),
-                      ),
-                      TextSpan(
-                        // style: linkText,
-                        text: "Rahul Singh",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () async {
-                            var url =
-                                "https://www.linkedin.com/in/rahul-singh-3003811b1/";
-                            if (await canLaunch(url)) {
-                              await launch(url);
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          },
-                      ),
-                    ],
-                  ),
-                ),
+                // child: RichText(
+                //   textAlign: TextAlign.right,
+                //   text: TextSpan(
+                //     children: [
+                //       TextSpan(
+                //         text: "Developer: ",
+                //         style: TextStyle(
+                //           color: Colors.black,
+                //           // fontWeight: FontWeight.bold,
+                //         ),
+                //       ),
+                //       WidgetSpan(
+                //         child: Icon(
+                //           Icons.ads_click_rounded,
+                //         ),
+                //       ),
+                //       TextSpan(
+                //         // style: linkText,
+                //         text: "Rahul Singh",
+                //         style: TextStyle(
+                //           color: Colors.blue,
+                //           fontWeight: FontWeight.bold,
+                //           decoration: TextDecoration.underline,
+                //         ),
+                //         recognizer: TapGestureRecognizer()
+                //           ..onTap = () async {
+                //             var url =
+                //                 "https://www.linkedin.com/in/rahul-singh-3003811b1/";
+                //             if (await canLaunch(url)) {
+                //               await launch(url);
+                //             } else {
+                //               throw 'Could not launch $url';
+                //             }
+                //           },
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ),
             ],
           ),

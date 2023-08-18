@@ -75,21 +75,36 @@ class _NewClassScreenState extends State<NewClassScreen> {
   late ui.Image _image;
   final picker = ImagePicker();
 
+  // Define a boolean flag to indicate if the widget is still mounted
+  bool _isMounted = false;
+
   @override
   void initState() {
     super.initState();
+    _isMounted = true;
     _requestPermission();
+  }
+
+  @override
+  void dispose() {
+    // Set the flag to false when the widget is being disposed
+    _isMounted = false;
+    super.dispose();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    setState(() {
-      if (_isCurrentLocationTaken == true) {
-        _stopListening();
-      }
-    });
+    try {
+      setState(() {
+        if (_isCurrentLocationTaken == true) {
+          _stopListening();
+        }
+      });
+    } catch (error) {
+      print("MEMERR1");
+    }
   }
 
   Future<void> _checkForError(
@@ -165,9 +180,13 @@ class _NewClassScreenState extends State<NewClassScreen> {
           content: Text(S.classSubmitText),
         ),
       );
-      setState(() {
-        _isSubmitLoadingSpinner = true;
-      });
+      try {
+        setState(() {
+          _isSubmitLoadingSpinner = true;
+        });
+      } catch (error) {
+        print("MEMERR2");
+      }
 
       try {
         Provider.of<ClassDetails>(context, listen: false)
@@ -183,18 +202,22 @@ class _NewClassScreenState extends State<NewClassScreen> {
         }).then((_) {
           // Scaffold.of(context).showSnackBar(
           //     SnackBar(content: Text('Class Submitted Successfully!')));
-          setState(() {
-            _isFloatingButtonActive = true;
-            _isSpinnerLoading = false;
-            _isCurrentLocationAccessGiven = false;
-            _isCurrentLocationTaken = false;
-            _isCameraOpened = false;
-            _isClassPictureTaken = false;
-            _isSubmitLoadingSpinner = false;
-            _getAddressFunc = false;
+          try {
+            setState(() {
+              _isFloatingButtonActive = true;
+              _isSpinnerLoading = false;
+              _isCurrentLocationAccessGiven = false;
+              _isCurrentLocationTaken = false;
+              _isCameraOpened = false;
+              _isClassPictureTaken = false;
+              _isSubmitLoadingSpinner = false;
+              _getAddressFunc = false;
 
-            _isSubmitLoadingSpinner = false;
-          });
+              _isSubmitLoadingSpinner = false;
+            });
+          } catch (error) {
+            print("MEMERR3");
+          }
 
           // Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
           Navigator.of(context)
@@ -429,18 +452,22 @@ class _NewClassScreenState extends State<NewClassScreen> {
         elevation: 20,
         onPressed: _isFloatingButtonActive
             ? () {
-                setState(
-                  () {
-                    _isSpinnerLoading = true;
-                    _isFloatingButtonActive = false;
-                    _getLocation(
-                      context,
-                      Provider.of<UserDetails>(context, listen: false)
-                          .getLoggedInUserUniqueId()
-                          .toString(),
-                    );
-                  },
-                );
+                try {
+                  setState(
+                    () {
+                      _isSpinnerLoading = true;
+                      _isFloatingButtonActive = false;
+                      _getLocation(
+                        context,
+                        Provider.of<UserDetails>(context, listen: false)
+                            .getLoggedInUserUniqueId()
+                            .toString(),
+                      );
+                    },
+                  );
+                } catch (error) {
+                  print("MEMERR4");
+                }
               }
             : null,
         label: !_isSpinnerLoading
@@ -488,9 +515,13 @@ class _NewClassScreenState extends State<NewClassScreen> {
 
   _stopListening() {
     _locationSubscription?.cancel();
-    setState(() {
-      _locationSubscription = null;
-    });
+    try {
+      setState(() {
+        _locationSubscription = null;
+      });
+    } catch (error) {
+      print("MEMERR5");
+    }
   }
 
   _requestPermission() async {
@@ -538,9 +569,13 @@ class _NewClassScreenState extends State<NewClassScreen> {
     }
 
     if (!_isCameraOpened) {
-      setState(() {
-        _isCameraOpened = true;
-      });
+      try {
+        setState(() {
+          _isCameraOpened = true;
+        });
+      } catch (error) {
+        print("MEMERR6");
+      }
       _takePicture(context);
     }
 
@@ -562,18 +597,25 @@ class _NewClassScreenState extends State<NewClassScreen> {
       position.longitude,
     );
 
-    setState(() {
-      _isCurrentLocationAccessGiven = true;
-      Placemark place = placemarkUserLocationList[0];
+    if (_isMounted) {
+      try {
+        setState(() {
+          _isCurrentLocationAccessGiven = true;
+          Placemark place = placemarkUserLocationList[0];
 
-      latitudeValue.value = position.latitude.toString();
-      longitudeValue.value = position.longitude.toString();
+          latitudeValue.value = position.latitude.toString();
+          longitudeValue.value = position.longitude.toString();
 
-      addressValue.value =
-          'Place Name/No: ${place.name},\nStreet: ${place.street},\nArea: ${place.subLocality},\nDistrict: ${place.locality},\nState: ${place.administrativeArea},\nPostal Code: ${place.postalCode},\nAdm. Area: ${place.subAdministrativeArea},\nCountry: ${place.country}.';
+          addressValue.value =
+              'Place Name/No: ${place.name},\nStreet: ${place.street},\nArea: ${place.subLocality},\nDistrict: ${place.locality},\nState: ${place.administrativeArea},\nPostal Code: ${place.postalCode},\nAdm. Area: ${place.subAdministrativeArea},\nCountry: ${place.country}.';
 
-      _isCurrentLocationTaken = true;
-    });
+          _isCurrentLocationTaken = true;
+        });
+      } catch (error) {
+        print("MEMERR7");
+        print(error);
+      }
+    }
   }
 
   ////////////////////////// Class Image ///////////////////////////
@@ -592,19 +634,26 @@ class _NewClassScreenState extends State<NewClassScreen> {
       String titleText = S.cameraErrText;
       String contextText = S.cameraSubText;
       _checkForError(context, titleText, contextText);
-      setState(() {
-        _isFloatingButtonActive = true;
-        _isSpinnerLoading = false;
-      });
+      try {
+        setState(() {
+          _isFloatingButtonActive = true;
+          _isSpinnerLoading = false;
+        });
+      } catch (error) {
+        print("MEMERR8");
+      }
       return;
     }
-
-    setState(() {
-      _storedImage = File(imageFile.path);
-      _isClassPictureTaken = true;
-      _isSpinnerLoading = false;
-      _isClassCreated = true;
-    });
+    try {
+      setState(() {
+        _storedImage = File(imageFile.path);
+        _isClassPictureTaken = true;
+        _isSpinnerLoading = false;
+        _isClassCreated = true;
+      });
+    } catch (error) {
+      print("MEMERR9");
+    }
 
     final appDir = await sysPaths.getApplicationDocumentsDirectory();
     final fileName = path.basename(imageFile.path);

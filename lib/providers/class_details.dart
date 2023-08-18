@@ -162,6 +162,7 @@ class ClassDetails with ChangeNotifier {
       // _items.add(classInfo);
       notifyListeners();
     } catch (errorVal) {
+      print("Errorrrrrrrrrrrrr");
       print(errorVal);
     }
   }
