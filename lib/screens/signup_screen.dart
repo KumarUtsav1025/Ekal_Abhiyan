@@ -492,7 +492,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _designationType.text == "Samiti -- समिति") {
         alterDropDown = true;
       }
-      print(_designationRoleType.text);
       if (_designationType.text == "Karyakarta -- कार्यकर्ता" &&
           (SamitiDaitvaList.contains(_designationRoleType.text) ||
               _designationRoleType.text == "आचार्य")) {
@@ -1137,7 +1136,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           onTap: () {},
           items: dropDownList.map(buildMenuItem).toList(),
           onChanged: (value) => setState(() {
-            print(value);
             _textCtr.text = value!;
           }),
         ),
