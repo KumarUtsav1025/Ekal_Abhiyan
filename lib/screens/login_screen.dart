@@ -454,6 +454,7 @@ class _LoginScreenState extends State<LoginScreen>
                       height: screenHeight * 0.07,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
                           elevation: 5,
                           shape: RoundedRectangleBorder(
                             borderRadius:
@@ -466,15 +467,18 @@ class _LoginScreenState extends State<LoginScreen>
                                 _userSignIn(context, _userPhoneNumber);
                               },
                         child: !_signInClicked
-                            ? Text(
-                                'Sign-In',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: screenHeight * 0.025,
-                                  color: Colors.white,
+                            ? Padding(
+                              padding: EdgeInsets.fromLTRB(screenWidth*0.15, screenHeight*0.025, screenWidth*0.15, screenHeight*0.025),
+                              child: Text(
+                                  'Sign-In',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: screenHeight * 0.030,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              )
+                            )
                             : const CircularProgressIndicator(
                                 color: Colors.white,
                               ),

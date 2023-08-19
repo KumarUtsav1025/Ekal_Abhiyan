@@ -39,9 +39,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   File _profilePicture = new File("");
 
-  var _designationType = TextEditingController();
-  var _designationRoleType = TextEditingController();
-  var _dayitvaType = TextEditingController();
+  final _designationType = TextEditingController();
+  final _designationRoleType = TextEditingController();
+  final _dayitvaType = TextEditingController();
 
   var _defaultDayitva_PrabhagType = TextEditingController();
   var _defaultDayitva_SambhagType = TextEditingController();
@@ -167,7 +167,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final SamitiDaitvaList = [
     "अभियान समिति",
     "संस्कार समिति",
-    "ग्राम स्वराज मंच",
+    "ग्राम स्वराज मंच ",
     "महिला समिति",
     "आरोग्य समिति",
     "ग्रामोत्थान समिति",
@@ -547,6 +547,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       backgroundColor: Colors.white70,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Sign Up / साइन अप करें',
           style: TextStyle(

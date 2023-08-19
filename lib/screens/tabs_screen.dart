@@ -65,6 +65,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           _pages[_selectedPageIndex]['title'] as String,
           style: TextStyle(
