@@ -548,6 +548,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       backgroundColor: Colors.white70,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Sign Up / साइन अप करें',
           style: TextStyle(
