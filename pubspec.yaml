@@ -79,17 +79,18 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/ac_logo.png
-    - assets/images/login.png
-    - assets/images/register.png
-    - assets/images/uProfile.png
-    - assets/images/Ekal-Vidyalaya.jpg
-    - assets/images/bck1.jpg
-    - assets/images/bck2.jpg
-    - assets/images/bck3.jpg
-    - assets/images/bck4.jpg
-    - assets/images/bck5.jpg
-    - assets/images/bck6.jpg
+    - assets/images/
+#    - assets/images/ac_logo.png
+#    - assets/images/login.png
+#    - assets/images/register.png
+#    - assets/images/uProfile.png
+#    - assets/images/Ekal-Vidyalaya.jpg
+#    - assets/images/bck1.jpg
+#    - assets/images/bck2.jpg
+#    - assets/images/bck3.jpg
+#    - assets/images/bck4.jpg
+#    - assets/images/bck5.jpg
+#    - assets/images/bck6.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
