@@ -1,3 +1,5 @@
+*.upload-keystore.jks
+*.upload-keystore.jks.old
 # Miscellaneous
 *.class
 *.log
