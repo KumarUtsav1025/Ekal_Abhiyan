@@ -64,6 +64,10 @@ class _MyProfileState extends State<MyProfile> {
     var userInfoDetails = Provider.of<UserDetails>(context);
     Map<String, String> userMapping =
         userInfoDetails.getUserPersonalInformation();
+
+    if (userMapping.isEmpty) {
+      return const Text("TEST");
+    }
     String subDesignationType = "";
     bool _isAcharyaInfo = false;
 
