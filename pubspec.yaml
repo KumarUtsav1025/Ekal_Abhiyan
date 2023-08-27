@@ -55,6 +55,7 @@ dependencies:
   json_annotation: ^4.8.1
   google_maps_flutter: ^2.4.0
   google_mlkit_face_detection: ^0.8.0
+  change_app_package_name: ^1.1.0
 
 dev_dependencies:
   flutter_test:
