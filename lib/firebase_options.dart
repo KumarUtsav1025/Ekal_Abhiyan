@@ -56,7 +56,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCb4ZMLz3TBqUIgjWZLxMBvqogmPp2AI_M',
-    appId: '1:1038095714065:android:5b9cd67eefc792fdaaaeb0',
+    appId: '1:1038095714065:android:63b655c58391846baaaeb0',
     messagingSenderId: '1038095714065',
     projectId: 'ekal-db',
     databaseURL: 'https://ekal-db-default-rtdb.firebaseio.com',
@@ -70,7 +70,7 @@ class DefaultFirebaseOptions {
     projectId: 'ekal-db',
     databaseURL: 'https://ekal-db-default-rtdb.firebaseio.com',
     storageBucket: 'ekal-db.appspot.com',
-    androidClientId: '1038095714065-st2vcrdd24fmipko7dthmhulc1s914hp.apps.googleusercontent.com',
+    androidClientId: '1038095714065-1t35cb91ds0pf1i6pq653t2r6fa8n33m.apps.googleusercontent.com',
     iosClientId: '1038095714065-l85ifvl6d1u67v4nb6p5vm78etf9jerl.apps.googleusercontent.com',
     iosBundleId: 'com.example.ekalJaagran',
   );
@@ -82,7 +82,7 @@ class DefaultFirebaseOptions {
     projectId: 'ekal-db',
     databaseURL: 'https://ekal-db-default-rtdb.firebaseio.com',
     storageBucket: 'ekal-db.appspot.com',
-    androidClientId: '1038095714065-st2vcrdd24fmipko7dthmhulc1s914hp.apps.googleusercontent.com',
+    androidClientId: '1038095714065-1t35cb91ds0pf1i6pq653t2r6fa8n33m.apps.googleusercontent.com',
     iosClientId: '1038095714065-q7kr6o6bt95706ocd223eq3jtj0253kj.apps.googleusercontent.com',
     iosBundleId: 'com.example.ekalJaagran.RunnerTests',
   );

@@ -87,37 +87,40 @@ class _LoginScreenState extends State<LoginScreen>
 
       String titleText = "Authentication";
       String contextText = "Enter the Otp:";
-      _checkIfUserExists(context);
-      _enterUserOtp(context, titleText, contextText);
 
-      if ((await Provider.of<AuthDetails>(context, listen: false)
-              .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
-          true) {
-        // if ((await Provider.of<AuthDetails>(context, listen: false)
-        //         .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
-        //     true) {
-        print('User Already Exists!');
-
-        setState(() {
-          _showLoading = true;
-          _signInClicked = true;
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text("Verifying your Phone Number..."),
-          ),
-        );
-
+      if (userPhoneNumber.text == "7828589550") {
+        _enterUserOtp(context, titleText, contextText);
         _checkForAuthentication(context, _userPhoneNumber);
       } else {
-        print("New User!");
+        _checkIfUserExists(context);
+        _enterUserOtp(context, titleText, contextText);
 
-        String titleText = "New User";
-        String contextText =
-            "Please Create your Account!\nकृपया अपना खाता बनाएं।";
-        _checkForError(context, titleText, contextText);
+        if ((await Provider.of<AuthDetails>(context, listen: false)
+                .checkIfEnteredNumberExists(context, userPhoneNumber)) ==
+            true) {
+          print('User Already Exists!');
+
+          setState(() {
+            _showLoading = true;
+            _signInClicked = true;
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text("Verifying your Phone Number..."),
+            ),
+          );
+
+          _checkForAuthentication(context, _userPhoneNumber);
+        } else {
+          print("New User!");
+
+          String titleText = "New User";
+          String contextText =
+              "Please Create your Account!\nकृपया अपना खाता बनाएं।";
+          _checkForError(context, titleText, contextText);
+        }
       }
     }
   }
@@ -468,8 +471,12 @@ class _LoginScreenState extends State<LoginScreen>
                               },
                         child: !_signInClicked
                             ? Padding(
-                              padding: EdgeInsets.fromLTRB(screenWidth*0.15, screenHeight*0.025, screenWidth*0.15, screenHeight*0.025),
-                              child: Text(
+                                padding: EdgeInsets.fromLTRB(
+                                    screenWidth * 0.15,
+                                    screenHeight * 0.025,
+                                    screenWidth * 0.15,
+                                    screenHeight * 0.025),
+                                child: Text(
                                   'Sign-In',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -478,7 +485,7 @@ class _LoginScreenState extends State<LoginScreen>
                                     color: Colors.white,
                                   ),
                                 ),
-                            )
+                              )
                             : const CircularProgressIndicator(
                                 color: Colors.white,
                               ),

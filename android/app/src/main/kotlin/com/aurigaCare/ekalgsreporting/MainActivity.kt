@@ -1,4 +1,4 @@
-package com.example.ekal_jaagran
+package com.aurigaCare.ekalgsreporting
 
 import io.flutter.embedding.android.FlutterActivity
 
